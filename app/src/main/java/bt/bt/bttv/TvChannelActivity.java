@@ -2,13 +2,9 @@ package bt.bt.bttv;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -16,7 +12,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,12 +23,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.koushikdutta.ion.Ion;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -42,9 +33,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -81,18 +69,9 @@ public class TvChannelActivity extends AppCompatActivity
         }
     };
 
-
-    // private Integer images[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
-    // private Integer images1[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
-    // private Integer images2[] = {R.drawable.mm3, R.drawable.mm1, R.drawable.mm4, R.drawable.mm1, R.drawable.mm3, R.drawable.mm4};
     private SQLiteHandler db;
     private SessionManager session;
     private ConnectionDetector cd;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +94,6 @@ public class TvChannelActivity extends AppCompatActivity
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int width = size.x;
-        int height = size.y;
         cd = new ConnectionDetector(this);
 
         setContentView(R.layout.activity_sports);
@@ -140,116 +117,12 @@ public class TvChannelActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        carouselView = (CarouselView) findViewById(R.id.carouselView);
-        carouselView.setPageCount(sampleImages.length);
-
-        carouselView.setImageListener(imageListener);
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void addImagesToThegallery(JSONArray imgs) throws JSONException {
         GridView imageGallery = (GridView) findViewById(R.id.gridview);
         imageGallery.setAdapter(new ImageAdapter(this));
-
-
-        //Log.i("Images Value: ", "> " + imgs.get(key));
-        //imageGallery.addView(getImageView(finalimage));
-
-
-        /* for(HashMap<String, String> img : imgs) {
-            imageGallery.addView(getImageView(image));
-        } */
-
-         /* for (Integer image1 : images1) {
-            imageGallery2.addView(getImageView(image1));
-        } */
-
-        /* for (Integer image2 : images2) {
-            imageGallery3.addView(getImageView(image2));
-        } */
     }
-
-    private View getImageView(String newimage, Integer uid) {
-        /* "http://bflix.ignitecloud.in/uploads/images/1.jpg" */
-        ImageView imageView = new ImageView(getApplicationContext());
-
-        final float scale = getResources().getDisplayMetrics().density;
-        int dpWidthInPx = (int) (130 * scale);
-        int dpHeightInPx = (int) (180 * scale);
-        //LinearLayout.LayoutParams.WRAP_CONTENT
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpWidthInPx, dpHeightInPx);
-        lp.setMargins(0, 0, 20, 30);
-        imageView.setLayoutParams(lp);
-        imageView.setId(uid);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Integer gid = v.getId();
-                PlayMovie(gid);
-                //v.getId() will give you the image id
-
-            }
-        });
-        //imageView.setAdjustViewBounds(true);
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        //imageView.setMaxWidth(400);
-        //imageView.setMaxWidth(500);
-        //imageView.setImageResource(newimage);
-        Ion.with(imageView)
-
-                .load(newimage);
-
-        return imageView;
-    }
-
-    private Bitmap decodeFile(File f, Integer MAX_SIZE_W, Integer MAX_SIZE_H) throws IOException {
-        Bitmap b = null;
-
-        //Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-
-        FileInputStream fis = new FileInputStream(f);
-        BitmapFactory.decodeStream(fis, null, o);
-        fis.close();
-
-        int scale = 1;
-        if (o.outHeight > MAX_SIZE_H || o.outWidth > MAX_SIZE_W) {
-            scale = (int) Math.pow(2, (int) Math.ceil(Math.log(MAX_SIZE_H /
-                    (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
-        }
-
-        //Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        fis = new FileInputStream(f);
-        b = BitmapFactory.decodeStream(fis, null, o2);
-        fis.close();
-
-        return b;
-    }
-
-    /* public void getjsondata(String url) {
-
-        final JsonObject[] newjson = new JsonObject[1];
-
-        Ion.with(this)
-                .load("http://bflix.ignitecloud.in/jsonApi/categories")
-                .asJsonObject(newjson)
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        newjson[0] = result;
-                    }
-                });
-
-
-    } */
 
     @Override
     public void onBackPressed() {
@@ -263,7 +136,6 @@ public class TvChannelActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -283,7 +155,6 @@ public class TvChannelActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -353,47 +224,6 @@ public class TvChannelActivity extends AppCompatActivity
         Intent intent = new Intent(this, TvChannelInnerActivity.class);
         intent.putExtra("vid", gid);
         startActivity(intent);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Movie Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Movie Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 
     private ArrayList<HashMap<String, String>> ParseJSONMovies(String json) {
@@ -474,33 +304,6 @@ public class TvChannelActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void logoutUser() {
-
-        new AlertDialog.Builder(this)
-                .setTitle("Logout?")
-                .setMessage("are you sure you want to logout??")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "Logging Out", Toast.LENGTH_SHORT).show();
-
-                        session.setLogin(false);
-
-                        db.deleteUsers();
-
-                        // Launching the login activity
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
-
-
-    }
-
     public class ImageAdapter extends BaseAdapter {
         String[] mThumbIds =
                 {"http://bflix.ignitecloud.in/uploads/images/t20.jpg",
@@ -570,7 +373,6 @@ public class TvChannelActivity extends AppCompatActivity
      */
     private class GetMovies extends AsyncTask<Void, Void, Void> {
 
-        // Hashmap for ListView
         ArrayList<HashMap<String, String>> moviesList;
         ProgressDialog proDialog;
         String TestMovies = null;
@@ -578,10 +380,11 @@ public class TvChannelActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-// Showing progress loading dialog
+
             proDialog = new ProgressDialog(TvChannelActivity.this);
             proDialog.setMessage("Loading Videos...");
             proDialog.setCancelable(false);
+
             if (!proDialog.isShowing()) {
                 proDialog.show();
             }
@@ -589,53 +392,24 @@ public class TvChannelActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... arg0) {
-// Creating service handler class instance
             WebRequest webreq = new WebRequest();
-
-// Making a request to url and getting response
             String MoviesStr = webreq.makeWebServiceCall(moviesurl, WebRequest.GETRequest);
-
-            Log.i("Response: ", "> " + MoviesStr);
-
             moviesList = ParseJSONMovies(MoviesStr);
             TestMovies = MoviesStr;
-
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void requestresult) {
             super.onPostExecute(requestresult);
-            Log.i("Movies: ", "> " + TestMovies);
-            //studentList = ParseJSON(TestString);
-            ArrayList<HashMap<String, String>> movList;
-
-            movList = ParseJSONMovies(TestMovies);
-
-            Log.i("Movies 2: ", "> " + movList);
-// Dismiss the progress dialog
             if (proDialog.isShowing()) {
                 proDialog.dismiss();
             }
-/**
- * Updating received data from JSON into ListView
- * */
-          /*   Log.i("Images : ", "> " +"PreExIG");
-           // addImagesToThegallery(movList);
-            Log.i("Images : ", "> " +"PostExIG");
-            */
             try {
                 addImagesToThegallery(mvs);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
-
     }
-
-
 }
-
-

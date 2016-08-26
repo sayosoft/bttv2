@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.helper.SessionManager;
 
 public class MovieInnerActivity extends AppCompatActivity {
 
@@ -77,7 +76,6 @@ public class MovieInnerActivity extends AppCompatActivity {
     private Integer images[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
     private ImageButton FavBtn, AddBtn;
     private SQLiteHandler db;
-    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +83,13 @@ public class MovieInnerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_inner);
 
         db = new SQLiteHandler(getApplicationContext());
-
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
-
         String uid = user.get("uid");
-
-        Bundle extras = getIntent().getExtras();
+        Intent extras = getIntent();
         if (extras != null) {
-            Integer value = extras.getInt("vid");
-            String ap = extras.getString("autoplay");
+            Integer value = Integer.parseInt(extras.getStringExtra("vid"));
+            String ap = extras.getStringExtra("autoplay");
             if (ap != null) {
                 autoplay = true;
             }
@@ -102,16 +97,13 @@ public class MovieInnerActivity extends AppCompatActivity {
             String furl = "http://bflix.ignitecloud.in/jsonApi/getvod/";
             moviesurl = furl + value + "/" + uid;
             Log.i("INTENTVALUE:", moviesurl);
-            //The key argument here must match that used in the other activity
         } else {
             Log.i("INTENTVALUE:", moviesurl);
         }
-
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
         }
-
         if (getResources().getBoolean(R.bool.portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
@@ -122,23 +114,15 @@ public class MovieInnerActivity extends AppCompatActivity {
         LinearLayout imageGallery = (LinearLayout) findViewById(R.id.relatedGallery);
         if (imgs != null) {
             for (int i = 0; i < imgs.length(); i++) {
-
                 JSONObject m = imgs.getJSONObject(i);
                 String c_genres = m.getString(TAG_VIDEO_GENRES);
                 String c_genres_text = m.getString(TAG_VIDEO_GENRES_TEXT);
                 List<String> genre = Arrays.asList(c_genres.split("\\s*,\\s*"));
-
                 Integer c_id = Integer.parseInt(m.getString(TAG_VIDEO_ID));
-
                 String c_title = m.getString(TAG_VIDEO_TITLE);
-                //String c_category = m.getString(TAG_VIDEO_CATEGORY);
                 String c_poster = m.getString(TAG_VIDEO_POSTER);
-                Log.i("Movies 158 ", "> " + c_title);
-                Log.i("Movie Genre 158 ", "> " + c_genres);
-
                 String FinalImage = "http://bflix.ignitecloud.in/uploads/images/" + c_poster;
                 if (imageGallery != null) {
-                    //Action
                     imageGallery.addView(getImageView(FinalImage, c_id));
                     System.gc();
                 }
@@ -154,6 +138,7 @@ public class MovieInnerActivity extends AppCompatActivity {
         NavUtils.navigateUpFromSameTask(this);
     }
 
+
     private void SetMovieValues(JSONArray movie) throws JSONException {
         TextView movietitle = (TextView) findViewById(R.id.movietitle);
         TextView movieduration = (TextView) findViewById(R.id.movieduration);
@@ -168,19 +153,14 @@ public class MovieInnerActivity extends AppCompatActivity {
         FavBtn = (ImageButton) findViewById(R.id.favbtn);
         AddBtn = (ImageButton) findViewById(R.id.addbtn);
 
-
         LayerDrawable stars = (LayerDrawable) rate_bar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
-
         String Ret = addrelated(related);
-
         FavBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                //SettingAlertDialogView();
                 Toast.makeText(getApplicationContext(), "Added to Favorites",
                         Toast.LENGTH_LONG).show();
 
@@ -190,22 +170,14 @@ public class MovieInnerActivity extends AppCompatActivity {
         AddBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                //SettingAlertDialogView();
                 PlaylistAlertDialogView();
-
             }
         });
-
         if (Ret == "NOTOK") {
             Toast.makeText(getApplicationContext(), "Could Not Find Related Videos",
                     Toast.LENGTH_LONG).show();
-
         }
-
-
         for (int i = 0; i < movie.length(); i++) {
-
             JSONObject m = movie.getJSONObject(i);
             video_source = "";
             video_source = m.getString(TAG_VIDEO_SOURCE);
@@ -213,7 +185,6 @@ public class MovieInnerActivity extends AppCompatActivity {
             String mpost = "http://bflix.ignitecloud.in/uploads/images/" + m.getString(TAG_VIDEO_POSTER);
             Ion.with(movieposter)
                     .placeholder(R.drawable.loadingposter)
-
                     .load(mpost);
             assert movietitle != null;
             movietitle.setText(m.getString(TAG_VIDEO_TITLE));
@@ -229,36 +200,22 @@ public class MovieInnerActivity extends AppCompatActivity {
             moviedirector.setText(m.getString(TAG_VIDEO_DIRECTOR));
             assert rate_bar != null;
             rate_bar.setRating(Float.parseFloat(m.getString(TAG_VIDEO_RATING)));
-
             MovieTitle = m.getString(TAG_VIDEO_TITLE);
             VideoID = m.getString(TAG_VIDEO_ID);
             VResume = m.getString(TAG_VIDEO_RESUME);
-
             MovieDuration = m.getString(TAG_VIDEO_DURATION);
             MovieGenre = m.getString(TAG_VIDEO_GENRES_TEXT);
             MovieDesciption = m.getString(TAG_VIDEO_DESCRIPTION);
             MovieCast = m.getString(TAG_VIDEO_ACTING);
             MovieDirector = m.getString(TAG_VIDEO_DIRECTOR);
-
-            /* assert buynowbutton != null;
-            if(c_purchased == "yes") {
-                buynowbutton.setVisibility(View.INVISIBLE);
-                imgbtn.setVisibility(View.VISIBLE);
-            }
-            else {
-                buynowbutton.setVisibility(View.VISIBLE);
-                imgbtn.setVisibility(View.INVISIBLE);
-            } */
         }
         if (autoplay) {
             PlayMoviePlayer2();
-
         }
     }
 
     private void PlaylistAlertDialogView() {
         final CharSequence[] items = {"Watchlist", "Default", "General"};
-
         AlertDialog.Builder builder = new AlertDialog.Builder(MovieInnerActivity.this);//ERROR ShowDialog cannot be resolved to a type
         builder.setTitle("Add to Playlist");
         builder.setSingleChoiceItems(items, -1,
@@ -269,37 +226,26 @@ public class MovieInnerActivity extends AppCompatActivity {
                         pvalues = items[item].toString();
                     }
                 });
-
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Success", Toast.LENGTH_SHORT)
-                        .show(); */
                 Toast.makeText(getApplicationContext(), "Added Video to " + pvalues,
                         Toast.LENGTH_SHORT).show();
-
-
             }
         });
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Fail", Toast.LENGTH_SHORT)
-                        .show(); */
             }
         });
-
         AlertDialog alert = builder.create();
         alert.show();
     }
 
     private View getImageView(String newimage, Integer uid) {
-        /* "http://bflix.ignitecloud.in/uploads/images/1.jpg" */
         ImageView imageView = new ImageView(getApplicationContext());
-
         final float scale = getResources().getDisplayMetrics().density;
         int dpWidthInPx = (int) (130 * scale);
         int dpHeightInPx = (int) (180 * scale);
-        //LinearLayout.LayoutParams.WRAP_CONTENT
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpWidthInPx, dpHeightInPx);
         lp.setMargins(0, 0, 20, 30);
         imageView.setLayoutParams(lp);
@@ -307,25 +253,13 @@ public class MovieInnerActivity extends AppCompatActivity {
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 Integer gid = v.getId();
                 PlayMovie(gid);
-                //v.getId() will give you the image id
-
             }
         });
-        //imageView.setAdjustViewBounds(true);
-
-        //imageView.setMaxWidth(400);
-        //imageView.setMaxWidth(500);
-        //imageView.setImageResource(newimage);
-        Ion.with(imageView)
-
-                .load(newimage);
-
+        Ion.with(imageView).load(newimage);
         return imageView;
     }
-
 
     public void PlayMoviePlayer(View view) {
         Intent intent = new Intent(this, PlayVideoNew.class);
@@ -356,7 +290,6 @@ public class MovieInnerActivity extends AppCompatActivity {
     }
 
     public void PlayMovie(Integer gid) {
-
         Intent intent = new Intent(this, MovieInnerActivity.class);
         intent.putExtra("vid", gid);
         startActivity(intent);
@@ -381,20 +314,14 @@ public class MovieInnerActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Error Getting Related Videos",
                     Toast.LENGTH_LONG).show();
         }
-
         return "NOTOK";
     }
 
     private ArrayList<HashMap<String, String>> ParseJSONMovie(String json) {
         if (json != null) {
             try {
-// Hashmap for ListView
                 ArrayList<HashMap<String, String>> moviesList = new ArrayList<HashMap<String, String>>();
-
-
                 JSONObject jsonObj = new JSONObject(json);
-
-// Getting JSON Array node
                 JSONArray movies;
                 JSONArray relatedVideos;
                 try {
@@ -413,10 +340,8 @@ public class MovieInnerActivity extends AppCompatActivity {
                 } else {
                     related = null;
                 }
-// looping through All Students
                 for (int i = 0; i < movies.length(); i++) {
                     JSONObject c = movies.getJSONObject(i);
-
                     String m_id = c.getString(TAG_VIDEO_ID);
                     String m_title = c.getString(TAG_VIDEO_TITLE);
                     String m_category = c.getString(TAG_VIDEO_CATEGORY);
@@ -432,21 +357,7 @@ public class MovieInnerActivity extends AppCompatActivity {
                     String m_rating = c.getString(TAG_VIDEO_RATING);
                     String m_pur = c.getString(TAG_VIDEO_PUR);
                     String m_res = c.getString(TAG_VIDEO_RESUME);
-
-
-                    Log.i("Movies 425 ", "> " + m_title);
-
-
-// Phone node is JSON Object
-                    //JSONObject phone = c.getJSONObject(TAG_STUDENT_PHONE);
-                    //String mobile = phone.getString(TAG_STUDENT_PHONE_MOBILE);
-                    //String home = phone.getString(TAG_STUDENT_PHONE_HOME);
-
-// tmp hashmap for single student
                     HashMap<String, String> movie = new HashMap<String, String>();
-
-
-// adding every child node to HashMap key => value
                     movie.put(TAG_VIDEO_ID, m_id);
                     movie.put(TAG_VIDEO_TITLE, m_title);
                     movie.put(TAG_VIDEO_CATEGORY, m_category);
@@ -462,8 +373,6 @@ public class MovieInnerActivity extends AppCompatActivity {
                     movie.put(TAG_VIDEO_RATING, m_rating);
                     movie.put(TAG_VIDEO_PUR, m_pur);
                     movie.put(TAG_VIDEO_RESUME, m_res);
-                    //student.put(TAG_STUDENT_PHONE_MOBILE, mobile);
-
                     onlymovie.put(TAG_VIDEO_ID, m_id);
                     onlymovie.put(TAG_VIDEO_TITLE, m_title);
                     onlymovie.put(TAG_VIDEO_CATEGORY, m_category);
@@ -479,13 +388,9 @@ public class MovieInnerActivity extends AppCompatActivity {
                     onlymovie.put(TAG_VIDEO_RATING, m_rating);
                     onlymovie.put(TAG_VIDEO_PUR, m_pur);
                     onlymovie.put(TAG_VIDEO_RESUME, m_res);
-
-// adding student to students list
-
                     moviesList.add(movie);
                     moviesList2.add(onlymovie);
                 }
-
                 return moviesList;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -502,54 +407,28 @@ public class MovieInnerActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void logoutUser() {
-        session.setLogin(false);
-
-        db.deleteUsers();
-
-        // Launching the login activity
-        Intent intent = new Intent(MovieInnerActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * Async task class to get json by making HTTP call
-     */
     private class GetMovies extends AsyncTask<Void, Void, Void> {
 
-        // Hashmap for ListView
         ArrayList<HashMap<String, String>> moviesList;
         ProgressDialog proDialog;
         String TestMovies = null;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-// Showing progress loading dialog
             proDialog = new ProgressDialog(MovieInnerActivity.this);
             proDialog.setMessage("Loading Video...");
             proDialog.setCancelable(false);
             if (!proDialog.isShowing()) {
                 proDialog.show();
             }
-
         }
 
         @Override
         protected Void doInBackground(Void... arg0) {
-// Creating service handler class instance
             WebRequest webreq = new WebRequest();
-
-// Making a request to url and getting response
             String MoviesStr = webreq.makeWebServiceCall(moviesurl, WebRequest.GETRequest);
-
-            Log.i("Response: ", "> " + MoviesStr);
-
             moviesList = ParseJSONMovie(MoviesStr);
             TestMovies = MoviesStr;
-
-
             return null;
         }
 
@@ -557,31 +436,17 @@ public class MovieInnerActivity extends AppCompatActivity {
         protected void onPostExecute(Void requestresult) {
             super.onPostExecute(requestresult);
             proDialog.dismiss();
-            Log.i("Movies: ", "> " + TestMovies);
-            //studentList = ParseJSON(TestString);
             ArrayList<HashMap<String, String>> movList;
-
             movList = ParseJSONMovie(TestMovies);
-
-            Log.i("Movies 2: ", "> " + movList);
-// Dismiss the progress dialog
             if (proDialog.isShowing()) {
                 proDialog.dismiss();
             }
-/**
- * Updating received data from JSON into ListView
- * */
-          /*   Log.i("Images : ", "> " +"PreExIG");
-           // addImagesToThegallery(movList);
-            Log.i("Images : ", "> " +"PostExIG");
-            */
             try {
                 SetMovieValues(mvs);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
-
     }
+
 }

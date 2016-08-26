@@ -1,6 +1,7 @@
 package bt.bt.bttv.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import bt.bt.bttv.AudioActivity;
 import bt.bt.bttv.R;
 import bt.bt.bttv.helper.ItemClickListener;
 import bt.bt.bttv.model.AudiosModel;
@@ -48,7 +50,9 @@ public class AudioHomeAdapter extends RecyclerView.Adapter<AudioHomeAdapter.View
                     Toast.makeText(context, "#" + position + " - " + audiosModelList.get(position).getAudio_id() + " (Long click)", Toast.LENGTH_SHORT).show();
 //                    context.startActivity(new Intent(context, Ca.class));
                 } else {
-                    Toast.makeText(context, "#" + position + " - " + audiosModelList.get(position).getAudio_id(), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(context, AudioActivity.class);
+                    i.putExtra("song_url", audiosModelList.get(position).getAudio_url());
+                    context.startActivity(i);
                 }
             }
         });

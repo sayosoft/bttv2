@@ -52,7 +52,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     Context context;
     Runnable sendData;
     private String path = "http://flv2.bn.netease.com/tvmrepo/2016/5/N/3/EBMTJBGN3/SD/EBMTJBGN3-mobile.mp4";
-    //private String path= Environment.getExternalStorageDirectory()+"/xihuanni.mp4";
     private Uri uri;
     private VideoView mVideoView;
     private ProgressBar pb;
@@ -87,50 +86,34 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             path = extras.getString("vurl");
             Title = extras.getString("title");
             VideoID = extras.getString("vid");
             VideoResume = extras.getString("vresume");
-
             MovieDuration = extras.getString("duration");
             MovieGenre = extras.getString("genre");
             MovieDesciption = extras.getString("desc");
             MovieCast = extras.getString("cast");
             MovieDirector = extras.getString("director");
-
             if (VideoResume != null) {
                 mPosition = Long.parseLong(VideoResume);
             }
-
             Log.i("Vitamio Video Path:", path);
             //The key argument here must match that used in the other activity
         } else {
             Log.i("Vitamio Video Path:", path);
         }
-
         if (!LibsChecker.checkVitamioLibs(this)) {
             return;
         }
         setContentView(R.layout.activity_play_video_new);
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
         hp = getHeightPixel(PlayVideoNew.this);
         wp = getWidthPixel(PlayVideoNew.this);
         sp = getStatusBarHeight(PlayVideoNew.this);
-
-
-        //if(savedInstanceState == null){
         init();
-        //}
-
-
     }
 
     private void init() {
@@ -153,103 +136,36 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         backIcon = (ImageView) findViewById(R.id.back_icon);
         settIcon = (ImageView) findViewById(R.id.sett_icon);
         PlaylistIcon = (ImageView) findViewById(R.id.playlist_icon);
-
-
         if (path == "") {
-            // Tell the user to provide a media file URL/path.
             return;
         } else {
-      /*
-       * Alternatively,for streaming media you can use
-       * mVideoView.setVideoURI(Uri.parse(URLstring));
-       */
             uri = Uri.parse(path);
-
             mVideoView.setVideoURI(uri);
-
             setTitles();
-
-            /* if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                mVideoView.setVideoLayout(io.vov.vitamio.widget.VideoView.VIDEO_LAYOUT_STRETCH, 0);
-
-            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                mVideoView.setVideoLayout(io.vov.vitamio.widget.VideoView.VIDEO_LAYOUT_ORIGIN, 0);
-            } */
-
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 isPortrait = false;
-
-                /* fl_controller.setMinimumWidth(getWidthPixel(PlayVideoNew.this));
-                fl_controller.setMinimumHeight(getHeightPixel(PlayVideoNew.this)); */
-
                 RelativeLayout.LayoutParams fl_lp = new RelativeLayout.LayoutParams(
                         getHeightPixel(PlayVideoNew.this),
                         getWidthPixel(PlayVideoNew.this) - getStatusBarHeight(PlayVideoNew.this)
                 );
-
                 fl_controller.setLayoutParams(fl_lp);
-               /* avoidLoop = true;
-               // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                if (Build.VERSION.SDK_INT > 18) {
-                    View decorView = getWindow().getDecorView();
-                    // Hide the status bar.
-                    int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN  | View.SYSTEM_UI_FLAG_FULLSCREEN;
-
-                    decorView.setSystemUiVisibility(uiOptions);
-                }
-                //getSupportActionBar().hide();
-                infoView.setVisibility(View.INVISIBLE);
-
-                mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0); */
-
             } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 isPortrait = true;
-                // mVideoView.setVideoLayout(io.vov.vitamio.widget.VideoView.VIDEO_LAYOUT_ORIGIN, 0);
-                // mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_ORIGIN, 0);
-
-
             }
-
-
-            /* mVideoView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-
-                    // have same code as onTouchEvent() (for the Activity) above
-
-                    int action = event.getActionMasked();
-
-                    Log.d("Touch Event Detected", String.valueOf(action));
-
-                    return true;
-                }
-            }); */
-
-            //MediaController mc = new MediaController(this, true, fl_controller);
-
-
             MediaController mc = new MediaController(this, true, fl_controller);
             mc.setOnControllerClick(new MediaController.OnControllerClick() {
                 @Override
                 public void OnClick(int type) {
-
                     if (type == 1) {
                         shareIt();
                     }
-
                     if (type == 0) {
                         avoidLoop = true;
                         if (isPortrait) {
-                             /* LinearLayout.LayoutParams fl_lp = new LinearLayout.LayoutParams(
-                                    getHeightPixel(PlayVideoNew.this),
-                                    getWidthPixel(PlayVideoNew.this) - getStatusBarHeight(PlayVideoNew.this)
-                            ); */
-
                             RelativeLayout.LayoutParams fl_lp = new RelativeLayout.LayoutParams(
                                     getHeightPixel(PlayVideoNew.this),
                                     getWidthPixel(PlayVideoNew.this) - getStatusBarHeight(PlayVideoNew.this)
                             );
-
                             fl_controller.setLayoutParams(fl_lp);
                             avoidLoop = true;
                             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -257,70 +173,44 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                                 View decorView = getWindow().getDecorView();
                                 // Hide the status bar.
                                 int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_FULLSCREEN;
-
                                 decorView.setSystemUiVisibility(uiOptions);
                             }
-                            //getSupportActionBar().hide();
                             infoView.setVisibility(View.INVISIBLE);
-
                             mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
                             isPortrait = false;
                         } else {
-                            /* LinearLayout.LayoutParams fl_lp = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    DensityUtil.dip2px(200, PlayVideoNew.this)
-                            ); */
-
-                           /*  RelativeLayout.LayoutParams fl_lp = new RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    DensityUtil.dip2px(200, PlayVideoNew.this)
-                            );
-
-                            fl_controller.setLayoutParams(fl_lp); */
                             if (Build.VERSION.SDK_INT > 18) {
                                 View decorView = getWindow().getDecorView();
                                 // Hide the status bar.
                                 int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
                                 decorView.setSystemUiVisibility(uiOptions);
                             }
-                            //getSupportActionBar().show();
                             infoView.setVisibility(View.VISIBLE);
-
                             avoidLoop = true;
                             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                             isPortrait = true;
                         }
-
                     }
-
                 }
             });
-
             volumeControl = (SeekBar) findViewById(R.id.volume_bar);
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
             volumeControl.setMax(audioManager
                     .getStreamMaxVolume(AudioManager.STREAM_MUSIC));
             volumeControl.setProgress(audioManager
                     .getStreamVolume(AudioManager.STREAM_MUSIC));
-
             if (volumeControl != null) {
-
                 volumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     int progressChanged = 0;
-
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         progressChanged = progress;
                     }
-
                     public void onStartTrackingTouch(SeekBar seekBar) {
+                        // TODO Auto-generated method stub
                     }
-
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                                 progressChanged, 0);
-                        /* Toast.makeText(PlayVideoNew.this, "seek bar progress:" + progressChanged,
-                                Toast.LENGTH_SHORT).show(); */
                     }
                 });
             } else {
@@ -331,140 +221,62 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 btnShare.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
-                        //v.getId() will give you the image id
                         shareIt();
-
                     }
                 });
             }
-
-
-            /*
-            final WindowManager mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-
-
-            OrientationEventListener mOrientationEventListener = new OrientationEventListener(this,
-                    SensorManager.SENSOR_DELAY_NORMAL)
-            {
-                @Override
-                public void onOrientationChanged(int orientation)
-                {
-                    if (orientation == ORIENTATION_UNKNOWN) return;
-
-                    Display display = mWindowManager.getDefaultDisplay();
-
-                    int rotation = display.getRotation();
-                    if(orientation == 90 || orientation == 270) {
-                        changerot(orientation);
-                    }
-                    else if(orientation == 180 || orientation == 360) {
-                        changerot(orientation);
-                    }
-                    /* switch (rotation) {
-                        case Surface.ROTATION_0:
-                            changerot(orientation);
-                            android.util.Log.i(TAG, "changed ROTATION_0 - " + orientation);
-                            break;
-                        case Surface.ROTATION_90:
-                            android.util.Log.i(TAG, "changed ROTATION_90 - " + orientation);
-                            break;
-                        case Surface.ROTATION_180:
-                            android.util.Log.i(TAG, "changed ROTATION_180 - " + orientation);
-                            break;
-                        case Surface.ROTATION_270:
-                            android.util.Log.i(TAG, "changed ROTATION_270 - " + orientation);
-                            break;
-                    }
-                    if ((rotation != mLastRotation) && (rotation & 0x1) == (mLastRotation & 0x1))
-                    {
-                        android.util.Log.i(TAG, "unhandled orientation changed >>> " + rotation);
-                    }
-                    mLastRotation = rotation;
-                }
-            };
-
-            if (mOrientationEventListener.canDetectOrientation()){
-                mOrientationEventListener.enable();
-            } */
-
-
             mVideoView.setMediaController(mc);
             mc.setVisibility(View.GONE);
             PPBtn.setVisibility(View.GONE);
-            //  mVideoView.setMediaController(new MediaController(this));
             mVideoView.requestFocus();
-
             mVideoView.setOnInfoListener(this);
             mVideoView.setOnBufferingUpdateListener(this);
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
-                    // optional need Vitamio 4.0
                     mediaPlayer.setAdaptiveStream(true);
                     if (subtitle_path != null) {
                         mVideoView.addTimedTextSource(subtitle_path);
                         mVideoView.setTimedTextShown(true);
                     }
-
                     mediaPlayer.setVideoQuality(MediaPlayer.VIDEOQUALITY_LOW);
                     if (!isPortrait) {
                         infoView.setVisibility(View.INVISIBLE);
-
                         RelativeLayout.LayoutParams fl_lp = new RelativeLayout.LayoutParams(
                                 getWidthPixel(PlayVideoNew.this),
-                                //getHeightPixel(PlayVideoNew.this) - getStatusBarHeight(PlayVideoNew.this)
                                 getHeightPixel(PlayVideoNew.this)
                         );
-
                         fl_controller.setLayoutParams(fl_lp);
                         avoidLoop = true;
-                        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                        // getSupportActionBar().hide();
-
-
                         mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
-
                         if (Build.VERSION.SDK_INT > 18) {
                             View decorView = getWindow().getDecorView();
                             // Hide the status bar.
                             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
                             decorView.setSystemUiVisibility(uiOptions);
                         }
-
                         mediaPlayer.setPlaybackSpeed(1.0f);
                     } else {
-                        //mVideoView.setVideoLayout(io.vov.vitamio.widget.VideoView.VIDEO_LAYOUT_ORIGIN, 0);
-                        //mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_ORIGIN, 0);
                         mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_ORIGIN, 0);
                         infoView.setVisibility(View.VISIBLE);
                         if (Build.VERSION.SDK_INT > 18) {
                             View decorView = getWindow().getDecorView();
-                            // Hide the status bar.
                             int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-
                             decorView.setSystemUiVisibility(uiOptions);
                         }
                     }
                 }
             });
-
             mVideoView.setOnTimedTextListener(new MediaPlayer.OnTimedTextListener() {
-
                 @Override
                 public void onTimedText(String text) {
                     mSubtitleView.setText(text);
                 }
-
                 @Override
                 public void onTimedTextUpdate(byte[] pixels, int width, int height) {
-
                 }
             });
-
-
             if (mPosition != 0) {
-                //Put up the Yes/No message box
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder
                         .setTitle("Resume Video")
@@ -472,67 +284,35 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //No button clicked, do nothing and reset
                                 mVideoView.seekTo(mPosition);
-
                             }
                         })
                         .setNegativeButton("Yes", null)
                         .show();
             }
-
             final View decorView = getWindow().getDecorView();
-
-           /* final Runnable hideSystemUiCallback = new Runnable() {
-                @Override
-                public void run() {
-                    if (Build.VERSION.SDK_INT > 18 && !isPortrait) {
-
-                        // Hide the status bar.
-                        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
-                        decorView.setSystemUiVisibility(uiOptions);
-                    }
-
-                }
-            }; */
-
-
             decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
                 @Override
                 public void onSystemUiVisibilityChange(int visibility) {
                     if ((visibility & (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)) == 0) {
                         if (!isPortrait) {
                             if (Build.VERSION.SDK_INT > 18) {
-
                                 // Hide the status bar.
                                 int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
                                 decorView.setSystemUiVisibility(uiOptions);
                             }
                         }
-
                     }
                 }
             });
-
-            /* if(mPosition != 0) {
-
-                mVideoView.seekTo(mPosition);
-            } */
-
             final int delay = 5000; //milliseconds
-
             sendData = new Runnable() {
                 public void run() {
-
                     updatetime();
                     h.postDelayed(this, delay);
                 }
             };
-
             h.postDelayed(sendData, delay);
-
             PPBtn.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
@@ -544,7 +324,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                         PPBtn.setBackgroundResource(R.drawable.playicon);
                         mVideoView.start();
                     }
-
                 }
             });
 
@@ -553,7 +332,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     finish();
-
                 }
             });
 
@@ -562,7 +340,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     SettingChoice();
-
                 }
             });
 
@@ -571,7 +348,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
                     PlaylistAlertDialogView();
-
                 }
             });
 
@@ -583,7 +359,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     audio.adjustStreamVolume(AudioManager.STREAM_MUSIC,
                             AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
-
                 }
             });
 
@@ -591,14 +366,10 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     Log.i(TAG, "Video onComplete hit");
-
                     finish();
                 }
             });
-
-
         }
-
     }
 
     private boolean isPortrait(int orientation) {
@@ -615,7 +386,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 Toast.makeText(PlayVideoNew.this,
                         items[which] + " Selected", Toast.LENGTH_LONG)
                         .show();
-
                 if (items[which] == "Video Quality") {
                     dialog.dismiss();
                     SettingAlertDialogView();
@@ -623,7 +393,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     dialog.dismiss();
                     SubtitleAlertDialogView();
                 }
-
             }
         });
         builder.setNegativeButton("cancel",
@@ -637,19 +406,14 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         alert.show();
     }
 
-
     private void PlaylistAlertDialogView() {
         final CharSequence[] items = {"Favorites", "Playlist", "Watch Later"};
         final int[] playitems = {2, 0, 1};
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayVideoNew.this);//ERROR ShowDialog cannot be resolved to a type
         builder.setTitle("Add to ");
         builder.setSingleChoiceItems(items, -1,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        /* Toast.makeText(getApplicationContext(), items[item],
-                                Toast.LENGTH_SHORT).show(); */
                         Playlist = items[item].toString();
                         PlaylistID = playitems[item];
                         if (PlaylistID != 0) {
@@ -661,8 +425,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                         }
                     }
                 });
-
-
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -670,21 +432,14 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     private void NewPlaylistDialog() {
         new GetPlaylistAsync().execute();
     }
-
     private void CreateNewPlaylist() {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
         final EditText edittext = new EditText(PlayVideoNew.this);
         alert.setMessage("Create New Playlist");
         alert.setTitle("Enter Playlist Name");
-
         alert.setView(edittext);
-
         alert.setPositiveButton("Create & Add", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //What ever you want to do with the value
-                //Editable YouEditTextValue = edittext.getText();
-                //OR
                 String PlaylistName = edittext.getText().toString();
                 Playlist = PlaylistName;
                 new NewPlaylistAsync().execute();
@@ -697,14 +452,11 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 dialog.dismiss();
             }
         });
-
         alert.show();
     }
 
     private void SubtitleAlertDialogView() {
         final CharSequence[] items = {"Off", "English"};
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayVideoNew.this);//ERROR ShowDialog cannot be resolved to a type
         builder.setTitle("Change Subtitle Language");
         builder.setSingleChoiceItems(items, -1,
@@ -720,51 +472,37 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             public void onClick(DialogInterface dialog, int id) {
                 if (Subtitle == "Off") {
                     mVideoView.setTimedTextShown(false);
-                    mSubtitleView.setVisibility(View.INVISIBLE);
-                    /* Toast.makeText(PlayVideoNew.this, "Subtitle Off", Toast.LENGTH_SHORT)
-                            .show(); */
                 } else {
                     mVideoView.setTimedTextShown(true);
                     mSubtitleView.setVisibility(View.VISIBLE);
                     Toast.makeText(PlayVideoNew.this, Subtitle + " Set as Subtitle Language", Toast.LENGTH_SHORT)
                             .show();
                 }
-
-
             }
         });
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Fail", Toast.LENGTH_SHORT)
-                        .show(); */
             }
         });
-
         AlertDialog alert = builder.create();
         alert.show();
     }
 
-
     private void SettingAlertDialogView() {
         final CharSequence[] items = {"Low", "Standard", "High Definition"};
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(PlayVideoNew.this);//ERROR ShowDialog cannot be resolved to a type
         builder.setTitle("Change Video Quality");
         builder.setSingleChoiceItems(items, -1,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                       /* Toast.makeText(getApplicationContext(), items[item],
-                                Toast.LENGTH_SHORT).show(); */
                         VidQuality = items[item].toString();
                     }
                 });
 
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Success", Toast.LENGTH_SHORT)
-                        .show(); */
                 switch (VidQuality) {
                     case "Low":
                         mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_LOW);
@@ -778,55 +516,36 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     default:
                         mVideoView.setVideoQuality(MediaPlayer.VIDEOQUALITY_MEDIUM);
                 }
-
-
             }
         });
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Fail", Toast.LENGTH_SHORT)
-                        .show(); */
             }
         });
-
         AlertDialog alert = builder.create();
         alert.show();
     }
 
     private void shareIt() {
-//sharing implementation here
         mVideoView.pause();
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         String shareBody = "Please Check out" + Title + "BTTV, Bhutans Only Premier Video Streaming Service, click on this link http://www.bttv.bt/movies/detail/" + VideoID;
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "BTTV");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "BTTV");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
-
     public void changerot() {
-
         if (!isPortrait) {
-                /* LinearLayout.LayoutParams fl_lp = new LinearLayout.LayoutParams(
-                        getHeightPixel(PlayVideoNew.this),
-                        getWidthPixel(PlayVideoNew.this) - getStatusBarHeight(PlayVideoNew.this)
-                ); */
             infoView.setVisibility(View.INVISIBLE);
-
             RelativeLayout.LayoutParams fl_lp = new RelativeLayout.LayoutParams(
-                    //getWidthPixel(PlayVideoNew.this) - getStatusBarHeight(PlayVideoNew.this),
                     getWidthPixel(PlayVideoNew.this),
                     getHeightPixel(PlayVideoNew.this)
             );
-
             fl_controller.setLayoutParams(fl_lp);
             avoidLoop = true;
-            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            // getSupportActionBar().hide();
-
-
             mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
             if (Build.VERSION.SDK_INT > 18) {
                 View decorView = getWindow().getDecorView();
@@ -835,23 +554,13 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
 
                 decorView.setSystemUiVisibility(uiOptions);
             }
-
-
             isPortrait = false;
         } else {
-                /* LinearLayout.LayoutParams fl_lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        DensityUtil.dip2px(200, PlayVideoNew.this)
-                ); */
-
             RelativeLayout.LayoutParams fl_lp = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     DensityUtil.dip2px(230, PlayVideoNew.this)
             );
-
             fl_controller.setLayoutParams(fl_lp);
-            // getSupportActionBar().show();
-            //VideoView.setVideoLayout(io.vov.vitamio.widget.VideoView.VIDEO_LAYOUT_ORIGIN, 0);
             mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_ORIGIN, 0);
             infoView.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT > 18) {
@@ -861,17 +570,14 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
 
                 decorView.setSystemUiVisibility(uiOptions);
             }
-
             avoidLoop = true;
             //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             isPortrait = true;
-        }
-
-        new CountDownTimer(2000, 1000) { // 5000 = 5 sec
-
-            public void onTick(long millisUntilFinished) {
             }
 
+        new CountDownTimer(2000, 1000) { // 5000 = 5 sec
+            public void onTick(long millisUntilFinished) {
+            }
             public void onFinish() {
                 PPBtn.setVisibility(View.GONE);
                 btnShare.setVisibility(View.GONE);
@@ -881,75 +587,29 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 PlaylistIcon.setVisibility(View.GONE);
             }
         }.start();
-
-
     }
 
     @Override
-
     public void onStart() {
         super.onStart();
 
     }
 
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
         // if(!avoidLoop) {
-
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             isPortrait = false;
             changerot();
-
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             isPortrait = true;
             changerot();
-            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         }
-        //}
-
-
-        // Checks the orientation of the screen
-        /*
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && !avoidLoop) {
-            LinearLayout.LayoutParams fl_lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    DensityUtil.dip2px(200,PlayVideoNew.this)
-            );
-
-            fl_controller.setLayoutParams(fl_lp);
-            getSupportActionBar().show();
-            infoView.setVisibility(View.VISIBLE);
-
-
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            avoidLoop = true;
-            isPortrait = true;
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && !avoidLoop){
-            LinearLayout.LayoutParams fl_lp = new LinearLayout.LayoutParams(
-                    getHeightPixel(PlayVideoNew.this),
-                    getWidthPixel(PlayVideoNew.this) - getStatusBarHeight(PlayVideoNew.this)
-            );
-
-            fl_controller.setLayoutParams(fl_lp);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            getSupportActionBar().hide();
-            infoView.setVisibility(View.INVISIBLE);
-
-            mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
-            isPortrait = false;
-            avoidLoop = true;
-        }
-            */
-
     }
 
     @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
-
         switch (what) {
             case MediaPlayer.MEDIA_INFO_BUFFERING_START:
                 if (mVideoView.isPlaying()) {
@@ -957,13 +617,10 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     pb.setVisibility(View.VISIBLE);
                     downloadRateView.setText("");
                     loadRateView.setText("");
-                    //downloadRateView.setVisibility(View.VISIBLE);
                     loadRateView.setVisibility(View.VISIBLE);
                     downloadRateView.setVisibility(View.GONE);
-
                     isBuffering = true;
                     PPBtn.setVisibility(View.GONE);
-
                 }
                 break;
             case MediaPlayer.MEDIA_INFO_BUFFERING_END:
@@ -984,25 +641,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
-            /* if(!isPortrait){
-                LinearLayout.LayoutParams fl_lp=new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        DensityUtil.dip2px(200,PlayVideoNew.this)
-                );
-                fl_controller.setLayoutParams(fl_lp);
-
-                if (Build.VERSION.SDK_INT > 15) {
-                    View decorView = getWindow().getDecorView();
-                    // Hide the status bar.
-                    int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-                    decorView.setSystemUiVisibility(uiOptions);
-                }
-
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                isPortrait=true;
-                return true;
-            } */
-
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -1029,8 +667,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         }
         super.onResume();
         mVideoView.start();
-
-
     }
 
     void updatetime() {
@@ -1041,7 +677,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             new ResumeAsync().execute();
             Log.i("Current Position:", ct);
         }
-
     }
 
 
@@ -1060,19 +695,16 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     public int getStatusBarHeight(Activity activity) {
         Rect frame = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-
         int statusBarHeight = frame.top;
         return statusBarHeight;
     }
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
         Intent intent = new Intent(this, MovieActivity.class);
         startActivity(intent);
         finish();
-
     }
 
     @Override
@@ -1101,31 +733,26 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         } else {
             titleTextview.setText("Unknown");
         }
-
         if (MovieDuration != null) {
             durationTextview.setText(MovieDuration);
         } else {
             durationTextview.setText("Unknown");
         }
-
         if (MovieGenre != null) {
             genreTextview.setText(MovieGenre);
         } else {
             genreTextview.setText("Unknown");
         }
-
         if (MovieDesciption != null) {
             descTextview.setText(MovieDesciption);
         } else {
             descTextview.setText("Unknown");
         }
-
         if (MovieCast != null) {
             castTextview.setText(MovieCast);
         } else {
             castTextview.setText("Unknown");
         }
-
         if (MovieDirector != null) {
             directorTextview.setText(MovieDirector);
         } else {
@@ -1135,7 +762,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-
         //Log.i(TAG, "View under finger: " + findViewAtPosition(getApplicationContext().getRootView(), (int)ev.getRawX(), (int)ev.getRawY()));
         if (ev.getAction() == MotionEvent.ACTION_DOWN && !isBuffering) {
             PPBtn = (ImageButton) findViewById(R.id.ppbtn);
@@ -1150,7 +776,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 backIcon.setVisibility(View.VISIBLE);
                 settIcon.setVisibility(View.VISIBLE);
                 PlaylistIcon.setVisibility(View.VISIBLE);
-
             } else {
                 PPBtn.setBackgroundResource(R.drawable.playicon);
                 PPBtn.setVisibility(View.VISIBLE);
@@ -1158,13 +783,10 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                 volIcon.setVisibility(View.VISIBLE);
                 settIcon.setVisibility(View.VISIBLE);
                 PlaylistIcon.setVisibility(View.VISIBLE);
-
             }
             new CountDownTimer(3000, 1000) { // 5000 = 5 sec
-
                 public void onTick(long millisUntilFinished) {
                 }
-
                 public void onFinish() {
                     PPBtn.setVisibility(View.GONE);
                     btnShare.setVisibility(View.GONE);
@@ -1174,10 +796,7 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     PlaylistIcon.setVisibility(View.GONE);
                 }
             }.start();
-
             return true;
-
-
         } else {
             return false;
         }
@@ -1214,25 +833,18 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             Log.d("DoINBackGround", "On doInBackground...");
             String test;
             test = "Test";
-
             // SqLite database handler
             db = new SQLiteHandler(getApplicationContext());
-
             // Fetching user details from sqlite
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
-
-
             WebRequest webreq = new WebRequest();
-
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/saveresume/" + uid + "/" + VideoID + "/" + mPos;
             String Res = webreq.makeWebServiceCall(newurl, WebRequest.GETRequest);
-
             //return "You are at PostExecute";
             return test;
         }
-
 
         protected void onPostExecute(String result) {
             //Log.d(""+result);
@@ -1248,31 +860,21 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             Log.d("DoINBackGround", "On doInBackground...");
             String test;
             test = "Test";
-
             // SqLite database handler
             db = new SQLiteHandler(getApplicationContext());
-
-            // Fetching user details from sqlite
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
-
-
             WebRequest webreq = new WebRequest();
-
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/savetoplaylist/" + uid + "/" + VideoID + "/" + PlaylistID;
             String Res = webreq.makeWebServiceCall(newurl, WebRequest.GETRequest);
-
             //return "You are at PostExecute";
             if (Res != null) {
                 return Res;
             } else {
                 return "null";
             }
-
         }
-
-
         protected void onPostExecute(String result) {
             //Log.d(""+result);
             if (result == "ok") {
@@ -1294,29 +896,22 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             Log.d("DoINBackGround", "On doInBackground...NewPlayListAsync");
             String test;
             test = "Test";
-
             // SqLite database handler
             db = new SQLiteHandler(getApplicationContext());
-
             // Fetching user details from sqlite
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
-
             WebRequest webreq = new WebRequest();
-
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/newsavetoplaylist/" + uid + "/" + VideoID + "/" + Playlist;
             String Res = webreq.makeWebServiceCall(newurl, WebRequest.GETRequest);
-
             //return "You are at PostExecute";
             if (Res != null) {
                 return Res;
             } else {
                 return "null";
             }
-
         }
-
 
         protected void onPostExecute(String result) {
             //Log.d(""+result);
@@ -1342,23 +937,17 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             Log.d("DoINBackGround", "On doInBackground...NewPlayListAsync");
             String test;
             test = "Test";
-
             // SqLite database handler
             db = new SQLiteHandler(getApplicationContext());
-
             // Fetching user details from sqlite
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
-
-
             WebRequest webreq = new WebRequest();
-
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/getplaylist3/" + uid + "/s";
             String newurl2 = "http://bflix.ignitecloud.in/jsonApi/getplaylist3/" + uid + "/i";
             Res = webreq.makeWebServiceCall(newurl, WebRequest.GETRequest);
             Res2 = webreq.makeWebServiceCall(newurl2, WebRequest.GETRequest);
-
             //return "You are at PostExecute";
             if (Res != null) {
                 return Res;
@@ -1367,79 +956,52 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             }
         }
 
-
         protected void onPostExecute(String result) {
-
             if (Res != null) {
                 List<String> listItems = new ArrayList<String>();
                 List<String> listItems2 = new ArrayList<String>();
                 String[] pnseparated = Res.split(",");
                 String[] pnseparated2 = Res2.split(",");
                 for (int i = 0; i < pnseparated.length; i++) {
-
                     listItems.add(pnseparated[i]);
                     listItems2.add(pnseparated2[i]);
                 }
 
                 final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
                 final CharSequence[] items2 = listItems2.toArray(new CharSequence[listItems2.size()]);
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(PlayVideoNew.this);//ERROR ShowDialog cannot be resolved to a type
                 builder.setTitle("My Playlists");
                 builder.setSingleChoiceItems(items, -1,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
-                        /* Toast.makeText(getApplicationContext(), items[item],
-                                Toast.LENGTH_SHORT).show(); */
                                 Playlist = items[item].toString();
                                 String tt = items2[item].toString();
                                 PlaylistID = Integer.parseInt(tt);
-
                             }
                         });
 
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Video added to "+Playlist, Toast.LENGTH_SHORT)
-                        .show(); */
                         new PlaylistAsync().execute();
-
-
                     }
                 });
 
                 builder.setNeutralButton("Create New Playlist", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Video added to "+Playlist, Toast.LENGTH_SHORT)
-                        .show(); */
-                        //new NewPlaylistAsync().execute();
                         dialog.dismiss();
                         CreateNewPlaylist();
-
-
                     }
                 });
 
-
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                /* Toast.makeText(PlayVideoNew.this, "Fail", Toast.LENGTH_SHORT)
-                        .show(); */
                         dialog.dismiss();
                     }
                 });
 
                 AlertDialog alert = builder.create();
                 alert.show();
-
-
             }
-
-            //final CharSequence[] items = { "Test1", "Test2", "Test3"};
-            //final int[] playitems = { 2, 0, 1};
-
-
-            //Log.d(""+result);
             if (result == "ok") {
                 Toast.makeText(PlayVideoNew.this, "Playlist Video added to " + Playlist, Toast.LENGTH_SHORT)
                         .show();
@@ -1449,4 +1011,5 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             }
         }
     }
+
 }

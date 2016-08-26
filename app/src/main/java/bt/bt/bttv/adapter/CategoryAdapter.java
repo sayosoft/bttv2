@@ -1,6 +1,7 @@
 package bt.bt.bttv.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import bt.bt.bttv.MovieInnerActivity;
 import bt.bt.bttv.R;
 import bt.bt.bttv.helper.ItemClickListener;
 import bt.bt.bttv.model.MovieModel;
@@ -49,7 +51,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                     Toast.makeText(context, "#" + position + " - " + movieModelList.get(position).getVideo_subtitle() + " (Long click)", Toast.LENGTH_SHORT).show();
 //                    context.startActivity(new Intent(context, Ca.class));
                 } else {
-                    Toast.makeText(context, "#" + position + " - " + movieModelList.get(position).getVideo_subtitle(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, MovieInnerActivity.class);
+                    intent.putExtra("vid", movieModelList.get(position).getVideo_id());
+                    context.startActivity(intent);
                 }
             }
         });

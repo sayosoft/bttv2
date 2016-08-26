@@ -106,7 +106,7 @@ public class MyPreferencesActivity extends AppCompatPreferenceActivity {
 
         }
     }
-
+/*
     public static class MyPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(final Bundle savedInstanceState) {
@@ -174,7 +174,7 @@ public class MyPreferencesActivity extends AppCompatPreferenceActivity {
             });
 
         }
-    }
+    }*/
 
 
 }
