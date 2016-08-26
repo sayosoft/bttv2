@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="applicationUpdates"
+        android:summary="This option if selected will allow the application to check for latest versions."
+        android:title="Application Updates" />
+
+    <Preference
+        android:key="editprofile"
+        android:summary="Edit your Registered Profile"
+        android:title="Edit Profile" />
+
+
+    <Preference
+        android:key="orderhistory"
+        android:summary="Your Order History"
+        android:title="Order History" />
+
+    <Preference
+        android:key="playhistory"
+        android:summary="Your Recent Play History"
+        android:title="Play History" />
+
+    <Preference
+        android:key="managesubs"
+        android:summary="View or Add New Packages"
+        android:title="Manage Subscriptions" />
+
+    <Preference
+        android:key="manageplaylist"
+        android:summary="Watch Videos from Your Playlist"
+        android:title="My Playlists" />
+
+    <Preference
+        android:key="managewishlist"
+        android:summary="Watch Videos from Your Wishlist"
+        android:title="My Wishlist" />
+
+    <EditTextPreference
+        android:key="username"
+        android:summary="Redeem your Voucher from here"
+        android:title="Redeem Voucher" />
+
+
+</PreferenceScreen>

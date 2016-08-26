@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!-- <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu> -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/settings"
+        android:onClick="showSettings"
+        android:title="Settings"
+        app:showAsAction="always" />
+    //set showAsAction always
+    //and this should be the only menu item with show as action always
+
+</menu>

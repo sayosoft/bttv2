@@ -1,0 +1,90 @@
+<resources>
+    <string name="app_name">BTTV</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_name">Action Movies</string>
+    <string name="comedy_name">Comedy Movies</string>
+    <string name="thriller_name">Thriller Movies</string>
+    <string name="drama_name">Drama Movies</string>
+    <string name="family_name">Family Movies</string>
+    <string name="documentary_name">Documentaries</string>
+    <string name="Movies">Movies</string>
+    <string name="Tv">Tv Shows / Live Tv</string>
+    <string name="live_tv">Live Tv</string>
+    <string name="latest_tv">Latest Tv Shows</string>
+    <string name="comedy_tv">Comedy Tv Shows</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="comedy_name_tv">Comedy Shows</string>
+    <string name="thriller_name_tv">Thriller Shows</string>
+    <string name="drama_name_tv">Drama Shows</string>
+    <string name="family_name_tv">Family Shows</string>
+    <string name="animation_name_tv">Animation Shows</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="no_internet">No Internet Connection, Please Connect to internet</string>
+
+
+    <!-- URLS -->
+
+    <!-- USER Login - Register Strings -->
+
+
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_name">First Name</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_register">REGISTER</string>
+    <string name="btn_continue">Continue</string>
+    <string name="btn_link_to_register">Not a subscriber? Register now.</string>
+    <string name="btn_link_to_login">Already registred? Login Please.</string>
+    <string name="welcome">Welcome</string>
+    <string name="btn_logout">LOGOUT</string>
+    <string name="hint_mobile">Mobile</string>
+    <string name="hint_cid">BT CID Number</string>
+
+    <!-- Strings related to URL-->
+
+    <string name="url_get_home_categories">http://bflix.ignitecloud.in/web_api/get_home_categories.php</string>
+    <string name="url_get_video">http://bflix.ignitecloud.in/jsonApi/vod/</string>
+    <string name="url_drawer_categories">http://bflix.ignitecloud.in/jsonApi/categories</string>
+    <string name="url_audio">http://bflix.ignitecloud.in/jsonApi/aod</string>
+
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+    <!-- Example settings for Data & Sync -->
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="url_get_packages">http://bflix.ignitecloud.in/jsonApi/packages/</string>
+</resources>

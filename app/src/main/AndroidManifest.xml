@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="bt.bt.bttv"
+    android:versionCode="6"
+    android:versionName="0.5">
+
+    <!-- android:theme="@style/AppTheme" -->
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".app.AppController"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SplashScreen"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MovieActivity"
+            android:label="@string/Movies"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TvActivity"
+            android:label="@string/Tv"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MovieInnerActivity"
+            android:hardwareAccelerated="false"
+            android:label="Video Details">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MovieActivity" />
+        </activity>
+        <activity android:name=".PlayMovieActivity" />
+        <activity android:name=".AndroidVideoPlayerActivity" />
+        <activity
+            android:name="io.vov.vitamio.activity.InitActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PlayVideo"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".SportsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewSportsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewNewsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".MyPreferencesActivity"
+            android:label="My Account">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MovieActivity" />
+        </activity>
+        <activity
+            android:name=".TvShowActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TvShowInnerActivity"
+            android:hardwareAccelerated="false"
+            android:label="TV Show Details">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.TvShowActivity" />
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MovieActivity" />
+        </activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="Edit Profile" />
+        <activity
+            android:name=".TvChannelActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TvChannelInnerActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.TvChannelActivity" />
+        </activity>
+        <activity
+            android:name=".OrderHistoryActivity"
+            android:label="Order History"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".PlayHistoryActivity"
+            android:label="Play History"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".OrderHistoryNew"
+            android:label="Order History"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".PlaylistinnerActivity"
+            android:label="Play History"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.PlaylistActivity" />
+        </activity>
+        <activity
+            android:name=".MoviesGenreActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TVShowGenreActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyAccountActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".PlaylistActivity"
+            android:label="My Playlists">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".NewPlaylistActivity"
+            android:label="My Playlists">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".WatchlistActivity"
+            android:label="My Wishlist">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".NewPackagesActivity"
+            android:label="Suscription Packages">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MyPreferencesActivity" />
+        </activity>
+        <activity
+            android:name=".NewOrderActivity"
+            android:label="New Order" />
+        <activity
+            android:name=".ScratchCardActivity"
+            android:label="Buy With Scratch Card" />
+        <activity
+            android:name=".PlayVideoNew"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:label="Playing Video"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="bt.bt.bttv.MovieInnerActivity" />
+        </activity>
+        <activity android:name=".WebViewActivity" />
+        <activity
+            android:name=".VideosActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AudioActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HomeCategoryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AudioHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VideoHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+    </application>
+
+</manifest>

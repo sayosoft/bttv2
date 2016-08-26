@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="215dp"
+    android:orientation="vertical">
+
+    <!-- Name Label -->
+    <TextView
+        android:id="@+id/ordertxid"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="T#"
+        android:textColor="@color/bg_register"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Name Label -->
+    <TextView
+        android:id="@+id/ordertitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:paddingTop="6dip"
+        android:text="Type"
+        android:textColor="@color/bg_register"
+        android:textSize="16sp" />
+
+    <!-- Email label -->
+    <TextView
+        android:id="@+id/orderitem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="2dip"
+        android:text="Item"
+        android:textColor="@color/bg_register" />
+
+    <!-- Mobile number label -->
+    <TextView
+        android:id="@+id/orderamt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Amount: "
+        android:textColor="@color/bg_register" />
+
+    <!-- Payment Methodlabel -->
+    <TextView
+        android:id="@+id/pmethod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Method: "
+        android:textColor="@color/bg_register" />
+
+    <!-- Payment Status -->
+    <TextView
+        android:id="@+id/pstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Status: "
+        android:textColor="@color/bg_register" />
+
+</LinearLayout>

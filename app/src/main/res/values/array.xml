@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="hdArray">
+        <item>Standard Definition</item>
+        <item>High Definition</item>
+
+    </string-array>
+
+    <string-array name="hdValues">
+        <item>1</item>
+        <item>2</item>
+
+    </string-array>
+
+    <string-array name="langArray">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Dzongkha</item>
+
+    </string-array>
+
+    <string-array name="langValues">
+        <item>1</item>
+        <item>2</item>
+        <item>23</item>
+
+    </string-array>
+
+
+</resources>
