@@ -4,7 +4,6 @@
     android:orientation="vertical"
     android:paddingTop="?android:attr/actionBarSize">
 
-
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,10 +51,8 @@
                     android:layout_gravity="right"
                     android:background="@drawable/buttonradius"
                     android:onClick="MovieGenres"
-
                     android:text="More" />
             </LinearLayout>
-
 
             <HorizontalScrollView
                 android:id="@+id/imageGalleryParent"
@@ -63,13 +60,11 @@
                 android:layout_height="wrap_content"
                 android:fillViewport="true">
 
-
                 <LinearLayout
 
                     android:id="@+id/imageGallery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:orientation="horizontal" />
 
             </HorizontalScrollView>
@@ -101,7 +96,6 @@
                     android:layout_gravity="right"
                     android:background="@drawable/buttonradius"
                     android:onClick="MovieGenres"
-
                     android:text="More" />
             </LinearLayout>
 
@@ -109,16 +103,13 @@
                 android:id="@+id/imageGalleryParent2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_below="@id/imageGalleryParent">
 
 
                 <LinearLayout
-
                     android:id="@+id/imageGallery2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:orientation="horizontal" />
 
             </HorizontalScrollView>
@@ -150,7 +141,6 @@
                     android:layout_gravity="right"
                     android:background="@drawable/buttonradius"
                     android:onClick="MovieGenres"
-
                     android:text="More" />
             </LinearLayout>
 
@@ -161,18 +151,12 @@
 
                 android:layout_below="@id/imageGalleryParent2">
 
-
                 <LinearLayout
-
                     android:id="@+id/imageGallery3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:orientation="horizontal" />
-
             </HorizontalScrollView>
-
-
         </LinearLayout>
     </ScrollView>
 

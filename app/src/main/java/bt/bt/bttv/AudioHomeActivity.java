@@ -154,7 +154,7 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideosActivity.class);
+            Intent intent = new Intent(this, VideoHomeActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_audio) {
@@ -198,11 +198,11 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
+            intent.putExtra("url", getString(R.string.url_terms));
             startActivity(intent);
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
+            intent.putExtra("url", getString(R.string.url_privacy));
             startActivity(intent);
         } else if (id == R.id.nav_watchlater) {
             Intent intent = new Intent(this, PlaylistinnerActivity.class);

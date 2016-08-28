@@ -202,11 +202,11 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
+            intent.putExtra("url", getString(R.string.url_terms));
             startActivity(intent);
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
+            intent.putExtra("url", getString(R.string.url_privacy));
             startActivity(intent);
         } else if (id == R.id.nav_watchlater) {
             Intent intent = new Intent(this, PlaylistinnerActivity.class);

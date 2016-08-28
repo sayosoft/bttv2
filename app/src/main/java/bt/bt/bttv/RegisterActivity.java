@@ -84,11 +84,9 @@ public class RegisterActivity extends Activity {
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
-        // Check if user is already logged in or not
         if (settings.contains(logFlag)) {
-            // User is already logged in. Take him to main activity
             Intent intent = new Intent(RegisterActivity.this,
-                    MainActivity.class);
+                    HomeCategoryActivity.class);
             startActivity(intent);
             finish();
         }

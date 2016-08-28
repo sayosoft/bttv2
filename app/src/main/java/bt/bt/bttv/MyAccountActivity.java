@@ -169,7 +169,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideosActivity.class);
+            Intent intent = new Intent(this, VideoHomeActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_audio) {

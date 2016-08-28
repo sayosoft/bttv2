@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
+import com.synnapps.carouselview.ImageListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,16 +60,42 @@ public class NewNewsActivity extends AppCompatActivity
     ArrayList<HashMap<String, String>> moviesList2 = new ArrayList<HashMap<String, String>>();
     JSONArray mvs = null;
     JSONArray Slides = null;
+    int[] sampleImages = {R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4};
+    ImageListener imageListener = new ImageListener() {
 
+        @Override
+        public void setImageForPosition(final int position, final ImageView imageView) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Do something here
+                    if (Slides != null) {
+                        for (int i = 0; i < Slides.length(); i++) {
+                            Log.i("Slide URL 3 ", "> " + Slides.length());
+                            try {
+                                JSONObject m = Slides.getJSONObject(i);
+                                String c_image = m.getString(TAG_SLIDES_IMAGE);
+                                Log.i("Slide URL 3 ", "> " + c_image);
+                                String FinalImage = getString(R.string.url_image) + c_image;
+                                Log.i("Slide URL 2 ", "> " + FinalImage);
+                                slideimgs[i] = FinalImage;
+                            } catch (JSONException e) {
+                                JSONObject m = null;
+                                e.printStackTrace();
+                            }
+                        }
+                        Ion.with(getApplicationContext()).load(slideimgs[position]).intoImageView(imageView);
+                    }
+                }
+            }, 1200);
+        }
+    };
     private SQLiteHandler db;
     private ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /* Threading */
-
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -77,13 +104,9 @@ public class NewNewsActivity extends AppCompatActivity
         if (getResources().getBoolean(R.bool.portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-
-        /* End Threading */
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-
         setContentView(R.layout.activity_news2);
         if (cd.isConnectingToInternet()) {
             new GetMovies().execute();
@@ -103,13 +126,10 @@ public class NewNewsActivity extends AppCompatActivity
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
-
-        // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
 
         String name = user.get("name");
         String email = user.get("email");
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -132,38 +152,28 @@ public class NewNewsActivity extends AppCompatActivity
             JSONObject m = imgs.getJSONObject(i);
             String c_genres = m.getString(TAG_VIDEO_GENRES);
             List<String> genre = Arrays.asList(c_genres.split("\\s*,\\s*"));
+
             Integer c_id = Integer.parseInt(m.getString(TAG_VIDEO_ID));
             String c_title = m.getString(TAG_VIDEO_TITLE);
             String c_poster = m.getString(TAG_VIDEO_POSTER);
-            Log.i("Movies 158 ", "> " + c_title);
-
-            Log.i("Movie Genre 158 ", "> " + c_genres);
-
-            String FinalImage = "http://bflix.ignitecloud.in/uploads/images/" + c_poster;
+            String FinalImage = getString(R.string.url_image) + c_poster;
             if (c_poster != null && c_id != null) {
                 if (imageGallery != null && genre.contains("98")) {
-                    //Action
-
                     imageGallery.addView(getImageView(FinalImage, c_id));
                     System.gc();
                 }
 
                 if (imageGallery2 != null && genre.contains("99")) {
-                    //Comedy
                     imageGallery2.addView(getImageView(FinalImage, c_id));
                     System.gc();
                 }
 
                 if (imageGallery3 != null && genre.contains("100")) {
-                    //Drama
                     imageGallery3.addView(getImageView(FinalImage, c_id));
                     System.gc();
                 }
-
-
             }
         }
-
     }
 
     private View getImageView(String newimage, Integer uid) {
@@ -177,10 +187,8 @@ public class NewNewsActivity extends AppCompatActivity
         imageView.setId(uid);
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 Integer gid = v.getId();
                 PlayMovie(gid);
-
             }
         });
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -203,7 +211,6 @@ public class NewNewsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -214,24 +221,22 @@ public class NewNewsActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, HomeCategoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_tv) {
             Intent intent = new Intent(this, TvShowActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, HomeCategoryActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_tvchannel) {
@@ -241,7 +246,6 @@ public class NewNewsActivity extends AppCompatActivity
         } else if (id == R.id.nav_radio) {
             //Intent intent = new Intent(this, RadioChannelActivity.class);
             //startActivity(intent);
-
         } else if (id == R.id.nav_sports) {
             Intent intent = new Intent(this, NewSportsActivity.class);
             startActivity(intent);
@@ -258,7 +262,6 @@ public class NewNewsActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_playlist) {
             Intent intent = new Intent(NewNewsActivity.this, NewPlaylistActivity.class);
-
             startActivity(intent);
         } else if (id == R.id.nav_watchlater) {
             Intent intent = new Intent(NewNewsActivity.this, PlaylistinnerActivity.class);
@@ -267,22 +270,20 @@ public class NewNewsActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(NewNewsActivity.this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
+            intent.putExtra("url", getString(R.string.url_terms));
             startActivity(intent);
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(NewNewsActivity.this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
+            intent.putExtra("url", getString(R.string.url_privacy));
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);
             globleMethods.logoutUser();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     public void PlayMovies(View view) {
         Intent intent = new Intent(this, MovieInnerActivity.class);
         startActivity(intent);
@@ -295,7 +296,6 @@ public class NewNewsActivity extends AppCompatActivity
     }
 
     public void MovieGenres(View view) {
-
         switch (view.getId()) {
             case R.id.button2:
                 Intent intent = new Intent(this, MoviesGenreActivity.class);
@@ -341,15 +341,18 @@ public class NewNewsActivity extends AppCompatActivity
                     String m_category = c.getString(TAG_VIDEO_CATEGORY);
                     String m_poster = c.getString(TAG_VIDEO_POSTER);
                     String m_genres = c.getString(TAG_VIDEO_GENRES);
+
                     Log.i("Movies 425 ", "> " + m_title);
                     HashMap<String, String> movie = new HashMap<String, String>();
                     movie.put(TAG_VIDEO_ID, m_id);
                     movie.put(TAG_VIDEO_TITLE, m_title);
                     movie.put(TAG_VIDEO_CATEGORY, m_category);
                     movie.put(TAG_VIDEO_POSTER, m_poster);
+
                     onlymovie.put(TAG_VIDEO_ID, m_id);
                     onlymovie.put(TAG_VIDEO_GENRES, m_genres);
                     onlymovie.put(TAG_VIDEO_POSTER, m_poster);
+
                     moviesList.add(movie);
                     moviesList2.add(onlymovie);
                 }
@@ -368,20 +371,14 @@ public class NewNewsActivity extends AppCompatActivity
     private ArrayList<HashMap<String, String>> ParseJSONSlides(String json) {
         if (json != null) {
             try {
-// Hashmap for ListView
                 ArrayList<HashMap<String, String>> slidesList = new ArrayList<HashMap<String, String>>();
-
-
                 JSONObject jsonObj = new JSONObject(json);
 
-// Getting JSON Array node
                 JSONArray slides;
                 try {
                     slides = jsonObj.getJSONArray(TAG_SLIDES_INFO);
-                    Log.i("CategoriesObj 410: ", "> " + slides);
                 } catch (JSONException e) {
                     slides = null;
-                    Log.i("CategoriesObj 413: ", "> " + "Slides Object Null");
                     e.printStackTrace();
                 }
                 Slides = slides;
@@ -390,23 +387,19 @@ public class NewNewsActivity extends AppCompatActivity
 
                     String m_id = c.getString(TAG_SLIDES_ID);
                     String m_image = c.getString(TAG_SLIDES_IMAGE);
-                    slideimgs[i] = "http://bflix.ignitecloud.in/uploads/images/" + m_image;
-
-                    Log.i("Slides 425 ", "> " + m_image);
+                    slideimgs[i] = getString(R.string.url_image) + m_image;
                     HashMap<String, String> slide = new HashMap<String, String>();
+
                     slide.put(TAG_SLIDES_ID, m_id);
                     slide.put(TAG_SLIDES_IMAGE, m_image);
-
                     slidesList.add(slide);
                 }
-
                 return slidesList;
             } catch (JSONException e) {
                 e.printStackTrace();
                 return null;
             }
         } else {
-            Log.e("ServiceHandler", "No data received from HTTP Request for Sliders");
             return null;
         }
     }
@@ -433,11 +426,11 @@ public class NewNewsActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... arg0) {
             WebRequest webreq = new WebRequest();
-            String slidesurl = "http://bflix.ignitecloud.in/jsonApi/slides/News";
+            String slidesurl = getString(R.string.url_news);
             String SlidesStr = webreq.makeWebServiceCall(slidesurl, WebRequest.GETRequest);
             String moviesurl = "http://bflix.ignitecloud.in/jsonApi/vod/video_category/26";
             String MoviesStr = webreq.makeWebServiceCall(moviesurl, WebRequest.GETRequest);
-            Log.i("Response: ", "> " + MoviesStr);
+
             slidesList = ParseJSONSlides(SlidesStr);
             moviesList = ParseJSONMovies(MoviesStr);
             TestMovies = MoviesStr;
@@ -447,11 +440,8 @@ public class NewNewsActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void requestresult) {
             super.onPostExecute(requestresult);
-            Log.i("Movies: ", "> " + TestMovies);
-            //studentList = ParseJSON(TestString);
             ArrayList<HashMap<String, String>> movList;
-            movList = ParseJSONMovies(TestMovies);
-            Log.i("Movies 2: ", "> " + movList);
+
             if (proDialog.isShowing()) {
                 proDialog.dismiss();
             }
@@ -461,7 +451,6 @@ public class NewNewsActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-
     }
 }
 

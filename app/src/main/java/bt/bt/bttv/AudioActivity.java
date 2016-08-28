@@ -161,7 +161,7 @@ public class AudioActivity extends AppCompatActivity implements NavigationView.O
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideosActivity.class);
+            Intent intent = new Intent(this, VideoHomeActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_audio) {
@@ -173,7 +173,7 @@ public class AudioActivity extends AppCompatActivity implements NavigationView.O
             startActivity(intent);
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, HomeCategoryActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_tvchannel) {
