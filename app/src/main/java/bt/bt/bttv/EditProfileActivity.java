@@ -23,7 +23,6 @@ import java.util.Map;
 import bt.bt.bttv.app.AppConfig;
 import bt.bt.bttv.app.AppController;
 import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.helper.SessionManager;
 
 /**
  * Created by sajid on 03-07-2016.
@@ -40,7 +39,6 @@ public class EditProfileActivity extends Activity {
     private EditText inputCID;
     private EditText inputMobile;
     private ProgressDialog pDialog;
-    private SessionManager session;
     private SQLiteHandler db;
 
     @Override

@@ -41,21 +41,12 @@ public class NewPackagesActivity extends AppCompatActivity {
 
         mLayoutManager = new GridLayoutManager(this, 1);
         rvPackages.setLayoutManager(mLayoutManager);
-
-        // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
 
         String uid = user.get("uid");
         new GetStudents().execute();
     }
-
-
-    /**
-     * Async task class to get json by making HTTP call
-     */
     private class GetStudents extends AsyncTask<Void, Void, Void> {
-
-        // Hashmap for ListView
         ArrayList<HashMap<String, String>> studentList;
         ProgressDialog proDialog;
         String TestString = null;

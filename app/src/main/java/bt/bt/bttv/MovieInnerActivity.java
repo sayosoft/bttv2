@@ -73,7 +73,6 @@ public class MovieInnerActivity extends AppCompatActivity {
     String VResume = null;
     String pvalues = null;
     Boolean autoplay = false;
-    private Integer images[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
     private ImageButton FavBtn, AddBtn;
     private SQLiteHandler db;
 

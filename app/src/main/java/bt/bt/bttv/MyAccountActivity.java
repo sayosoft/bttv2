@@ -2,7 +2,6 @@ package bt.bt.bttv;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -12,7 +11,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -32,13 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.ConnectionDetector;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.UserPackagesModel;
 
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-
-    public static final String logFlag = "logFlag";
-    public static final String PREFS_NAME = "MyPrefs";
     private static String moviesurl = "http://bflix.ignitecloud.in/jsonApi/userpackages/";
     public SharedPreferences settings;
     Context context;
@@ -65,12 +61,6 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        if (!settings.contains(logFlag)) {
-            logoutUser();
-        }
-
 
         db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
@@ -235,38 +225,13 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             intent.putExtra("title", "Watch Later");
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            logoutUser();
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
-    }
-
-    private void logoutUser() {
-
-        new AlertDialog.Builder(this)
-                .setTitle("Logout?")
-                .setMessage("are you sure you want to logout??")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "Logging Out", Toast.LENGTH_SHORT).show();
-                        db.deleteUsers();
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.remove(logFlag);
-                        editor.commit();
-                        // Launching the login activity
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
-
-
     }
 
     private void setData(UserPackagesModel userPackagesModel) {

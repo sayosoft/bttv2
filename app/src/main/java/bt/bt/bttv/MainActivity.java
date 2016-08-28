@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.SessionManager;
 
@@ -67,14 +66,6 @@ public class MainActivity extends AppCompatActivity
             logoutUser();
         }
 
-       /* private boolean isNetworkAvailable() {
-            ConnectivityManager connectivityManager
-                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        } */
-
-        // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
 
         String name = user.get("name");
@@ -113,26 +104,6 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-
-
-       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        }); */
-
-        /* Button btn = (Button) findViewById(R.id.button);
-        btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(this, MovieActivity.class);
-            }
-        }); */
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -162,21 +133,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main, menu);
-        //return true;
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -239,27 +202,14 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("title", "Watch Later");
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            logoutUser();
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-    public void StartMovies(View view) {
-
-        Intent intent = new Intent(this, MovieActivity.class);
-        startActivity(intent);
-    }
-
-    public void showSettings(MenuItem item) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
 
     private void logoutUser() {
 
@@ -271,12 +221,8 @@ public class MainActivity extends AppCompatActivity
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Toast.makeText(getApplicationContext(), "Logging Out", Toast.LENGTH_SHORT).show();
-
                         session.setLogin(false);
-
                         db.deleteUsers();
-
-                        // Launching the login activity
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -287,35 +233,4 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
-    private void logoutUser2(View view) {
-        session.setLogin(false);
-
-        db.deleteUsers();
-
-        // Launching the login activity
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
-    private boolean checkInternetConenction() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null) { // connected to the internet
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                // connected to wifi
-                Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
-            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                // connected to the mobile provider's data plan
-                Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            // not connected to the internet
-        }
-        return false;
-    }
-
-
 }

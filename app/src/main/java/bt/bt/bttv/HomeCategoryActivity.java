@@ -2,7 +2,6 @@ package bt.bt.bttv;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -14,7 +13,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +38,7 @@ import java.util.List;
 
 import bt.bt.bttv.adapter.CategoryAdapter;
 import bt.bt.bttv.helper.ConnectionDetector;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.HomeCategoryModel;
@@ -69,11 +68,7 @@ public class HomeCategoryActivity extends AppCompatActivity implements Navigatio
 
         db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
-
         settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        if (!settings.contains(logFlag)) {
-            logoutUser();
-        }
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -130,12 +125,7 @@ public class HomeCategoryActivity extends AppCompatActivity implements Navigatio
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -203,7 +193,8 @@ public class HomeCategoryActivity extends AppCompatActivity implements Navigatio
             intent.putExtra("title", "Watch Later");
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            logoutUser();
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -211,31 +202,6 @@ public class HomeCategoryActivity extends AppCompatActivity implements Navigatio
         return false;
     }
 
-    private void logoutUser() {
-
-        new AlertDialog.Builder(this)
-                .setTitle("Logout?")
-                .setMessage("are you sure you want to logout??")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "Logging Out", Toast.LENGTH_SHORT).show();
-                        db.deleteUsers();
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.remove(logFlag);
-                        editor.commit();
-                        // Launching the login activity
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
-
-
-    }
 
     public void showSettings(MenuItem item) {
         Intent intent = new Intent(this, SettingsActivity.class);
