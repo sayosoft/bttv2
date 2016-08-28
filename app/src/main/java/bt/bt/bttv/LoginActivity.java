@@ -65,7 +65,7 @@ public class LoginActivity extends Activity {
         // Check if user is already logged in or not
         if (settings.contains(logFlag)) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(LoginActivity.this, HomeCategoryActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
         }
@@ -145,7 +145,7 @@ public class LoginActivity extends Activity {
 
                         // Launch main activity
                         settings.edit().putString(logFlag, response).commit();
-                        Intent intent = new Intent(LoginActivity.this, HomeCategoryActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);
                         finish();
                     } else {

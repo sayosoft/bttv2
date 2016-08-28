@@ -182,7 +182,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             startActivity(intent);
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeCategoryActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_tvchannel) {

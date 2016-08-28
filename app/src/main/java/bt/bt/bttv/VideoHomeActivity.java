@@ -152,7 +152,6 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -171,7 +170,7 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
             startActivity(intent);
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeCategoryActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_tvchannel) {

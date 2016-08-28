@@ -232,14 +232,14 @@ public class NewNewsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, HomeCategoryActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_tv) {
             Intent intent = new Intent(this, TvShowActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeCategoryActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_tvchannel) {

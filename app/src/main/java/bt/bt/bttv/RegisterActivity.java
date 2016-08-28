@@ -85,9 +85,8 @@ public class RegisterActivity extends Activity {
         db = new SQLiteHandler(getApplicationContext());
 
         if (settings.contains(logFlag)) {
-            Intent intent = new Intent(RegisterActivity.this,
-                    HomeCategoryActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(RegisterActivity.this,
+                    HomeActivity.class));
             finish();
         }
 
