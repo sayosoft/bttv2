@@ -24,8 +24,11 @@
     <string name="vitamio_init_decoders">Initializing decoders…</string>
     <string name="vitamio_library_app_name">VitamioLibrary</string>
     <style name="MediaController_SeekBar" parent="android:Widget.SeekBar">
-        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
-        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_dark
+        </item>
+        <item name="android:indeterminateDrawable">
+            @drawable/scrubber_progress_horizontal_holo_dark
+        </item>
         <item name="android:minHeight">13dip</item>
         <item name="android:maxHeight">13dip</item>
         <item name="android:thumb">@drawable/scrubber_control_selector_holo</item>

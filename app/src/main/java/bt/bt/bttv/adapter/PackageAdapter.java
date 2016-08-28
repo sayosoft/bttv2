@@ -1,6 +1,9 @@
 package bt.bt.bttv.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -12,6 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import bt.bt.bttv.R;
+import bt.bt.bttv.SubscriptionPaymentModeActivity;
 import bt.bt.bttv.helper.ItemClickListener;
 import bt.bt.bttv.model.PackagesModel;
 
@@ -53,8 +57,24 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
                     Toast.makeText(context, "#" + position + " - " + packagesModelList.get(position) + " (Long click)", Toast.LENGTH_SHORT).show();
 //                    context.startActivity(new Intent(context, MainActivity.class));
                 } else {
-                    Toast.makeText(context, "#" + position + " - " + packagesModelList.get(position), Toast.LENGTH_SHORT).show();
+
+                    new AlertDialog.Builder(context)
+                            .setTitle("Confirm")
+                            .setMessage("are you sure, you want to change your existing subscription pack to <pack name> for <pack value>?")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(R.string.yes_dialog, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    Intent intent = new Intent(context, SubscriptionPaymentModeActivity.class);
+                                    context.startActivity(intent);
+
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null).show();
+
+
                 }
+//                    Toast.makeText(context, "#" + position + " - " + packagesModelList.get(position), Toast.LENGTH_SHORT).show();
             }
         });
     }
