@@ -6,6 +6,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -62,6 +64,7 @@ public class NewNewsActivity extends AppCompatActivity
     JSONArray Slides = null;
     int[] sampleImages = {R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4};
     ImageListener imageListener = new ImageListener() {
+    int[] sampleImages = {R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4};
 
         @Override
         public void setImageForPosition(final int position, final ImageView imageView) {
@@ -442,6 +445,9 @@ public class NewNewsActivity extends AppCompatActivity
             super.onPostExecute(requestresult);
             ArrayList<HashMap<String, String>> movList;
 
+
+            movList = ParseJSONMovies(TestMovies);
+            Log.i("Movies 2: ", "> " + movList);
             if (proDialog.isShowing()) {
                 proDialog.dismiss();
             }
