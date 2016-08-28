@@ -220,6 +220,10 @@
         <activity
             android:name=".VideoHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".SubscriptionPaymentModeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
