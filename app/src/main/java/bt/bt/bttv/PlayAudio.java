@@ -75,10 +75,8 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     private String Subtitle = "";
     private String Playlist = "";
     private int PlaylistID = 0;
-    private String VideoURL = "";
     private String subtitle_path = "http://bflix.ignitecloud.in/uploads/test.srt";
     private TextView mSubtitleView;
-    private Integer mLastRotation = 0, hp, wp, sp;
     private SeekBar volumeControl = null;
     private AudioManager audioManager = null;
     private boolean isBuffering = false;
@@ -111,9 +109,9 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         }
         setContentView(R.layout.activity_play_video_new);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        hp = getHeightPixel(PlayAudio.this);
+        /*hp = getHeightPixel(PlayAudio.this);
         wp = getWidthPixel(PlayAudio.this);
-        sp = getStatusBarHeight(PlayAudio.this);
+        sp = getStatusBarHeight(PlayAudio.this);*/
         init();
     }
 
