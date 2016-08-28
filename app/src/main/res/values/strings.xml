@@ -87,4 +87,8 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="url_get_packages">http://bflix.ignitecloud.in/jsonApi/packages/</string>
+    <string name="url_terms">http://bflix.ignitecloud.in/apppages/terms</string>
+    <string name="url_privacy">http://bflix.ignitecloud.in/apppages/privacy</string>
+    <string name="url_image">http://bflix.ignitecloud.in/uploads/images/</string>
+    <string name="url_news">http://bflix.ignitecloud.in/jsonApi/slides/News</string>
 </resources>

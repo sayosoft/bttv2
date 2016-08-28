@@ -142,8 +142,6 @@ public class HomeCategoryActivity extends AppCompatActivity implements Navigatio
 
         return super.onOptionsItemSelected(item);
     }
-
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -191,11 +189,11 @@ public class HomeCategoryActivity extends AppCompatActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
+            intent.putExtra("url", getString(R.string.url_terms));
             startActivity(intent);
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
+            intent.putExtra("url", getString(R.string.url_privacy));
             startActivity(intent);
         } else if (id == R.id.nav_watchlater) {
             Intent intent = new Intent(this, PlaylistinnerActivity.class);
@@ -233,8 +231,6 @@ public class HomeCategoryActivity extends AppCompatActivity implements Navigatio
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show();
-
-
     }
 
     public void showSettings(MenuItem item) {

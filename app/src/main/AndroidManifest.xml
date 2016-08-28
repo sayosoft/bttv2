@@ -30,10 +30,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MovieActivity"
             android:label="@string/Movies"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -212,12 +208,6 @@
                 android:value="bt.bt.bttv.MovieInnerActivity" />
         </activity>
         <activity android:name=".WebViewActivity" />
-        <activity
-            android:name=".VideosActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AudioActivity"
             android:theme="@style/AppTheme.NoActionBar" />

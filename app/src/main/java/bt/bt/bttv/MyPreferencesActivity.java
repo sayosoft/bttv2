@@ -18,13 +18,10 @@ public class MyPreferencesActivity extends AppCompatPreferenceActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
-
-
     }
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
         finish();
     }

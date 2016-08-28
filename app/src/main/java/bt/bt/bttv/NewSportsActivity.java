@@ -405,14 +405,14 @@ public class NewSportsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideosActivity.class);
+            Intent intent = new Intent(this, VideoHomeActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_tv) {
             Intent intent = new Intent(this, TvShowActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, HomeCategoryActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_tvchannel) {
