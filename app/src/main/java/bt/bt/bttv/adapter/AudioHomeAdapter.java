@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import bt.bt.bttv.AudioActivity;
+import bt.bt.bttv.PlayAudio;
 import bt.bt.bttv.R;
 import bt.bt.bttv.helper.ItemClickListener;
 import bt.bt.bttv.model.AudiosModel;
@@ -50,9 +50,22 @@ public class AudioHomeAdapter extends RecyclerView.Adapter<AudioHomeAdapter.View
                     Toast.makeText(context, "#" + position + " - " + audiosModelList.get(position).getAudio_id() + " (Long click)", Toast.LENGTH_SHORT).show();
 //                    context.startActivity(new Intent(context, Ca.class));
                 } else {
-                    Intent i = new Intent(context, AudioActivity.class);
+
+                    Intent intent = new Intent(context, PlayAudio.class);
+                    intent.putExtra("vurl", audiosModelList.get(position).getAudio_url());
+                    intent.putExtra("title", audiosModelList.get(position).getAudio_title());
+                    intent.putExtra("vid", audiosModelList.get(position).getAudio_id());
+                    intent.putExtra("vresume", "0");
+                    intent.putExtra("duration", "05:00");
+                    intent.putExtra("desc", audiosModelList.get(position).getAudio_description());
+                    intent.putExtra("genre", audiosModelList.get(position).getAudio_genre());
+                    intent.putExtra("cast", audiosModelList.get(position).getAudio_is_album());
+                    intent.putExtra("director", audiosModelList.get(position).getAudio_artist());
+                    context.startActivity(intent);
+
+                    /*Intent i = new Intent(context, AudioActivity.class);
                     i.putExtra("song_url", audiosModelList.get(position).getAudio_url());
-                    context.startActivity(i);
+                    context.startActivity(i);*/
                 }
             }
         });

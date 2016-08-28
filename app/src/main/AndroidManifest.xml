@@ -25,9 +25,9 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".MovieActivity"
@@ -212,7 +212,7 @@
             android:name=".AudioActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".HomeCategoryActivity"
+            android:name=".PlayAudio"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AudioHomeActivity"
@@ -220,6 +220,11 @@
         <activity
             android:name=".VideoHomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
 
         <activity
             android:name=".SubscriptionPaymentModeActivity"
