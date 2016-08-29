@@ -52,6 +52,7 @@
     <string name="url_get_video">http://bflix.ignitecloud.in/jsonApi/vod/</string>
     <string name="url_drawer_categories">http://bflix.ignitecloud.in/jsonApi/categories</string>
     <string name="url_audio">http://bflix.ignitecloud.in/jsonApi/aod</string>
+    <string name="url_watch_later">http://bflix.ignitecloud.in/web_api/get_watch_later.php</string>
 
 
     <!-- Strings related to Settings -->

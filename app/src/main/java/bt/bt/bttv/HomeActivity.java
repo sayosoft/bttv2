@@ -58,6 +58,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        GlobleMethods.content_type = "Movies";
+
         adapter.addFragment(new HomeFragment(), "Home");
         adapter.addFragment(new LaterFragment(), "Later");
         adapter.addFragment(new MyFavoriteFragment(), "My Fav");

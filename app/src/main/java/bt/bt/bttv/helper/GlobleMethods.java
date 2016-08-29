@@ -19,6 +19,7 @@ public class GlobleMethods {
     public static final String PREFS_NAME = "MyPrefs";
     public static final String logFlag = "logFlag";
     public static MediaPlayer mp = new MediaPlayer();
+    public static String content_type = "";
     public SharedPreferences settings;
     private Context _context;
     private SQLiteHandler db;

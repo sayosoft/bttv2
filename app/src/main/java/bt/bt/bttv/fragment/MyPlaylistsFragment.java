@@ -63,7 +63,6 @@ public class MyPlaylistsFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
         }
-
         return view;
     }
 

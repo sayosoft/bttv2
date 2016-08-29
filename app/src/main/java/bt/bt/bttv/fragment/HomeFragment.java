@@ -27,11 +27,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.R;
+import bt.bt.bttv.SplashScreen;
 import bt.bt.bttv.adapter.CategoryAdapter;
+import bt.bt.bttv.adapter.VideoHomeAdapter;
 import bt.bt.bttv.helper.ConnectionDetector;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.HTTPURLConnection;
+import bt.bt.bttv.model.DrawerCategoriesModel;
 import bt.bt.bttv.model.HomeCategoryModel;
 import bt.bt.bttv.model.MovieModel;
+import bt.bt.bttv.model.VideosModel;
+import bt.bt.bttv.model.WatchLater;
 
 /**
  * Created by Sachin on 8/28/2016.
@@ -47,6 +53,8 @@ public class HomeFragment extends Fragment {
     private List<HomeCategoryModel> homeCategoryModels;
     private List<MovieModel> movieModels;
     private JSONObject jsonObject;
+    private List<DrawerCategoriesModel> drawerCategoriesModelList;
+    private List<VideosModel> videosModelsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,12 +66,31 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         llMain = (LinearLayout) view.findViewById(R.id.llMain);
 
-        if (cd.isConnectingToInternet()) {
-            new GetHomeContentCategory().execute();
-        } else {
-            Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
+        if (GlobleMethods.content_type.equals("Movies")) {
+            if (cd.isConnectingToInternet()) {
+                new GetHomeContentCategory().execute();
+            } else {
+                Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
+            }
+        } else if (GlobleMethods.content_type.equals("Videos")) {
+            if (cd.isConnectingToInternet()) {
+                getAudioCategories(SplashScreen.drawerCategoriesModelsList);
+            } else {
+                Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
+            }
         }
         return view;
+    }
+
+    private void getAudioCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
+
+        drawerCategoriesModelList = new ArrayList<>();
+        for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
+            if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("VoD")) {
+                drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
+            }
+        }
+        new GetAudio().execute();
     }
 
     private void inflateData() {
@@ -110,6 +137,81 @@ public class HomeFragment extends Fragment {
             llMain.addView(tvTitle);
             llMain.addView(tvSubTitle);
             llMain.addView(recyclerView);
+        }
+    }
+
+    private void inflateData1() {
+
+        HashMap<Integer, List<VideosModel>> stringListHashMap = new HashMap<>();
+
+        for (int i = 0; i < drawerCategoriesModelList.size(); i++) {
+            List<VideosModel> videosModelsList1 = new ArrayList<>();
+            for (int j = 0; j < videosModelsList.size(); j++) {
+                System.out.print("ids" + drawerCategoriesModelList.get(i).getCategory_id() + "  " + videosModelsList.get(j).getVideo_category());
+                if (drawerCategoriesModelList.get(i).getCategory_id().equals(videosModelsList.get(j).getVideo_category())) {
+                    videosModelsList1.add(videosModelsList.get(j));
+                }
+            }
+            if (videosModelsList1 != null)
+                if (videosModelsList1.size() > 0) {
+                    RecyclerView recyclerView = new RecyclerView(getActivity());
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    recyclerView.setLayoutParams(params);
+                    params.setMargins(5, 0, 5, 0);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    recyclerView.setLayoutManager(mLayoutManager);
+
+                    stringListHashMap.put(i, videosModelsList1);
+                    VideoHomeAdapter audioHomeAdapter = new VideoHomeAdapter(getActivity(), stringListHashMap.get(i));
+                    recyclerView.setAdapter(audioHomeAdapter);
+
+                    TextView tvTitle = new TextView(getActivity());
+                    LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    tvTitle.setLayoutParams(params1);
+                    params1.setMargins(10, 10, 0, 0);
+                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+                    tvTitle.setText(drawerCategoriesModelList.get(i).getCategory_title());
+
+                    llMain.addView(tvTitle);
+                    llMain.addView(recyclerView);
+                }
+        }
+    }
+
+    private class GetAudio extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            service = new HTTPURLConnection();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... result) {
+            return service.ServerData(getResources().getString(R.string.url_get_video));
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+            try {
+                jsonObject = new JSONObject(result);
+                Gson gson = new Gson();
+                videosModelsList = gson.fromJson(jsonObject.getJSONArray("videos").toString(), new TypeToken<List<VideosModel>>() {
+                }.getType());
+                WatchLater.videoModelList = videosModelsList;
+                inflateData1();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

@@ -42,6 +42,7 @@ import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.AudiosModel;
 import bt.bt.bttv.model.DrawerCategoriesModel;
+import bt.bt.bttv.model.WatchLater;
 
 /**
  * Created by Sachin on 8/23/2016.
@@ -282,6 +283,7 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
             Gson gson = new Gson();
             audiosModelsList = gson.fromJson(result.toString(), new TypeToken<List<AudiosModel>>() {
             }.getType());
+            WatchLater.audiosModelList = audiosModelsList;
             inflateData();
         }
     }

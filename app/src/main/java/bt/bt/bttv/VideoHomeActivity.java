@@ -1,15 +1,9 @@
 package bt.bt.bttv;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,31 +13,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import bt.bt.bttv.adapter.VideoHomeAdapter;
 import bt.bt.bttv.fragment.HomeFragment;
 import bt.bt.bttv.fragment.LaterFragment;
 import bt.bt.bttv.fragment.MyFavoriteFragment;
@@ -98,63 +78,26 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        llMain = (LinearLayout) findViewById(R.id.llMain);
+        /*llMain = (LinearLayout) findViewById(R.id.llMain);
         if (cd.isConnectingToInternet()) {
             getAudioCategories(SplashScreen.drawerCategoriesModelsList);
         } else {
             Toast.makeText(VideoHomeActivity.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
         }
-
+*/
     }
 
     private void setupViewPager(ViewPager viewPager) {
        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+//        send content type to fragment
+        GlobleMethods.content_type = "Videos";
+
         adapter.addFragment(new HomeFragment(), "Movies");
         adapter.addFragment(new LaterFragment(), "Later");
         adapter.addFragment(new MyFavoriteFragment(), "My Fav");
         adapter.addFragment(new MyPlaylistsFragment(), "My Playlists");
         viewPager.setAdapter(adapter);
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
-
-
-    private void getAudioCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
-
-        drawerCategoriesModelList = new ArrayList<>();
-        for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
-            if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("VoD")) {
-                drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
-            }
-        }
-        new GetAudio().execute();
     }
 
     @Override
@@ -166,6 +109,18 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
             super.onBackPressed();
         }
     }
+
+
+    /*private void getAudioCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
+
+        drawerCategoriesModelList = new ArrayList<>();
+        for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
+            if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("VoD")) {
+                drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
+            }
+        }
+        new GetAudio().execute();
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -251,46 +206,36 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         startActivity(intent);
     }
 
-    private void inflateData() {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        HashMap<Integer, List<VideosModel>> stringListHashMap = new HashMap<>();
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
 
-        for (int i = 0; i < drawerCategoriesModelList.size(); i++) {
-            List<VideosModel> videosModelsList1 = new ArrayList<>();
-            for (int j = 0; j < videosModelsList.size(); j++) {
-                System.out.print("ids" + drawerCategoriesModelList.get(i).getCategory_id() + "  " + videosModelsList.get(j).getVideo_category());
-                if (drawerCategoriesModelList.get(i).getCategory_id().equals(videosModelsList.get(j).getVideo_category())) {
-                    videosModelsList1.add(videosModelsList.get(j));
-                }
-            }
-            if (videosModelsList1 != null)
-                if (videosModelsList1.size() > 0) {
-                    RecyclerView recyclerView = new RecyclerView(VideoHomeActivity.this);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    recyclerView.setLayoutParams(params);
-                    params.setMargins(5, 0, 5, 0);
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
-                    recyclerView.setLayoutManager(mLayoutManager);
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
 
-                    stringListHashMap.put(i, videosModelsList1);
-                    VideoHomeAdapter audioHomeAdapter = new VideoHomeAdapter(VideoHomeActivity.this, stringListHashMap.get(i));
-                    recyclerView.setAdapter(audioHomeAdapter);
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
 
-                    TextView tvTitle = new TextView(VideoHomeActivity.this);
-                    LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    tvTitle.setLayoutParams(params1);
-                    params1.setMargins(10, 10, 0, 0);
-                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                    tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
-                    tvTitle.setText(drawerCategoriesModelList.get(i).getCategory_title());
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
 
-                    llMain.addView(tvTitle);
-                    llMain.addView(recyclerView);
-                }
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
         }
     }
 
-    private class GetAudio extends AsyncTask<String, Void, String> {
+   /* private class GetAudio extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -317,11 +262,11 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
                 Gson gson = new Gson();
                 videosModelsList = gson.fromJson(jsonObject.getJSONArray("videos").toString(), new TypeToken<List<VideosModel>>() {
                 }.getType());
-                inflateData();
+                inflateData1();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
-    }
+    }*/
 }
