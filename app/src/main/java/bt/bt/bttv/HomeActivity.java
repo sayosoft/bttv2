@@ -36,9 +36,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
+        toolbar.setTitle("Movies");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -59,7 +58,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new HomeFragment(), "Movies");
+        adapter.addFragment(new HomeFragment(), "Home");
         adapter.addFragment(new LaterFragment(), "Later");
         adapter.addFragment(new MyFavoriteFragment(), "My Fav");
         adapter.addFragment(new MyPlaylistsFragment(), "My Playlists");
@@ -100,17 +99,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_news) {
             Intent intent = new Intent(this, NewNewsActivity.class);
             startActivity(intent);
-
         } else if (id == R.id.nav_myacc) {
             startActivity(new Intent(this, MyAccountActivity.class));
-        } else if (id == R.id.nav_fav) {
-            Intent intent = new Intent(this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 2);
-            intent.putExtra("title", "Favorites");
-            startActivity(intent);
-        } else if (id == R.id.nav_playlist) {
-            Intent intent = new Intent(this, NewPlaylistActivity.class);
-            startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", getString(R.string.url_terms));
@@ -118,11 +108,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", getString(R.string.url_privacy));
-            startActivity(intent);
-        } else if (id == R.id.nav_watchlater) {
-            Intent intent = new Intent(this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 1);
-            intent.putExtra("title", "Watch Later");
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);

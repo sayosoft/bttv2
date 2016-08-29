@@ -25,5 +25,10 @@
     <color name="lbl_name">#333333</color>
     <color name="btn_logut_bg">#ff6861</color>
     <color name="btn_continue_bg">#26bf90</color>
+    <color name="tx_continue_bg">#ff8000</color>
+    <color name="tx_continue_bg_green">#39ac39</color>
+
+
+
 
 </resources>

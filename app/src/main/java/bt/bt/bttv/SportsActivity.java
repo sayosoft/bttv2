@@ -372,20 +372,6 @@ public class SportsActivity extends AppCompatActivity
         } else if (id == R.id.nav_myacc) {
             Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_fav) {
-            Intent intent = new Intent(SportsActivity.this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 2);
-            intent.putExtra("title", "Favorites");
-            startActivity(intent);
-        } else if (id == R.id.nav_playlist) {
-            Intent intent = new Intent(SportsActivity.this, NewPlaylistActivity.class);
-
-            startActivity(intent);
-        } else if (id == R.id.nav_watchlater) {
-            Intent intent = new Intent(SportsActivity.this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 1);
-            intent.putExtra("title", "Watch Later");
-            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             logoutUser();
         }

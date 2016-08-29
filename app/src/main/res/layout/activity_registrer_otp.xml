@@ -31,7 +31,7 @@
             android:background="@color/tx_continue_bg_green"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Please fill in below fome to create an account with us"
+            android:text="Please enter your OTPs to verify your account"
             android:textColor="#fff"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -40,21 +40,20 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="0dp"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/edit_text_bg"
-                android:hint="@string/hint_name"
-                android:inputType="textCapWords"
-                android:padding="10dp"
-                android:singleLine="true" />
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:text="We have sent an OTP as SMS on your Mobile Number. Please enter that OTP below and click confirm"
+                android:textSize="15sp"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/email"
@@ -62,10 +61,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/edit_text_bg"
-                android:hint="@string/hint_email"
-                android:inputType="textEmailAddress"
+                android:hint="Mobile OTP"
                 android:padding="10dp"
                 android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginTop="15dp"
+                android:text="We have sent an OTP on your Mail. Please enter that OTP below and click confirm"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/password"
@@ -73,79 +81,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/edit_text_bg"
-                android:hint="@string/hint_password"
+                android:hint="Email OTP"
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/password2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/edit_text_bg"
-                android:hint="Confirm Password"
-                android:inputType="textPassword"
-                android:padding="10dp"
-                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/mobilenumber"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/edit_text_bg"
-                android:hint="@string/hint_mobile"
-                android:inputType="numberSigned"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/input_register"
-                android:textColorHint="@color/input_register_hint" />
-
-            <EditText
-                android:id="@+id/cidnumber"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/edit_text_bg"
-                android:hint="@string/hint_cid"
-                android:inputType="number"
-                android:maxLength="11"
-                android:padding="10dp"
-                android:singleLine="true" />
-
-            <!-- Login Button -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnRegister"
-                    android:layout_width="100dp"
+                    android:id="@+id/btnConfirm"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dip"
                     android:background="@drawable/sign_up_bg"
-                    android:text="Sign Up"
+                    android:text="Confirm"
+                    android:layout_gravity="center"
                     android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/btnLinkToLoginScreen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
                     android:layout_marginTop="20dip"
                     android:background="@null"
+                    android:layout_gravity="center"
                     android:text="@string/btn_link_to_login"
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
                     android:textSize="15dp" />
-
-            </LinearLayout>
-
 
         </LinearLayout>
 

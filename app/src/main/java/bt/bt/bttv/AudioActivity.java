@@ -194,14 +194,6 @@ public class AudioActivity extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_myacc) {
             Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_fav) {
-            Intent intent = new Intent(this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 2);
-            intent.putExtra("title", "Favorites");
-            startActivity(intent);
-        } else if (id == R.id.nav_playlist) {
-            Intent intent = new Intent(this, NewPlaylistActivity.class);
-            startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
@@ -209,11 +201,6 @@ public class AudioActivity extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
-            startActivity(intent);
-        } else if (id == R.id.nav_watchlater) {
-            Intent intent = new Intent(this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 1);
-            intent.putExtra("title", "Watch Later");
             startActivity(intent);
         }
 //        else if (id == R.id.nav_logout) {

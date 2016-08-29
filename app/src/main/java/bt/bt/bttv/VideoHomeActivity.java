@@ -11,7 +11,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -39,7 +44,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.adapter.VideoHomeAdapter;
+import bt.bt.bttv.fragment.HomeFragment;
+import bt.bt.bttv.fragment.LaterFragment;
+import bt.bt.bttv.fragment.MyFavoriteFragment;
+import bt.bt.bttv.fragment.MyPlaylistsFragment;
 import bt.bt.bttv.helper.ConnectionDetector;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.DrawerCategoriesModel;
@@ -47,8 +57,6 @@ import bt.bt.bttv.model.VideosModel;
 
 public class VideoHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String PREFS_NAME = "MyPrefs";
-    public static final String logFlag = "logFlag";
     public SharedPreferences settings;
     private LinearLayout llMain;
     private ProgressDialog pDialog;
@@ -59,34 +67,18 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
     private SQLiteHandler db;
     private List<DrawerCategoriesModel> drawerCategoriesModelList;
 
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_category);
+        setContentView(R.layout.activity_home);
 
         db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
 
-        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        if (!settings.contains(logFlag)) {
-            logoutUser();
-        }
-
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
-        if (getResources().getBoolean(R.bool.portrait_only)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-
-        setContentView(R.layout.activity_home_category);
+//        setContentView(R.layout.activity_home_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Videos");
         setSupportActionBar(toolbar);
@@ -100,6 +92,12 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
         llMain = (LinearLayout) findViewById(R.id.llMain);
         if (cd.isConnectingToInternet()) {
             getAudioCategories(SplashScreen.drawerCategoriesModelsList);
@@ -108,6 +106,45 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         }
 
     }
+
+    private void setupViewPager(ViewPager viewPager) {
+       ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new HomeFragment(), "Movies");
+        adapter.addFragment(new LaterFragment(), "Later");
+        adapter.addFragment(new MyFavoriteFragment(), "My Fav");
+        adapter.addFragment(new MyPlaylistsFragment(), "My Playlists");
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
 
     private void getAudioCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
 
@@ -191,14 +228,6 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.nav_myacc) {
             Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_fav) {
-            Intent intent = new Intent(this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 2);
-            intent.putExtra("title", "Favorites");
-            startActivity(intent);
-        } else if (id == R.id.nav_playlist) {
-            Intent intent = new Intent(this, NewPlaylistActivity.class);
-            startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", getString(R.string.url_terms));
@@ -207,44 +236,14 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", getString(R.string.url_privacy));
             startActivity(intent);
-        } else if (id == R.id.nav_watchlater) {
-            Intent intent = new Intent(this, PlaylistinnerActivity.class);
-            intent.putExtra("pid", 1);
-            intent.putExtra("title", "Watch Later");
-            startActivity(intent);
         } else if (id == R.id.nav_logout) {
-            logoutUser();
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
-    }
-
-    private void logoutUser() {
-
-        new AlertDialog.Builder(this)
-                .setTitle("Logout?")
-                .setMessage("are you sure you want to logout??")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "Logging Out", Toast.LENGTH_SHORT).show();
-                        db.deleteUsers();
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.remove(logFlag);
-                        editor.commit();
-                        // Launching the login activity
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
-
-
     }
 
     public void showSettings(MenuItem item) {
@@ -285,16 +284,7 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
                     tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
                     tvTitle.setText(drawerCategoriesModelList.get(i).getCategory_title());
 
-            /*TextView  tvSubTitle= new TextView(AudioHomeActivity.this);
-            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvSubTitle.setLayoutParams(params2);
-            params2.setMargins(10,5,0,0);
-            tvSubTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            tvSubTitle.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvSubTitle.setText(homeCategoryModels.get(i).getHomepage_subtitle());*/
-
                     llMain.addView(tvTitle);
-//            llMain.addView(tvSubTitle);
                     llMain.addView(recyclerView);
                 }
         }
