@@ -270,20 +270,28 @@ public class MovieActivity extends AppCompatActivity
         } else if (id == R.id.nav_sports) {
             Intent intent = new Intent(this, NewSportsActivity.class);
             startActivity(intent);
+
         } else if (id == R.id.nav_news) {
             Intent intent = new Intent(this, NewNewsActivity.class);
             startActivity(intent);
+
         } else if (id == R.id.nav_myacc) {
             Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
+
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(this, SettingsActivity.class));
+
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(MovieActivity.this, WebViewActivity.class);
             intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
             startActivity(intent);
+
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(MovieActivity.this, WebViewActivity.class);
             intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
             startActivity(intent);
+
         } else if (id == R.id.nav_logout) {
             logoutUser();
         }
@@ -459,11 +467,6 @@ public class MovieActivity extends AppCompatActivity
             Log.e("ServiceHandler", "No data received from HTTP Request for Sliders");
             return null;
         }
-    }
-
-    public void showSettings(MenuItem item) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
     }
 
     private void logoutUser() {

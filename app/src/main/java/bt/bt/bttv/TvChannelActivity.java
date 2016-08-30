@@ -3,11 +3,8 @@ package bt.bt.bttv;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,8 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +21,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
-import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +31,6 @@ import java.util.HashMap;
 
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.helper.SessionManager;
 
 
 public class TvChannelActivity extends AppCompatActivity
@@ -59,41 +51,13 @@ public class TvChannelActivity extends AppCompatActivity
     JSONArray mvs = null;
     String[] mbThumbIds2 = new String[40];
     Integer[] mbThumbIds3 = new Integer[40];
-    int[] sampleImages = {R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4};
-    CarouselView carouselView;
-    ImageListener imageListener = new ImageListener() {
-
-        @Override
-        public void setImageForPosition(int position, ImageView imageView) {
-            imageView.setImageResource(sampleImages[position]);
-        }
-    };
-
     private SQLiteHandler db;
-    private SessionManager session;
     private ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String jsondata = null;
 
-        /* Threading */
-
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
-        /* End Threading */
-
-        if (getResources().getBoolean(R.bool.portrait_only)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
         cd = new ConnectionDetector(this);
 
         setContentView(R.layout.activity_sports);
@@ -134,11 +98,6 @@ public class TvChannelActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -196,6 +155,9 @@ public class TvChannelActivity extends AppCompatActivity
             Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
 
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(this, SettingsActivity.class));
+
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(TvChannelActivity.this, WebViewActivity.class);
             intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
@@ -212,12 +174,6 @@ public class TvChannelActivity extends AppCompatActivity
         return true;
     }
 
-
-    public void PlayMovies(View view) {
-
-        Intent intent = new Intent(this, MovieInnerActivity.class);
-        startActivity(intent);
-    }
 
     public void PlayMovie(Integer gid) {
 
@@ -257,17 +213,7 @@ public class TvChannelActivity extends AppCompatActivity
                     String m_genres = c.getString(TAG_VIDEO_GENRES);
                     Log.i("Movies 425 ", "> " + m_title);
 
-
-// Phone node is JSON Object
-                    //JSONObject phone = c.getJSONObject(TAG_STUDENT_PHONE);
-                    //String mobile = phone.getString(TAG_STUDENT_PHONE_MOBILE);
-                    //String home = phone.getString(TAG_STUDENT_PHONE_HOME);
-
-// tmp hashmap for single student
                     HashMap<String, String> movie = new HashMap<String, String>();
-
-
-// adding every child node to HashMap key => value
                     movie.put(TAG_VIDEO_ID, m_id);
                     movie.put(TAG_VIDEO_TITLE, m_title);
                     movie.put(TAG_VIDEO_CATEGORY, m_category);
@@ -297,11 +243,6 @@ public class TvChannelActivity extends AppCompatActivity
             Log.e("ServiceHandler", "No data received from HTTP Request");
             return null;
         }
-    }
-
-    public void showSettings(MenuItem item) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
     }
 
     public class ImageAdapter extends BaseAdapter {

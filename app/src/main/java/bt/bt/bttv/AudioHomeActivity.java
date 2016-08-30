@@ -19,7 +19,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Display;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -129,13 +128,6 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -189,6 +181,10 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.nav_myacc) {
             Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
+
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(this, SettingsActivity.class));
+
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", getString(R.string.url_terms));
@@ -205,11 +201,6 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
-    }
-
-    public void showSettings(MenuItem item) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
     }
 
     private void inflateData() {

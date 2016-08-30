@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -134,13 +133,6 @@ public class AudioActivity extends AppCompatActivity implements NavigationView.O
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -194,6 +186,10 @@ public class AudioActivity extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_myacc) {
             Intent intent = new Intent(this, MyPreferencesActivity.class);
             startActivity(intent);
+
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(this, SettingsActivity.class));
+
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
             intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
@@ -209,10 +205,5 @@ public class AudioActivity extends AppCompatActivity implements NavigationView.O
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
-    }
-
-    public void showSettings(MenuItem item) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
     }
 }
