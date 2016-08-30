@@ -37,7 +37,7 @@ import bt.bt.bttv.model.DrawerCategoriesModel;
 import bt.bt.bttv.model.HomeCategoryModel;
 import bt.bt.bttv.model.MovieModel;
 import bt.bt.bttv.model.VideosModel;
-import bt.bt.bttv.model.WatchLater;
+import bt.bt.bttv.model.WatchLaterModel;
 
 /**
  * Created by Sachin on 8/28/2016.
@@ -206,7 +206,7 @@ public class HomeFragment extends Fragment {
                 Gson gson = new Gson();
                 videosModelsList = gson.fromJson(jsonObject.getJSONArray("videos").toString(), new TypeToken<List<VideosModel>>() {
                 }.getType());
-                WatchLater.videoModelList = videosModelsList;
+                WatchLaterModel.videoModelList = videosModelsList;
                 inflateData1();
             } catch (JSONException e) {
                 e.printStackTrace();

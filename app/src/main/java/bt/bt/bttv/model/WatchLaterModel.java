@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Sachin on 8/30/2016.
  */
-public class WatchLater {
+public class WatchLaterModel {
 
     public static ArrayList<String> audioIdList = new ArrayList<>();
     public static ArrayList<String> videoIdList = new ArrayList<>();

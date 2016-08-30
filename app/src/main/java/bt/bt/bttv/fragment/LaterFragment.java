@@ -31,7 +31,7 @@ import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.model.AudiosModel;
 import bt.bt.bttv.model.VideosModel;
-import bt.bt.bttv.model.WatchLater;
+import bt.bt.bttv.model.WatchLaterModel;
 
 
 public class LaterFragment extends Fragment {
@@ -66,23 +66,23 @@ public class LaterFragment extends Fragment {
 
     private void getWatchLaterLists() {
 
-        audiosModelList = WatchLater.audiosModelList;
-        videosModelList = WatchLater.videoModelList;
+        audiosModelList = WatchLaterModel.audiosModelList;
+        videosModelList = WatchLaterModel.videoModelList;
 
         List<AudiosModel> audiosModelListFiltered = new ArrayList<>();
         List<VideosModel> videoModelListFiltered = new ArrayList<>();
 
         for (int i = 0; i < audiosModelList.size(); i++) {
-            for (int j = 0; j < WatchLater.audioIdList.size(); j++) {
-                if (audiosModelList.get(i).getAudio_id().equals(WatchLater.audioIdList.get(j))) {
+            for (int j = 0; j < WatchLaterModel.audioIdList.size(); j++) {
+                if (audiosModelList.get(i).getAudio_id().equals(WatchLaterModel.audioIdList.get(j))) {
                     audiosModelListFiltered.add(audiosModelList.get(i));
                 }
             }
         }
 
         for (int i = 0; i < videosModelList.size(); i++) {
-            for (int j = 0; j < WatchLater.videoIdList.size(); j++) {
-                if (videosModelList.get(i).getVideo_id().equals(WatchLater.videoIdList.get(j))) {
+            for (int j = 0; j < WatchLaterModel.videoIdList.size(); j++) {
+                if (videosModelList.get(i).getVideo_id().equals(WatchLaterModel.videoIdList.get(j))) {
                     videoModelListFiltered.add(videosModelList.get(i));
                 }
             }
@@ -180,9 +180,9 @@ public class LaterFragment extends Fragment {
                 if (jsonObject.getString("success").equals("success")) {
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
                     if (jsonArray.length() > 0) {
-                        WatchLater.audioIdList.clear();
+                        WatchLaterModel.audioIdList.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            WatchLater.audioIdList.add(jsonArray.getJSONObject(i).getString("audio_id"));
+                            WatchLaterModel.audioIdList.add(jsonArray.getJSONObject(i).getString("audio_id"));
                         }
                     }
                 }
@@ -233,9 +233,9 @@ public class LaterFragment extends Fragment {
                 if (jsonObject.getString("success").equals("success")) {
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
                     if (jsonArray.length() > 0) {
-                        WatchLater.videoIdList.clear();
+                        WatchLaterModel.videoIdList.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            WatchLater.videoIdList.add(jsonArray.getJSONObject(i).getString("video_id"));
+                            WatchLaterModel.videoIdList.add(jsonArray.getJSONObject(i).getString("video_id"));
                         }
                     }
                 }
