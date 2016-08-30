@@ -73,6 +73,8 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
+        //        disables swipe between fragments
+        viewPager.beginFakeDrag();
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);

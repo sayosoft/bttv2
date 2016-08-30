@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -21,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bt.bt.bttv.R;
+import bt.bt.bttv.adapter.AudioHomeAdapter;
+import bt.bt.bttv.adapter.VideoHomeAdapter;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.model.AudiosModel;
@@ -56,6 +62,81 @@ public class LaterFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void getWatchLaterLists() {
+
+        audiosModelList = WatchLater.audiosModelList;
+        videosModelList = WatchLater.videoModelList;
+
+        List<AudiosModel> audiosModelListFiltered = new ArrayList<>();
+        List<VideosModel> videoModelListFiltered = new ArrayList<>();
+
+        for (int i = 0; i < audiosModelList.size(); i++) {
+            for (int j = 0; j < WatchLater.audioIdList.size(); j++) {
+                if (audiosModelList.get(i).getAudio_id().equals(WatchLater.audioIdList.get(j))) {
+                    audiosModelListFiltered.add(audiosModelList.get(i));
+                }
+            }
+        }
+
+        for (int i = 0; i < videosModelList.size(); i++) {
+            for (int j = 0; j < WatchLater.videoIdList.size(); j++) {
+                if (videosModelList.get(i).getVideo_id().equals(WatchLater.videoIdList.get(j))) {
+                    videoModelListFiltered.add(videosModelList.get(i));
+                }
+            }
+        }
+        setWatchLater(audiosModelListFiltered, videoModelListFiltered);
+    }
+
+    private void setWatchLater(List<AudiosModel> audiosModelListFiltered, List<VideosModel> videoModelListFiltered) {
+
+        if (videoModelListFiltered.size() > 0) {
+            RecyclerView recyclerView = new RecyclerView(getActivity());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            recyclerView.setLayoutParams(params);
+            params.setMargins(5, 0, 5, 0);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(mLayoutManager);
+
+            VideoHomeAdapter videoHomeAdapter = new VideoHomeAdapter(getActivity(), videoModelListFiltered);
+            recyclerView.setAdapter(videoHomeAdapter);
+
+            TextView tvTitle = new TextView(getActivity());
+            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tvTitle.setLayoutParams(params1);
+            params1.setMargins(10, 10, 0, 0);
+            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+            tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+            tvTitle.setText("Videos");
+
+            llMain.addView(tvTitle);
+            llMain.addView(recyclerView);
+        }
+
+        if (audiosModelListFiltered.size() > 0) {
+            RecyclerView recyclerView = new RecyclerView(getActivity());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            recyclerView.setLayoutParams(params);
+            params.setMargins(5, 0, 5, 0);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(mLayoutManager);
+
+            AudioHomeAdapter audioHomeAdapter = new AudioHomeAdapter(getActivity(), audiosModelListFiltered);
+            recyclerView.setAdapter(audioHomeAdapter);
+
+            TextView tvTitle = new TextView(getActivity());
+            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tvTitle.setLayoutParams(params1);
+            params1.setMargins(10, 10, 0, 0);
+            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+            tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+            tvTitle.setText("Audios");
+
+            llMain.addView(tvTitle);
+            llMain.addView(recyclerView);
+        }
     }
 
     private class GetWatchLaterAudios extends AsyncTask<String, Void, String> {
@@ -99,6 +180,7 @@ public class LaterFragment extends Fragment {
                 if (jsonObject.getString("success").equals("success")) {
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
                     if (jsonArray.length() > 0) {
+                        WatchLater.audioIdList.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             WatchLater.audioIdList.add(jsonArray.getJSONObject(i).getString("audio_id"));
                         }
@@ -151,6 +233,7 @@ public class LaterFragment extends Fragment {
                 if (jsonObject.getString("success").equals("success")) {
                     JSONArray jsonArray = jsonObject.getJSONArray("result");
                     if (jsonArray.length() > 0) {
+                        WatchLater.videoIdList.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             WatchLater.videoIdList.add(jsonArray.getJSONObject(i).getString("video_id"));
                         }
@@ -159,9 +242,7 @@ public class LaterFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            audiosModelList = WatchLater.audiosModelList;
-            videosModelList = WatchLater.videoModelList;
-
+            getWatchLaterLists();
         }
     }
 
