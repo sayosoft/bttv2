@@ -318,31 +318,31 @@ public class MovieActivity extends AppCompatActivity
     public void MovieGenres(View view) {
         switch (view.getId()) {
             case R.id.button2:
-                Intent intent = new Intent(this, MoviesGenreActivity.class);
+                Intent intent = new Intent(this, GenreActivity.class);
                 intent.putExtra("gid", 1);
                 intent.putExtra("title", "Action Movies");
                 startActivity(intent);
                 break;
             case R.id.button3:
-                Intent intent2 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent2 = new Intent(this, GenreActivity.class);
                 intent2.putExtra("gid", 3);
                 intent2.putExtra("title", "Comedy Movies");
                 startActivity(intent2);
                 break;
             case R.id.button4:
-                Intent intent3 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent3 = new Intent(this, GenreActivity.class);
                 intent3.putExtra("gid", 5);
                 intent3.putExtra("title", "Drama Movies");
                 startActivity(intent3);
                 break;
             case R.id.button5:
-                Intent intent4 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent4 = new Intent(this, GenreActivity.class);
                 intent4.putExtra("gid", 7);
                 intent4.putExtra("title", "Documentaries");
                 startActivity(intent4);
                 break;
             case R.id.button6:
-                Intent intent5 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent5 = new Intent(this, GenreActivity.class);
                 intent5.putExtra("gid", 9);
                 intent5.putExtra("title", "Thriller Movies");
                 startActivity(intent5);

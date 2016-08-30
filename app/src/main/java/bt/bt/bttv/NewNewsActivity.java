@@ -284,19 +284,19 @@ public class NewNewsActivity extends AppCompatActivity
     public void MovieGenres(View view) {
         switch (view.getId()) {
             case R.id.button2:
-                Intent intent = new Intent(this, MoviesGenreActivity.class);
+                Intent intent = new Intent(this, GenreActivity.class);
                 intent.putExtra("gid", 98);
                 intent.putExtra("title", "Local News");
                 startActivity(intent);
                 break;
             case R.id.button3:
-                Intent intent2 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent2 = new Intent(this, GenreActivity.class);
                 intent2.putExtra("gid", 99);
                 intent2.putExtra("title", "Global News");
                 startActivity(intent2);
                 break;
             case R.id.button4:
-                Intent intent3 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent3 = new Intent(this, GenreActivity.class);
                 intent3.putExtra("gid", 100);
                 intent3.putExtra("title", "Business News");
                 startActivity(intent3);

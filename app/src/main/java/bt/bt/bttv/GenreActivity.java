@@ -34,11 +34,8 @@ import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.DrawerCategoriesModel;
 import bt.bt.bttv.model.VideosModel;
 
-/**
- * Created by Sachin on 8/23/2016.
- */
 
-public class AudioHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class GenreActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public SharedPreferences settings;
     private LinearLayout llMain;
@@ -63,7 +60,7 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
 
 //        setContentView(R.layout.activity_home_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Audios");
+        toolbar.setTitle("Genre");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,8 +73,6 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        //        disables swipe between fragments
-        viewPager.beginFakeDrag();
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -88,7 +83,7 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
 //        send content type to fragment
-        GlobleMethods.content_type = "Audio";
+        GlobleMethods.content_type = "Genre";
 
         adapter.addFragment(new HomeFragment(), "Popular");
         adapter.addFragment(new LaterFragment(), "Later");
@@ -263,3 +258,6 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         }
     }*/
 }
+
+
+

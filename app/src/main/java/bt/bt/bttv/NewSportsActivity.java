@@ -292,25 +292,25 @@ public class NewSportsActivity extends AppCompatActivity
 
         switch (view.getId()) {
             case R.id.button2:
-                Intent intent = new Intent(this, MoviesGenreActivity.class);
+                Intent intent = new Intent(this, GenreActivity.class);
                 intent.putExtra("gid", 33);
                 intent.putExtra("title", "Cricket");
                 startActivity(intent);
                 break;
             case R.id.button3:
-                Intent intent2 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent2 = new Intent(this, GenreActivity.class);
                 intent2.putExtra("gid", 34);
                 intent2.putExtra("title", "Football");
                 startActivity(intent2);
                 break;
             case R.id.button4:
-                Intent intent3 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent3 = new Intent(this, GenreActivity.class);
                 intent3.putExtra("gid", 35);
                 intent3.putExtra("title", "Tennis");
                 startActivity(intent3);
                 break;
             case R.id.button5:
-                Intent intent4 = new Intent(this, MoviesGenreActivity.class);
+                Intent intent4 = new Intent(this, GenreActivity.class);
                 intent4.putExtra("gid", 32);
                 intent4.putExtra("title", "Basketball");
                 startActivity(intent4);

@@ -20,9 +20,12 @@ public class GlobleMethods {
     public static final String logFlag = "logFlag";
     public static MediaPlayer mp = new MediaPlayer();
     public static String content_type = "";
+    public static String genre_type = "";
+    public static String category_id = "";
     public SharedPreferences settings;
     private Context _context;
     private SQLiteHandler db;
+
 
     public GlobleMethods(Context context) {
         this._context = context;
