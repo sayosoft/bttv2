@@ -78,14 +78,6 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        /*llMain = (LinearLayout) findViewById(R.id.llMain);
-        if (cd.isConnectingToInternet()) {
-            getAudioCategories(SplashScreen.drawerCategoriesModelsList);
-        } else {
-            Toast.makeText(VideoHomeActivity.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
-        }
-*/
     }
 
     private void setupViewPager(ViewPager viewPager) {

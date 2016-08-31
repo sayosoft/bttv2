@@ -124,7 +124,7 @@ public class TvChannelActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_audio) {
-            Intent intent = new Intent(this, AudioActivity.class);
+            Intent intent = new Intent(this, AudioHomeActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_tv) {

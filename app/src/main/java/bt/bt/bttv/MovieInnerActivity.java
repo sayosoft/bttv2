@@ -325,7 +325,10 @@ public class MovieInnerActivity extends AppCompatActivity {
                 JSONArray relatedVideos;
                 try {
                     movies = jsonObj.getJSONArray(TAG_VIDEO_INFO);
-                    relatedVideos = jsonObj.getJSONArray(TAG_VIDEO_RELATED_INFO);
+                    if (jsonObj.has(TAG_VIDEO_RELATED_INFO))
+                        relatedVideos = jsonObj.getJSONArray(TAG_VIDEO_RELATED_INFO);
+                    else
+                        relatedVideos = null;
                     Log.i("CategoriesObj 410: ", "> " + movies);
                 } catch (JSONException e) {
                     movies = null;
@@ -411,6 +414,7 @@ public class MovieInnerActivity extends AppCompatActivity {
         ArrayList<HashMap<String, String>> moviesList;
         ProgressDialog proDialog;
         String TestMovies = null;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

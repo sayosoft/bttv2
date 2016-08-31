@@ -38,10 +38,12 @@ import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.model.AudiosModel;
 import bt.bt.bttv.model.DrawerCategoriesModel;
+import bt.bt.bttv.model.GenreModel;
 import bt.bt.bttv.model.HomeCategoryModel;
 import bt.bt.bttv.model.MovieModel;
 import bt.bt.bttv.model.VideosModel;
 import bt.bt.bttv.model.WatchLaterModel;
+import io.vov.vitamio.utils.Log;
 
 /**
  * Created by Sachin on 8/28/2016.
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment {
     private ConnectionDetector cd;
     private List<HomeCategoryModel> homeCategoryModels;
     private List<AudiosModel> audiosModelsList;
+    private List<GenreModel> genreModelsList;
     private List<MovieModel> movieModels;
     private JSONObject jsonObject;
     private List<DrawerCategoriesModel> drawerCategoriesModelList;
@@ -102,11 +105,12 @@ public class HomeFragment extends Fragment {
     private void getAudioCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
 
         drawerCategoriesModelList = new ArrayList<>();
-        for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
-            if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("AoD")) {
-                drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
+        if (drawerCategoriesModelsLists != null)
+            for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
+                if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("AoD")) {
+                    drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
+                }
             }
-        }
         if (cd.isConnectingToInternet()) {
             new GetAudio().execute();
         } else {
@@ -117,12 +121,97 @@ public class HomeFragment extends Fragment {
     private void getVideoCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
 
         drawerCategoriesModelList = new ArrayList<>();
-        for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
-            if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("VoD")) {
-                drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
+        if (drawerCategoriesModelsLists != null)
+            for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
+                if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("VoD")) {
+                    drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
+                }
             }
-        }
         new GetVideo().execute();
+    }
+
+    private void inflateDataGenreVoD() {
+        HashMap<Integer, List<VideosModel>> stringListHashMap = new HashMap<>();
+        videosModelsList = WatchLaterModel.videoModelList;
+        for (int i = 0; i < genreModelsList.size(); i++) {
+            List<VideosModel> videosModelsList1 = new ArrayList<>();
+            for (int j = 0; j < videosModelsList.size(); j++) {
+                if (genreModelsList.get(i).getGenre_id().equals(videosModelsList.get(j).getVideo_genre())) {
+                    videosModelsList1.add(videosModelsList.get(j));
+                }
+            }
+            if (videosModelsList1 != null)
+                if (videosModelsList1.size() > 0) {
+                    RecyclerView recyclerView = new RecyclerView(getActivity());
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    recyclerView.setLayoutParams(params);
+                    params.setMargins(5, 0, 5, 0);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    recyclerView.setLayoutManager(mLayoutManager);
+
+                    stringListHashMap.put(i, videosModelsList1);
+                    VideoHomeAdapter audioHomeAdapter = new VideoHomeAdapter(getActivity(), stringListHashMap.get(i));
+                    recyclerView.setAdapter(audioHomeAdapter);
+                    final int finalI = i;
+                    TextView tvTitle = new TextView(getActivity());
+                    LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    tvTitle.setLayoutParams(params1);
+                    params1.setMargins(10, 10, 0, 0);
+                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+                    tvTitle.setText(genreModelsList.get(i).getGenre_name());
+
+                    llMain.addView(tvTitle);
+                    llMain.addView(recyclerView);
+                }
+        }
+    }
+
+    private void inflateDataGenreAoD() {
+
+        HashMap<Integer, List<AudiosModel>> stringListHashMap = new HashMap<>();
+        audiosModelsList = WatchLaterModel.audiosModelList;
+        for (int i = 0; i < genreModelsList.size(); i++) {
+            List<AudiosModel> audiosModelsList1 = new ArrayList<>();
+            for (int j = 0; j < audiosModelsList.size(); j++) {
+                if (genreModelsList.get(i).getGenre_id().equals(audiosModelsList.get(j).getAudio_genre())) {
+                    audiosModelsList1.add(audiosModelsList.get(j));
+                }
+            }
+            if (audiosModelsList1 != null)
+                if (audiosModelsList1.size() > 0) {
+                    RecyclerView recyclerView = new RecyclerView(getActivity());
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    recyclerView.setLayoutParams(params);
+                    params.setMargins(5, 0, 5, 0);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    recyclerView.setLayoutManager(mLayoutManager);
+
+                    stringListHashMap.put(i, audiosModelsList1);
+                    AudioHomeAdapter audioHomeAdapter = new AudioHomeAdapter(getActivity(), stringListHashMap.get(i));
+                    recyclerView.setAdapter(audioHomeAdapter);
+                    final int finalI = i;
+                    TextView tvTitle = new TextView(getActivity());
+                    LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    tvTitle.setLayoutParams(params1);
+                    params1.setMargins(10, 10, 0, 0);
+                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+                    tvTitle.setText(genreModelsList.get(i).getGenre_name());
+
+            /*TextView  tvSubTitle= new TextView(AudioHomeActivity.this);
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tvSubTitle.setLayoutParams(params2);
+            params2.setMargins(10,5,0,0);
+            tvSubTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            tvSubTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+            tvSubTitle.setText(homeCategoryModels.get(i).getHomepage_subtitle());*/
+
+                    llMain.addView(tvTitle);
+//            llMain.addView(tvSubTitle);
+                    llMain.addView(recyclerView);
+                }
+        }
     }
 
     private void inflateDataMovies() {
@@ -310,11 +399,24 @@ public class HomeFragment extends Fragment {
         protected void onPostExecute(String result) {
             if (pDialog.isShowing())
                 pDialog.dismiss();
-//            Gson gson = new Gson();
-//            audiosModelsList = gson.fromJson(result.toString(), new TypeToken<List<AudiosModel>>() {
-//            }.getType());
-//
-//            inflateDataAudio();
+            Log.d("Genre Data", result);
+            if (genreModelsList != null) {
+                genreModelsList.clear();
+            }
+            try {
+                JSONObject jb = new JSONObject(result);
+                Gson gson = new Gson();
+                genreModelsList = gson.fromJson(jb.getJSONArray("genres").toString(), new TypeToken<List<GenreModel>>() {
+                }.getType());
+                if (GlobleMethods.genre_type.equals("VoD")) {
+                    inflateDataGenreVoD();
+                } else if (GlobleMethods.genre_type.equals("AoD")) {
+                    inflateDataGenreAoD();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

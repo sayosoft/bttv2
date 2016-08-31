@@ -209,9 +209,6 @@
         </activity>
         <activity android:name=".WebViewActivity" />
         <activity
-            android:name=".AudioActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".PlayAudio"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

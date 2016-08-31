@@ -76,8 +76,6 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        //        disables swipe between fragments
-        viewPager.beginFakeDrag();
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);

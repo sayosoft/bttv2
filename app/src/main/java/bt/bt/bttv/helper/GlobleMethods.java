@@ -26,7 +26,6 @@ public class GlobleMethods {
     private Context _context;
     private SQLiteHandler db;
 
-
     public GlobleMethods(Context context) {
         this._context = context;
     }
