@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,10 +21,11 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:padding="5dp"
             android:text="WATCH LIVE TV, LISTEN TO RADIO,MOVIES AND TV SHOWS ANYTIME AND ANYWHERE"
+            android:textAlignment="center"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -42,18 +42,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="horizontal">
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:padding="5dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="2"
+                android:padding="5dp"
                 android:text="User Name"
                 android:textColor="#000"
                 android:textSize="17sp"
@@ -64,10 +64,12 @@
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginRight="15dp"
+                android:layout_weight="1"
                 android:background="@drawable/btn_bg"
+                android:gravity="center"
                 android:hint="User Name"
+                android:maxLines="1"
                 android:padding="15dp" />
 
         </LinearLayout>
@@ -76,19 +78,19 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="horizontal">
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:padding="5dp"
                 android:text="Password"
-                android:layout_marginLeft="15dp"
                 android:textColor="#000"
                 android:textSize="17sp"
                 android:textStyle="bold" />
@@ -98,10 +100,13 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginRight="15dp"
+                android:layout_weight="1"
                 android:background="@drawable/btn_bg"
+                android:gravity="center"
                 android:hint="Password"
+                android:inputType="textPassword"
+                android:maxLines="1"
                 android:padding="15dp" />
 
         </LinearLayout>
@@ -111,11 +116,11 @@
             android:id="@+id/btnLogin"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
             android:layout_gravity="center"
-            android:textColor="@color/white"
+            android:layout_margin="20dp"
             android:background="@drawable/login_bg"
-            android:text="Login" />
+            android:text="Login"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/textView5"
@@ -130,11 +135,11 @@
             android:id="@+id/btnLinkToRegisterScreen"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
             android:layout_gravity="center"
-            android:textColor="@color/white"
+            android:layout_margin="20dp"
             android:background="@drawable/sign_up_bg"
-            android:text="Sign-Up" />
+            android:text="Sign-Up"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
