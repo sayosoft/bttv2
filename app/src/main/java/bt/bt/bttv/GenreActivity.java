@@ -83,7 +83,6 @@ public class GenreActivity extends AppCompatActivity implements NavigationView.O
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
 //        send content type to fragment
-        GlobleMethods.content_type = "Genre";
 
         adapter.addFragment(new HomeFragment(), "Popular");
         adapter.addFragment(new LaterFragment(), "Later");

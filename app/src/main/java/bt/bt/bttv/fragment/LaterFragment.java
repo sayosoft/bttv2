@@ -55,7 +55,10 @@ public class LaterFragment extends Fragment {
         llMain = (LinearLayout) view.findViewById(R.id.llMain);
 
         if (cd.isConnectingToInternet()) {
-            new GetWatchLaterAudios().execute();
+            if (WatchLaterModel.audioIdList.size() == 0)
+                new GetWatchLaterAudios().execute();
+            else
+                getWatchLaterLists();
         } else {
             Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
         }
@@ -189,8 +192,8 @@ public class LaterFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            new GetWatchLaterVideos().execute();
+            if (WatchLaterModel.videoIdList.size() == 0)
+                new GetWatchLaterVideos().execute();
         }
     }
 

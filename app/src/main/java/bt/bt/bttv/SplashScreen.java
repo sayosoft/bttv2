@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -15,8 +16,12 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.HTTPURLConnection;
+import bt.bt.bttv.model.AudiosModel;
 import bt.bt.bttv.model.DrawerCategoriesModel;
+import bt.bt.bttv.model.VideosModel;
+import bt.bt.bttv.model.WatchLaterModel;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -26,14 +31,22 @@ public class SplashScreen extends AppCompatActivity {
     private ProgressDialog pDialog;
     private HTTPURLConnection service;
     private JSONObject jsonObject;
+    private List<VideosModel> videosModelsList;
+    private List<AudiosModel> audiosModelsList;
+    private ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        new GetDrawerCategories().execute();
+        cd = new ConnectionDetector(SplashScreen.this);
 
+        if (cd.isConnectingToInternet()) {
+            new GetDrawerCategories().execute();
+        } else {
+            Toast.makeText(SplashScreen.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
+        }
         new Handler().postDelayed(new Runnable() {
 
             /*
@@ -45,9 +58,7 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashScreen.this, LoginActivity.class);
-                startActivity(i);
-
+                startActivity(new Intent(SplashScreen.this, LoginActivity.class));
                 // close this activity
                 finish();
             }
@@ -74,10 +85,75 @@ public class SplashScreen extends AppCompatActivity {
                 Gson gson = new Gson();
                 drawerCategoriesModelsList = gson.fromJson(jsonObject.getJSONArray("categories").toString(), new TypeToken<List<DrawerCategoriesModel>>() {
                 }.getType());
-
+                new GetVideo().execute();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    private class GetVideo extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            service = new HTTPURLConnection();
+            pDialog = new ProgressDialog(SplashScreen.this);
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... result) {
+            return service.ServerData(getResources().getString(R.string.url_get_video));
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+            try {
+                jsonObject = new JSONObject(result);
+                Gson gson = new Gson();
+                videosModelsList = gson.fromJson(jsonObject.getJSONArray("videos").toString(), new TypeToken<List<VideosModel>>() {
+                }.getType());
+                WatchLaterModel.videoModelList = videosModelsList;
+                new GetAudio().execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private class GetAudio extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            service = new HTTPURLConnection();
+            pDialog = new ProgressDialog(SplashScreen.this);
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... result) {
+            return service.ServerData(getResources().getString(R.string.url_audio));
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+            Gson gson = new Gson();
+            audiosModelsList = gson.fromJson(result.toString(), new TypeToken<List<AudiosModel>>() {
+            }.getType());
+            WatchLaterModel.audiosModelList = audiosModelsList;
+        }
+    }
+
 }

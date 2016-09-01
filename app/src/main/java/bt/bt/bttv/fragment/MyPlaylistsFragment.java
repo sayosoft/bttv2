@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -29,13 +31,15 @@ import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.model.MyPlayListModel;
 
 
-public class MyPlaylistsFragment extends Fragment {
+public class MyPlaylistsFragment extends Fragment implements View.OnClickListener {
 
     public static final String PREFS_NAME = "MyPrefs";
     public SharedPreferences settings;
     RecyclerView rvMyPlayList;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
+    EditText etPlayListName;
+    Button btnAddPlayList;
     private LinearLayout llMain;
     private ProgressDialog pDialog;
     private HTTPURLConnection service;
@@ -54,16 +58,36 @@ public class MyPlaylistsFragment extends Fragment {
         rvMyPlayList = (RecyclerView) view.findViewById(R.id.rvMyPlayList);
         rvMyPlayList.setHasFixedSize(true);
 
+        etPlayListName = (EditText) view.findViewById(R.id.etPlayListName);
+        btnAddPlayList = (Button) view.findViewById(R.id.btnAddPlayList);
+        btnAddPlayList.setOnClickListener(this);
         // The number of Columns
         mLayoutManager = new GridLayoutManager(getActivity(), 1);
         rvMyPlayList.setLayoutManager(mLayoutManager);
 
         if (cd.isConnectingToInternet()) {
-            new GetPlayLists().execute();
+            if (myPlayListModelList == null) {
+                new GetPlayLists().execute();
+            } else {
+                mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModelList);
+                rvMyPlayList.setAdapter(mAdapter);
+            }
         } else {
             Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
         }
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnAddPlayList:
+                if (etPlayListName.getText().length() > 0) {
+
+                } else
+                    Toast.makeText(getActivity(), "Please enter playlist name", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private class GetPlayLists extends AsyncTask<String, Void, String> {

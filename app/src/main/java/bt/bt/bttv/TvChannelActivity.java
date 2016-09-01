@@ -70,7 +70,7 @@ public class TvChannelActivity extends AppCompatActivity
 
         // addImagesToThegallery();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("TV Channels");
+        toolbar.setTitle("Live TV");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -21,6 +21,7 @@ public class GlobleMethods {
     public static MediaPlayer mp = new MediaPlayer();
     public static String content_type = "";
     public static String genre_type = "";
+    public static String genre_name = "";
     public static String category_id = "";
     public SharedPreferences settings;
     private Context _context;

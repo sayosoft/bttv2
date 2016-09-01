@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -68,6 +69,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        videosModelsList = WatchLaterModel.videoModelList;
+        audiosModelsList = WatchLaterModel.audiosModelList;
+
         cd = new ConnectionDetector(getActivity());
         settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
@@ -76,7 +80,10 @@ public class HomeFragment extends Fragment {
 
         if (GlobleMethods.content_type.equals("Movies")) {
             if (cd.isConnectingToInternet()) {
-                new GetHomeContentCategory().execute();
+                if (homeCategoryModels == null)
+                    new GetHomeContentCategory().execute();
+                else
+                    inflateDataMovies();
             } else {
                 Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
             }
@@ -98,6 +105,16 @@ public class HomeFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
             }
+        } else if (GlobleMethods.content_type.equals("GenreSong")) {
+            if (cd.isConnectingToInternet()) {
+                if (GlobleMethods.genre_type.equals("VoD")) {
+                    inflateDataOneGenreVoD();
+                } else if (GlobleMethods.genre_type.equals("AoD")) {
+                    inflateDataOneGenreAoD();
+                }
+            } else {
+                Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
+            }
         }
         return view;
     }
@@ -111,11 +128,7 @@ public class HomeFragment extends Fragment {
                     drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
                 }
             }
-        if (cd.isConnectingToInternet()) {
-            new GetAudio().execute();
-        } else {
-            Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
-        }
+        inflateDataAudio();
     }
 
     private void getVideoCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
@@ -127,8 +140,80 @@ public class HomeFragment extends Fragment {
                     drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
                 }
             }
-        new GetVideo().execute();
+        inflateDataVideos();
     }
+
+    private void inflateDataOneGenreAoD() {
+
+        HashMap<Integer, List<AudiosModel>> stringListHashMap = new HashMap<>();
+        audiosModelsList = WatchLaterModel.audiosModelList;
+        List<AudiosModel> audiosModelsList1 = new ArrayList<>();
+        for (int j = 0; j < audiosModelsList.size(); j++) {
+            if (GlobleMethods.category_id.equals(audiosModelsList.get(j).getAudio_genre())) {
+                audiosModelsList1.add(audiosModelsList.get(j));
+            }
+        }
+        if (audiosModelsList1 != null)
+            if (audiosModelsList1.size() > 0) {
+                RecyclerView recyclerView = new RecyclerView(getActivity());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                recyclerView.setLayoutParams(params);
+                params.setMargins(5, 0, 5, 0);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(recyclerView.getContext(), 2);
+                recyclerView.setLayoutManager(mLayoutManager);
+
+                stringListHashMap.put(0, audiosModelsList1);
+                AudioHomeAdapter audioHomeAdapter = new AudioHomeAdapter(getActivity(), stringListHashMap.get(0));
+                recyclerView.setAdapter(audioHomeAdapter);
+                TextView tvTitle = new TextView(getActivity());
+
+                LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvTitle.setLayoutParams(params1);
+                params1.setMargins(10, 10, 0, 0);
+                tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+
+                llMain.addView(tvTitle);
+                llMain.addView(recyclerView);
+            }
+    }
+
+    private void inflateDataOneGenreVoD() {
+        HashMap<Integer, List<VideosModel>> stringListHashMap = new HashMap<>();
+        videosModelsList = WatchLaterModel.videoModelList;
+        List<VideosModel> videosModelsList1 = new ArrayList<>();
+        for (int j = 0; j < videosModelsList.size(); j++) {
+            Log.e(GlobleMethods.category_id + "  " + videosModelsList.get(j).getVideo_genre());
+            if (GlobleMethods.category_id.equals(videosModelsList.get(j).getVideo_genre())) {
+                videosModelsList1.add(videosModelsList.get(j));
+            }
+        }
+        if (videosModelsList1 != null)
+            if (videosModelsList1.size() > 0) {
+                RecyclerView recyclerView = new RecyclerView(getActivity());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                recyclerView.setLayoutParams(params);
+                params.setMargins(5, 0, 5, 0);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(recyclerView.getContext(), 2);
+                recyclerView.setLayoutManager(mLayoutManager);
+
+                stringListHashMap.put(0, videosModelsList1);
+                VideoHomeAdapter audioHomeAdapter = new VideoHomeAdapter(getActivity(), stringListHashMap.get(0));
+                recyclerView.setAdapter(audioHomeAdapter);
+                TextView tvTitle = new TextView(getActivity());
+
+                LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvTitle.setLayoutParams(params1);
+                params1.setMargins(10, 10, 0, 0);
+                tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+                tvTitle.setText(GlobleMethods.genre_name);
+
+                llMain.addView(tvTitle);
+                llMain.addView(recyclerView);
+            }
+    }
+
 
     private void inflateDataGenreVoD() {
         HashMap<Integer, List<VideosModel>> stringListHashMap = new HashMap<>();
@@ -154,6 +239,17 @@ public class HomeFragment extends Fragment {
                     recyclerView.setAdapter(audioHomeAdapter);
                     final int finalI = i;
                     TextView tvTitle = new TextView(getActivity());
+                    tvTitle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            GlobleMethods.content_type = "GenreSong";
+                            GlobleMethods.genre_name = genreModelsList.get(finalI).getGenre_name();
+                            GlobleMethods.genre_type = "AoD";
+                            GlobleMethods.category_id = genreModelsList.get(finalI).getGenre_id();
+                            Intent genre = new Intent(getActivity(), GenreActivity.class);
+                            startActivity(genre);
+                        }
+                    });
                     LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     tvTitle.setLayoutParams(params1);
                     params1.setMargins(10, 10, 0, 0);
@@ -192,6 +288,17 @@ public class HomeFragment extends Fragment {
                     recyclerView.setAdapter(audioHomeAdapter);
                     final int finalI = i;
                     TextView tvTitle = new TextView(getActivity());
+                    tvTitle.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            GlobleMethods.content_type = "GenreSong";
+                            GlobleMethods.genre_type = "AoD";
+                            GlobleMethods.genre_name = genreModelsList.get(finalI).getGenre_name();
+                            GlobleMethods.category_id = genreModelsList.get(finalI).getGenre_id();
+                            Intent genre = new Intent(getActivity(), GenreActivity.class);
+                            startActivity(genre);
+                        }
+                    });
                     LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     tvTitle.setLayoutParams(params1);
                     params1.setMargins(10, 10, 0, 0);
@@ -445,7 +552,7 @@ public class HomeFragment extends Fragment {
             audiosModelsList = gson.fromJson(result.toString(), new TypeToken<List<AudiosModel>>() {
             }.getType());
             WatchLaterModel.audiosModelList = audiosModelsList;
-            inflateDataAudio();
+
         }
     }
 
@@ -476,8 +583,7 @@ public class HomeFragment extends Fragment {
                 Gson gson = new Gson();
                 videosModelsList = gson.fromJson(jsonObject.getJSONArray("videos").toString(), new TypeToken<List<VideosModel>>() {
                 }.getType());
-                WatchLaterModel.videoModelList = videosModelsList;
-                inflateDataVideos();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
