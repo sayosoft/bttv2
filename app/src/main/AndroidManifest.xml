@@ -90,9 +90,6 @@
                 android:value="bt.bt.bttv.MovieActivity" />
         </activity>
         <activity
-            android:name=".TvShowActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".TvShowInnerActivity"
             android:hardwareAccelerated="false"
             android:label="TV Show Details">

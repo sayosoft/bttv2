@@ -110,7 +110,7 @@ public class MyFavoriteFragment extends Fragment {
             LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             tvTitle.setLayoutParams(params1);
             params1.setMargins(10, 10, 0, 0);
-            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
             tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
             tvTitle.setText("Videos");
 
@@ -133,7 +133,7 @@ public class MyFavoriteFragment extends Fragment {
             LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             tvTitle.setLayoutParams(params1);
             params1.setMargins(10, 10, 0, 0);
-            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
             tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
             tvTitle.setText("Audios");
 

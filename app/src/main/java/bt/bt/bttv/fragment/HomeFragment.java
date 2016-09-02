@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -170,7 +171,7 @@ public class HomeFragment extends Fragment {
                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 tvTitle.setLayoutParams(params1);
                 params1.setMargins(10, 10, 0, 0);
-                tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                 tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
 
                 llMain.addView(tvTitle);
@@ -205,7 +206,7 @@ public class HomeFragment extends Fragment {
                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 tvTitle.setLayoutParams(params1);
                 params1.setMargins(10, 10, 0, 0);
-                tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                 tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
                 tvTitle.setText(GlobleMethods.genre_name);
 
@@ -246,6 +247,7 @@ public class HomeFragment extends Fragment {
                             GlobleMethods.genre_name = genreModelsList.get(finalI).getGenre_name();
                             GlobleMethods.genre_type = "AoD";
                             GlobleMethods.category_id = genreModelsList.get(finalI).getGenre_id();
+                            GlobleMethods.toolbar_title = genreModelsList.get(finalI).getGenre_name();
                             Intent genre = new Intent(getActivity(), GenreActivity.class);
                             startActivity(genre);
                         }
@@ -253,7 +255,7 @@ public class HomeFragment extends Fragment {
                     LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     tvTitle.setLayoutParams(params1);
                     params1.setMargins(10, 10, 0, 0);
-                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                     tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
                     tvTitle.setText(genreModelsList.get(i).getGenre_name());
 
@@ -295,6 +297,7 @@ public class HomeFragment extends Fragment {
                             GlobleMethods.genre_type = "AoD";
                             GlobleMethods.genre_name = genreModelsList.get(finalI).getGenre_name();
                             GlobleMethods.category_id = genreModelsList.get(finalI).getGenre_id();
+                            GlobleMethods.toolbar_title = genreModelsList.get(finalI).getGenre_name();
                             Intent genre = new Intent(getActivity(), GenreActivity.class);
                             startActivity(genre);
                         }
@@ -302,20 +305,11 @@ public class HomeFragment extends Fragment {
                     LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     tvTitle.setLayoutParams(params1);
                     params1.setMargins(10, 10, 0, 0);
-                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                     tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
                     tvTitle.setText(genreModelsList.get(i).getGenre_name());
 
-            /*TextView  tvSubTitle= new TextView(AudioHomeActivity.this);
-            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvSubTitle.setLayoutParams(params2);
-            params2.setMargins(10,5,0,0);
-            tvSubTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            tvSubTitle.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvSubTitle.setText(homeCategoryModels.get(i).getHomepage_subtitle());*/
-
                     llMain.addView(tvTitle);
-//            llMain.addView(tvSubTitle);
                     llMain.addView(recyclerView);
                 }
         }
@@ -354,6 +348,7 @@ public class HomeFragment extends Fragment {
                     GlobleMethods.content_type = "Genre";
                     GlobleMethods.genre_type = "VoD";
                     GlobleMethods.category_id = homeCategoryModels.get(finalI).getHomepage_id();
+                    GlobleMethods.toolbar_title = homeCategoryModels.get(finalI).getHomepage_title();
                     Intent genre = new Intent(getActivity(), GenreActivity.class);
                     startActivity(genre);
                 }
@@ -411,6 +406,7 @@ public class HomeFragment extends Fragment {
                             GlobleMethods.content_type = "Genre";
                             GlobleMethods.genre_type = "VoD";
                             GlobleMethods.category_id = drawerCategoriesModelList.get(finalI).getCategory_id();
+                            GlobleMethods.toolbar_title = drawerCategoriesModelList.get(finalI).getCategory_title();
                             Intent genre = new Intent(getActivity(), GenreActivity.class);
                             startActivity(genre);
                         }
@@ -418,7 +414,7 @@ public class HomeFragment extends Fragment {
                     LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     tvTitle.setLayoutParams(params1);
                     params1.setMargins(10, 10, 0, 0);
-                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                     tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
                     tvTitle.setText(drawerCategoriesModelList.get(i).getCategory_title());
 
@@ -459,6 +455,7 @@ public class HomeFragment extends Fragment {
                             GlobleMethods.content_type = "Genre";
                             GlobleMethods.genre_type = "AoD";
                             GlobleMethods.category_id = drawerCategoriesModelList.get(finalI).getCategory_id();
+                            GlobleMethods.toolbar_title = drawerCategoriesModelList.get(finalI).getCategory_title();
                             Intent genre = new Intent(getActivity(), GenreActivity.class);
                             startActivity(genre);
                         }
@@ -466,20 +463,11 @@ public class HomeFragment extends Fragment {
                     LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     tvTitle.setLayoutParams(params1);
                     params1.setMargins(10, 10, 0, 0);
-                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                     tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
                     tvTitle.setText(drawerCategoriesModelList.get(i).getCategory_title());
 
-            /*TextView  tvSubTitle= new TextView(AudioHomeActivity.this);
-            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvSubTitle.setLayoutParams(params2);
-            params2.setMargins(10,5,0,0);
-            tvSubTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            tvSubTitle.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvSubTitle.setText(homeCategoryModels.get(i).getHomepage_subtitle());*/
-
                     llMain.addView(tvTitle);
-//            llMain.addView(tvSubTitle);
                     llMain.addView(recyclerView);
                 }
         }
@@ -520,70 +508,6 @@ public class HomeFragment extends Fragment {
                 } else if (GlobleMethods.genre_type.equals("AoD")) {
                     inflateDataGenreAoD();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    private class GetAudio extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            service = new HTTPURLConnection();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... result) {
-            return service.ServerData(getResources().getString(R.string.url_audio));
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            Gson gson = new Gson();
-            audiosModelsList = gson.fromJson(result.toString(), new TypeToken<List<AudiosModel>>() {
-            }.getType());
-            WatchLaterModel.audiosModelList = audiosModelsList;
-
-        }
-    }
-
-    private class GetVideo extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            service = new HTTPURLConnection();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... result) {
-            return service.ServerData(getResources().getString(R.string.url_get_video));
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-
-            try {
-                jsonObject = new JSONObject(result);
-                Gson gson = new Gson();
-                videosModelsList = gson.fromJson(jsonObject.getJSONArray("videos").toString(), new TypeToken<List<VideosModel>>() {
-                }.getType());
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

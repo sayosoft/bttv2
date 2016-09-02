@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Movies");
+        toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -79,10 +79,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, AudioHomeActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_tv) {
-            Intent intent = new Intent(this, TvShowActivity.class);
-            startActivity(intent);
-
         } else if (id == R.id.nav_home) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
@@ -92,8 +88,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
         } else if (id == R.id.nav_radio) {
-            //Intent intent = new Intent(this, RadioChannelActivity.class);
-            //startActivity(intent);
+            /*Intent intent = new Intent(this, RadioChannelActivity.class);
+            startActivity(intent);*/
 
         } else if (id == R.id.nav_sports) {
             Intent intent = new Intent(this, NewSportsActivity.class);

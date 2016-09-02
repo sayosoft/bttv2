@@ -23,6 +23,8 @@ public class GlobleMethods {
     public static String genre_type = "";
     public static String genre_name = "";
     public static String category_id = "";
+    public static String toolbar_title = "BTTV";
+
     public SharedPreferences settings;
     private Context _context;
     private SQLiteHandler db;

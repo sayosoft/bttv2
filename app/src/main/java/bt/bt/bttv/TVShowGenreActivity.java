@@ -323,10 +323,6 @@ public class TVShowGenreActivity extends AppCompatActivity
         if (id == R.id.nav_movies) {
             Intent intent = new Intent(this, VideoHomeActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_tv) {
-            Intent intent = new Intent(this, TvShowActivity.class);
-            startActivity(intent);
-
         } else if (id == R.id.nav_home) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);

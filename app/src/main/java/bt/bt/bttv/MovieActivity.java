@@ -255,10 +255,6 @@ public class MovieActivity extends AppCompatActivity
         if (id == R.id.nav_movies) {
             Intent intent = new Intent(this, MovieActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_tv) {
-            Intent intent = new Intent(this, TvShowActivity.class);
-            startActivity(intent);
-
         } else if (id == R.id.nav_tvchannel) {
             Intent intent = new Intent(this, TvChannelActivity.class);
             startActivity(intent);

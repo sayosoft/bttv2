@@ -16,32 +16,29 @@ import java.util.List;
 
 import bt.bt.bttv.MovieInnerActivity;
 import bt.bt.bttv.R;
+import bt.bt.bttv.TvChannelInnerActivity;
 import bt.bt.bttv.helper.ImageLoadedCallback;
 import bt.bt.bttv.helper.ItemClickListener;
-import bt.bt.bttv.model.VideosModel;
+import bt.bt.bttv.model.LiveTvModel;
 
-public class VideoHomeAdapter extends RecyclerView.Adapter<VideoHomeAdapter.ViewHolder> {
+public class LiveTvAdapter extends RecyclerView.Adapter<LiveTvAdapter.ViewHolder> {
 
     Context context;
-    List<VideosModel> videosModelsList;
+    List<LiveTvModel> liveTvModelList;
     ProgressBar progressBar = null;
 
-    public VideoHomeAdapter(Context context, List<VideosModel> videosModelsList) {
+    public LiveTvAdapter(Context context, List<LiveTvModel> liveTvModelList) {
         super();
         this.context = context;
-        this.videosModelsList = videosModelsList;
+        this.liveTvModelList = liveTvModelList;
     }
 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.category_inflate, viewGroup, false);
+                .inflate(R.layout.live_tv_inflate, viewGroup, false);
 
-        if (v != null) {
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-            progressBar.setVisibility(View.VISIBLE);
-        }
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
@@ -50,26 +47,16 @@ public class VideoHomeAdapter extends RecyclerView.Adapter<VideoHomeAdapter.View
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
         Picasso.with(context)
-                .load("http://bflix.ignitecloud.in/uploads/images/" + videosModelsList.get(i).getVideo_poster())
-                .into(viewHolder.ivMovie,  new ImageLoadedCallback(progressBar) {
-                            @Override
-                            public void onSuccess() {
-                                if (this.progressBar != null) {
-                                    this.progressBar.setVisibility(View.GONE);
-                                }
-                            }
-                        });
+                .load("http://bflix.ignitecloud.in/uploads/images/" + liveTvModelList.get(i).getChannel_poster())
+                .into(viewHolder.ivLiveTv);
 
         viewHolder.setClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
                 if (isLongClick) {
-                    Toast.makeText(context, "#" + position + " - " + videosModelsList.get(position).getVideo_id() + " (Long click)", Toast.LENGTH_SHORT).show();
-//                    context.startActivity(new Intent(context, Ca.class));
+
                 } else {
-                    Intent intent = new Intent(context, MovieInnerActivity.class);
-                    intent.putExtra("vid", videosModelsList.get(position).getVideo_id());
-                    context.startActivity(intent);
+                    context.startActivity(new Intent(context, TvChannelInnerActivity.class).putExtra("vid", liveTvModelList.get(position).getChannel_id()));
                 }
             }
         });
@@ -77,17 +64,17 @@ public class VideoHomeAdapter extends RecyclerView.Adapter<VideoHomeAdapter.View
 
     @Override
     public int getItemCount() {
-        return videosModelsList.size();
+        return liveTvModelList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        public ImageView ivMovie;
+        public ImageView ivLiveTv;
         private ItemClickListener clickListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ivMovie = (ImageView) itemView.findViewById(R.id.ivMovie);
+            ivLiveTv = (ImageView) itemView.findViewById(R.id.ivLiveTv);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }

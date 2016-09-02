@@ -58,9 +58,8 @@ public class GenreActivity extends AppCompatActivity implements NavigationView.O
         db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
 
-//        setContentView(R.layout.activity_home_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Genre");
+        toolbar.setTitle(GlobleMethods.toolbar_title);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,19 +141,11 @@ public class GenreActivity extends AppCompatActivity implements NavigationView.O
             startActivity(intent);
             finish();
 
-        } else if (id == R.id.nav_tv) {
-            Intent intent = new Intent(this, TvShowActivity.class);
-            startActivity(intent);
-
         } else if (id == R.id.nav_home) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_tvchannel) {
-            Intent intent = new Intent(this, TvShowActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_radio) {
+        }else if (id == R.id.nav_radio) {
             //Intent intent = new Intent(this, RadioChannelActivity.class);
             //startActivity(intent);
 

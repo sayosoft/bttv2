@@ -11,9 +11,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -31,7 +34,7 @@ import bt.bt.bttv.app.AppConfig;
 import bt.bt.bttv.app.AppController;
 import bt.bt.bttv.helper.SQLiteHandler;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements View.OnClickListener {
     public static final String PREFS_NAME = "MyPrefs";
     public static final String logFlag = "logFlag";
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -47,6 +50,7 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+
         settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -60,8 +64,6 @@ public class LoginActivity extends Activity {
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
-        // Session manager
-
         // Check if user is already logged in or not
         if (settings.contains(logFlag)) {
             // User is already logged in. Take him to main activity
@@ -71,35 +73,21 @@ public class LoginActivity extends Activity {
         }
 
         // Login button Click Event
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
-
-                // Check for empty data in the form
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    // login user
-                    checkLogin(email, password);
-                } else {
-                    // Prompt user to enter credentials
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter the credentials!", Toast.LENGTH_LONG)
-                            .show();
+        btnLogin.setOnClickListener(this);
+        inputPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    login();
+                    handled = true;
                 }
+                return handled;
             }
-
         });
 
         // Link to Register Screen
-        btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
+        btnLinkToRegister.setOnClickListener(this);
 
     }
 
@@ -196,5 +184,29 @@ public class LoginActivity extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnLogin:
+                login();
+                break;
+            case R.id.btnLinkToRegisterScreen:
+                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+                finish();
+                break;
+        }
+    }
+
+    private void login() {
+        String email = inputEmail.getText().toString().trim();
+        String password = inputPassword.getText().toString().trim();
+
+        if (!email.isEmpty() && !password.isEmpty()) {
+            checkLogin(email, password);
+        } else {
+            Toast.makeText(getApplicationContext(),"Please enter the credentials!", Toast.LENGTH_LONG).show();
+        }
     }
 }
