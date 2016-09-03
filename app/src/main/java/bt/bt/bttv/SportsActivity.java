@@ -50,8 +50,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.SessionManager;
+import bt.bt.bttv.helper.WebRequest;
 
 
 public class SportsActivity extends AppCompatActivity
@@ -77,12 +79,7 @@ public class SportsActivity extends AppCompatActivity
     String[] mbThumbIds2 = new String[40];
     Integer[] mbThumbIds3 = new Integer[40];
     JSONArray Slides = null;
-    int[] sampleImages = {R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4};
 
-
-    // private Integer images[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
-    //  private Integer images1[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
-    // private Integer images2[] = {R.drawable.mm3, R.drawable.mm1, R.drawable.mm4, R.drawable.mm1, R.drawable.mm3, R.drawable.mm4};
     CarouselView carouselView;
     ImageListener imageListener = new ImageListener() {
 
@@ -342,41 +339,52 @@ public class SportsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, MovieActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, VideoHomeActivity.class));
+
+        } else if (id == R.id.nav_audio) {
+            startActivity(new Intent(this, AudioHomeActivity.class));
+
+        } else if (id == R.id.nav_home) {
+            startActivity(new Intent(this, HomeActivity.class));
+
         } else if (id == R.id.nav_tvchannel) {
-            Intent intent = new Intent(this, TvChannelActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, TvChannelActivity.class));
 
         } else if (id == R.id.nav_radio) {
-            //Intent intent = new Intent(this, RadioChannelActivity.class);
-            //startActivity(intent);
+            startActivity(new Intent(this, RadioChannelActivity.class));
 
         } else if (id == R.id.nav_sports) {
-            Intent intent = new Intent(this, NewSportsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewSportsActivity.class));
+
         } else if (id == R.id.nav_news) {
-            Intent intent = new Intent(this, NewNewsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewNewsActivity.class));
+
         } else if (id == R.id.nav_myacc) {
-            Intent intent = new Intent(this, MyPreferencesActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MyAccountActivity.class));
+
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(this, SettingsActivity.class));
+
+        } else if (id == R.id.nav_terms) {
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
+
+        } else if (id == R.id.nav_privacy) {
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+
         } else if (id == R.id.nav_logout) {
-            logoutUser();
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
-
 
     public void PlayMovies(View view) {
 

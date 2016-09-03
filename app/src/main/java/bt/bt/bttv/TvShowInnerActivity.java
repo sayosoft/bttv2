@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import bt.bt.bttv.helper.WebRequest;
+
 public class TvShowInnerActivity extends AppCompatActivity {
 
     // JSON Node names
@@ -55,9 +57,6 @@ public class TvShowInnerActivity extends AppCompatActivity {
     private static final String TAG_VIDEO_RATING = "video_rating";
     private static final String TAG_VIDEO_RESUME = "video_resume";
     private static String moviesurl = "http://bflix.ignitecloud.in/jsonApi/getvod/";
-    private static String moviesurl2 = "http://bflix.ignitecloud.in/jsonApi/vod/video_tvshow_id/";
-    //private static String moviesurl3 = "http://bflix.ignitecloud.in/jsonApi/gettvid/";
-    private static Integer TestTVId = null;
     final HashMap<String, String> onlymovie = new HashMap<String, String>();
     ArrayList<HashMap<String, String>> moviesList2 = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> Eplist = new ArrayList<HashMap<String, String>>();
@@ -73,7 +72,6 @@ public class TvShowInnerActivity extends AppCompatActivity {
     String MovieDesciption = null;
     String MovieCast = null;
     String MovieDirector = null;
-    private Integer images[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

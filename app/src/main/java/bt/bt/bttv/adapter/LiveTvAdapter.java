@@ -8,16 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import bt.bt.bttv.MovieInnerActivity;
 import bt.bt.bttv.R;
 import bt.bt.bttv.TvChannelInnerActivity;
-import bt.bt.bttv.helper.ImageLoadedCallback;
 import bt.bt.bttv.helper.ItemClickListener;
 import bt.bt.bttv.model.LiveTvModel;
 
@@ -47,7 +44,8 @@ public class LiveTvAdapter extends RecyclerView.Adapter<LiveTvAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
         Picasso.with(context)
-                .load("http://bflix.ignitecloud.in/uploads/images/" + liveTvModelList.get(i).getChannel_poster())
+                .load(context.getString(R.string.url_base_image) + liveTvModelList.get(i).getChannel_poster())
+                .placeholder(R.drawable.movieinner)
                 .into(viewHolder.ivLiveTv);
 
         viewHolder.setClickListener(new ItemClickListener() {
@@ -56,7 +54,7 @@ public class LiveTvAdapter extends RecyclerView.Adapter<LiveTvAdapter.ViewHolder
                 if (isLongClick) {
 
                 } else {
-                    context.startActivity(new Intent(context, TvChannelInnerActivity.class).putExtra("vid", liveTvModelList.get(position).getChannel_id()));
+                    context.startActivity(new Intent(context, TvChannelInnerActivity.class).putExtra("vid", Integer.parseInt(liveTvModelList.get(position).getChannel_id())));
                 }
             }
         });

@@ -100,19 +100,6 @@ public class GenreActivity extends AppCompatActivity implements NavigationView.O
         }
     }
 
-
-    /*private void getAudioCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
-
-        drawerCategoriesModelList = new ArrayList<>();
-        for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
-            if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("VoD")) {
-                drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
-            }
-        }
-        new GetAudio().execute();
-    }*/
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -133,46 +120,37 @@ public class GenreActivity extends AppCompatActivity implements NavigationView.O
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideoHomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, VideoHomeActivity.class));
 
         } else if (id == R.id.nav_audio) {
-            Intent intent = new Intent(this, AudioHomeActivity.class);
-            startActivity(intent);
-            finish();
+            startActivity(new Intent(this, AudioHomeActivity.class));
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, HomeActivity.class));
 
-        }else if (id == R.id.nav_radio) {
-            //Intent intent = new Intent(this, RadioChannelActivity.class);
-            //startActivity(intent);
+        } else if (id == R.id.nav_tvchannel) {
+            startActivity(new Intent(this, TvChannelActivity.class));
+
+        } else if (id == R.id.nav_radio) {
+            startActivity(new Intent(this, RadioChannelActivity.class));
 
         } else if (id == R.id.nav_sports) {
-            Intent intent = new Intent(this, NewSportsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewSportsActivity.class));
 
         } else if (id == R.id.nav_news) {
-            Intent intent = new Intent(this, NewNewsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewNewsActivity.class));
 
         } else if (id == R.id.nav_myacc) {
-            Intent intent = new Intent(this, MyPreferencesActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MyAccountActivity.class));
 
         } else if (id == R.id.nav_setting) {
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", getString(R.string.url_terms));
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
 
         } else if (id == R.id.nav_privacy) {
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", getString(R.string.url_privacy));
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);

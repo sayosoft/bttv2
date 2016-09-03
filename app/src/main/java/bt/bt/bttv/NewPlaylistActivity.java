@@ -36,6 +36,7 @@ import java.util.HashMap;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.SessionManager;
+import bt.bt.bttv.helper.WebRequest;
 
 public class NewPlaylistActivity extends AppCompatActivity {
     // JSON Node names

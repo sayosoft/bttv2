@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -40,7 +39,6 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
     RecyclerView.Adapter mAdapter;
     EditText etPlayListName;
     Button btnAddPlayList;
-    private LinearLayout llMain;
     private ProgressDialog pDialog;
     private HTTPURLConnection service;
     private ConnectionDetector cd;
@@ -97,7 +95,7 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
             super.onPreExecute();
             service = new HTTPURLConnection();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
+            pDialog.setMessage(getString(R.string.msg_progress_dialog));
             pDialog.setCancelable(false);
             pDialog.show();
         }

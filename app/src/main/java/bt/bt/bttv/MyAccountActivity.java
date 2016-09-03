@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -32,10 +33,10 @@ import java.util.List;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.WebRequest;
 import bt.bt.bttv.model.UserPackagesModel;
 
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private static String moviesurl = "http://bflix.ignitecloud.in/jsonApi/userpackages/";
     public SharedPreferences settings;
     Context context;
     private SQLiteHandler db;
@@ -44,11 +45,13 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     private List<UserPackagesModel> userPackagesModelList;
     private TextView tvPlanName, tvPrice, tvVOD, tvAOD, tvLiveTvChannel, tvRadioChannel, tvExpiryDate, tvManageSubscriptions, tvManageFamilyMembers, tvManageAddOns, tvAddBalance, tvEditProfile;
     private Switch switchAutoRenew;
+    private HashMap<String, String> user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("My Account");
         setSupportActionBar(toolbar);
@@ -66,11 +69,8 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         cd = new ConnectionDetector(this);
 
         // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
+        user = db.getUserDetails();
 
-        String uid = user.get("uid");
-        moviesurl = "";
-        moviesurl = "http://bflix.ignitecloud.in/jsonApi/userpackages/" + uid;
         if (cd.isConnectingToInternet()) {
             new GetUserPackages().execute();
         } else {
@@ -185,8 +185,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             Intent intent = new Intent(this, TvChannelActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_radio) {
-            //Intent intent = new Intent(this, RadioChannelActivity.class);
-            //startActivity(intent);
+            startActivity(new Intent(this, RadioChannelActivity.class));
 
         } else if (id == R.id.nav_sports) {
             Intent intent = new Intent(this, NewSportsActivity.class);
@@ -201,11 +200,11 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             startActivity(intent);
         } else if (id == R.id.nav_terms) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
+            intent.putExtra("url", getString(R.string.url_terms_conditios));
             startActivity(intent);
         } else if (id == R.id.nav_privacy) {
             Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
+            intent.putExtra("url", getString(R.string.url_privacy_policy));
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);
@@ -243,7 +242,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             super.onPreExecute();
 
             proDialog = new ProgressDialog(MyAccountActivity.this);
-            proDialog.setMessage("Loading ...");
+            proDialog.setMessage(getString(R.string.msg_progress_dialog));
             proDialog.setCancelable(false);
             proDialog.show();
         }
@@ -251,7 +250,8 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         @Override
         protected Void doInBackground(Void... arg0) {
             WebRequest webreq = new WebRequest();
-            strUserPackages = webreq.makeWebServiceCall(moviesurl, WebRequest.GETRequest);
+            Log.e("user id :", user.get("uid"));
+            strUserPackages = webreq.makeWebServiceCall(getString(R.string.url_userpackages) + "" + user.get("uid"), WebRequest.GETRequest);
             return null;
         }
 

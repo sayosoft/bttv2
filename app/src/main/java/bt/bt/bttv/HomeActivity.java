@@ -72,32 +72,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideoHomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, VideoHomeActivity.class));
 
         } else if (id == R.id.nav_audio) {
-            Intent intent = new Intent(this, AudioHomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, AudioHomeActivity.class));
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, HomeActivity.class));
 
         } else if (id == R.id.nav_tvchannel) {
-            Intent intent = new Intent(this, TvChannelActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, TvChannelActivity.class));
 
         } else if (id == R.id.nav_radio) {
-            /*Intent intent = new Intent(this, RadioChannelActivity.class);
-            startActivity(intent);*/
+            startActivity(new Intent(this, RadioChannelActivity.class));
 
         } else if (id == R.id.nav_sports) {
-            Intent intent = new Intent(this, NewSportsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewSportsActivity.class));
 
         } else if (id == R.id.nav_news) {
-            Intent intent = new Intent(this, NewNewsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewNewsActivity.class));
 
         } else if (id == R.id.nav_myacc) {
             startActivity(new Intent(this, MyAccountActivity.class));
@@ -106,14 +99,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", getString(R.string.url_terms));
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
 
         } else if (id == R.id.nav_privacy) {
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", getString(R.string.url_privacy));
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);

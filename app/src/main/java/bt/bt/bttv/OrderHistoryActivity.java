@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.WebRequest;
 
 public class OrderHistoryActivity extends ListActivity {
     private static final String TAG_ORDER_INFO = "orders";

@@ -151,7 +151,7 @@ public class LaterFragment extends Fragment {
             super.onPreExecute();
             service = new HTTPURLConnection();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
+            pDialog.setMessage(getString(R.string.msg_progress_dialog));
             pDialog.setCancelable(false);
             pDialog.show();
 
@@ -206,7 +206,7 @@ public class LaterFragment extends Fragment {
             super.onPreExecute();
             service = new HTTPURLConnection();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
+            pDialog.setMessage(getString(R.string.msg_progress_dialog));
             pDialog.setCancelable(false);
             pDialog.show();
 

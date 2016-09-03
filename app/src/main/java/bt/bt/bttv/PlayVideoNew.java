@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.WebRequest;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;
@@ -74,10 +75,8 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     private String Subtitle = "";
     private String Playlist = "";
     private int PlaylistID = 0;
-    private String VideoURL = "";
     private String subtitle_path = "http://bflix.ignitecloud.in/uploads/test.srt";
     private TextView mSubtitleView;
-    private Integer mLastRotation = 0, hp, wp, sp;
     private SeekBar volumeControl = null;
     private AudioManager audioManager = null;
     private boolean isBuffering = false;
@@ -100,19 +99,12 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             if (VideoResume != null) {
                 mPosition = Long.parseLong(VideoResume);
             }
-            Log.i("Vitamio Video Path:", path);
-            //The key argument here must match that used in the other activity
-        } else {
-            Log.i("Vitamio Video Path:", path);
         }
         if (!LibsChecker.checkVitamioLibs(this)) {
             return;
         }
         setContentView(R.layout.activity_play_video_new);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        hp = getHeightPixel(PlayVideoNew.this);
-        wp = getWidthPixel(PlayVideoNew.this);
-        sp = getStatusBarHeight(PlayVideoNew.this);
         init();
     }
 

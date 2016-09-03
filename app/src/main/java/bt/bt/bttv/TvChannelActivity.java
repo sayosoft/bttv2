@@ -1,7 +1,6 @@
 package bt.bt.bttv;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,31 +12,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.koushikdutta.ion.Ion;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.adapter.LiveTvAdapter;
 import bt.bt.bttv.helper.ConnectionDetector;
-import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.model.DrawerCategoriesModel;
+import bt.bt.bttv.helper.GlobleMethods;
+import bt.bt.bttv.helper.WebRequest;
 import bt.bt.bttv.model.LiveTvModel;
 
 public class TvChannelActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -92,60 +81,50 @@ public class TvChannelActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideoHomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, VideoHomeActivity.class));
 
         } else if (id == R.id.nav_audio) {
-            Intent intent = new Intent(this, AudioHomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, AudioHomeActivity.class));
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, HomeActivity.class));
 
         } else if (id == R.id.nav_tvchannel) {
-            Intent intent = new Intent(this, TvChannelActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, TvChannelActivity.class));
 
         } else if (id == R.id.nav_radio) {
-            //Intent intent = new Intent(this, RadioChannelActivity.class);
-            //startActivity(intent);
+            startActivity(new Intent(this, RadioChannelActivity.class));
 
         } else if (id == R.id.nav_sports) {
-            Intent intent = new Intent(this, NewSportsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewSportsActivity.class));
 
         } else if (id == R.id.nav_news) {
-            Intent intent = new Intent(this, NewNewsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewNewsActivity.class));
 
         } else if (id == R.id.nav_myacc) {
-            Intent intent = new Intent(this, MyPreferencesActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MyAccountActivity.class));
 
         } else if (id == R.id.nav_setting) {
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            Intent intent = new Intent(TvChannelActivity.this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
 
         } else if (id == R.id.nav_privacy) {
-            Intent intent = new Intent(TvChannelActivity.this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+
+        } else if (id == R.id.nav_logout) {
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
-
     private class GetMovies extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog proDialog;

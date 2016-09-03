@@ -80,8 +80,9 @@
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
+    <string name="msg_progress_dialog">BTTV Loading...</string>
     <string name="pref_title_vibrate">Vibrate</string>
+
     <string name="url_get_packages">http://bflix.ignitecloud.in/jsonApi/packages/</string>
     <string name="url_terms">http://bflix.ignitecloud.in/apppages/terms</string>
     <string name="url_privacy">http://bflix.ignitecloud.in/apppages/privacy</string>
@@ -96,4 +97,9 @@
     <string name="url_get_favorite">http://bflix.ignitecloud.in/web_api/get_favorites.php</string>
     <string name="url_genres">http://bflix.ignitecloud.in/jsonApi/genres/</string>
     <string name="get_live_tv_channel">http://bflix.ignitecloud.in/jsonApi/channels/Video/</string>
+    <string name="url_userpackages">http://bflix.ignitecloud.in/jsonApi/userpackages/</string>
+    <string name="url_terms_conditios">http://bflix.ignitecloud.in/apppages/terms</string>
+    <string name="url_privacy_policy">http://bflix.ignitecloud.in/apppages/privacy</string>
+    <string name="url_get_radios">http://bflix.ignitecloud.in/jsonApi/radio</string>
+    <string name="url_base_image">http://bflix.ignitecloud.in/uploads/images/</string>
 </resources>

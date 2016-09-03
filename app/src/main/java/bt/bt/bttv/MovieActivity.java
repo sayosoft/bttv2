@@ -42,7 +42,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.WebRequest;
 
 
 public class MovieActivity extends AppCompatActivity
@@ -247,54 +249,51 @@ public class MovieActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, MovieActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, VideoHomeActivity.class));
+
+        } else if (id == R.id.nav_audio) {
+            startActivity(new Intent(this, AudioHomeActivity.class));
+
+        } else if (id == R.id.nav_home) {
+            startActivity(new Intent(this, HomeActivity.class));
+
         } else if (id == R.id.nav_tvchannel) {
-            Intent intent = new Intent(this, TvChannelActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, TvChannelActivity.class));
 
         } else if (id == R.id.nav_radio) {
-            //Intent intent = new Intent(this, RadioChannelActivity.class);
-            //startActivity(intent);
+            startActivity(new Intent(this, RadioChannelActivity.class));
 
         } else if (id == R.id.nav_sports) {
-            Intent intent = new Intent(this, NewSportsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewSportsActivity.class));
 
         } else if (id == R.id.nav_news) {
-            Intent intent = new Intent(this, NewNewsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewNewsActivity.class));
 
         } else if (id == R.id.nav_myacc) {
-            Intent intent = new Intent(this, MyPreferencesActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MyAccountActivity.class));
 
         } else if (id == R.id.nav_setting) {
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            Intent intent = new Intent(MovieActivity.this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/terms");
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
 
         } else if (id == R.id.nav_privacy) {
-            Intent intent = new Intent(MovieActivity.this, WebViewActivity.class);
-            intent.putExtra("url", "http://bflix.ignitecloud.in/apppages/privacy");
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
 
         } else if (id == R.id.nav_logout) {
-            logoutUser();
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
 

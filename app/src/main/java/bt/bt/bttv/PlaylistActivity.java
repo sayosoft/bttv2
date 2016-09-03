@@ -3,7 +3,6 @@ package bt.bt.bttv;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
@@ -32,6 +28,7 @@ import java.util.Map;
 
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.SessionManager;
+import bt.bt.bttv.helper.WebRequest;
 
 public class PlaylistActivity extends AppCompatActivity {
     // JSON Node names
@@ -47,11 +44,6 @@ public class PlaylistActivity extends AppCompatActivity {
     private TextView tx27, tx28, tx29;
     private SQLiteHandler db;
     private SessionManager session;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
 
     @Override
@@ -109,97 +101,6 @@ public class PlaylistActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        /*
-
-        playAdapter = new ArrayAdapter<JsonObject>(context, 0) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null)
-                    convertView = getLayoutInflater().inflate(R.layout.play_list, null);
-
-
-                // grab the tweet (or retweet)
-                JsonObject play = getItem(position);
-
-                // grab the user info... name, profile picture, tweet text
-                //JsonObject user = play.getAsJsonObject("playhistory");
-                JsonObject user = play;
-                String twitterId = user.get("video_title").getAsString();
-
-                // set the profile photo using Ion
-                String imageUrl = "http://bflix.ignitecloud.in/uploads/images/"+user.get("video_poster").getAsString();
-
-                ImageView imageView = (ImageView)convertView.findViewById(R.id.poster);
-
-                // Use Ion's builder set the google_image on an ImageView from a URL
-
-                // start with the ImageView
-                Ion.with(imageView)
-                        // use a placeholder google_image if it needs to load from the network
-
-                        // load the url
-                        .load(imageUrl);
-
-                // and finally, set the name and text
-                TextView handle = (TextView)convertView.findViewById(R.id.videotitle);
-                handle.setText(twitterId);
-
-                TextView text = (TextView)convertView.findViewById(R.id.lastplayed);
-                text.setText(play.get("play_last_played").getAsString());
-                return convertView;
-            }
-        };
-        setContentView(R.layout.lister);
-        ListView listView = (ListView)findViewById(R.id.list);
-        listView.setAdapter(playAdapter); */
-
-
-        Log.i("Order URL: ", "> " + url);
-// Calling async task to get json
-        //new GetStudents().execute();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Test Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Test Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 
     private ArrayList<HashMap<String, String>> ParseJSON(String json) {

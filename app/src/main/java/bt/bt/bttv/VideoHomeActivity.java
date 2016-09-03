@@ -1,6 +1,5 @@
 package bt.bt.bttv;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,9 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,25 +23,11 @@ import bt.bt.bttv.fragment.HomeFragment;
 import bt.bt.bttv.fragment.LaterFragment;
 import bt.bt.bttv.fragment.MyFavoriteFragment;
 import bt.bt.bttv.fragment.MyPlaylistsFragment;
-import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.HTTPURLConnection;
-import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.model.DrawerCategoriesModel;
-import bt.bt.bttv.model.VideosModel;
 
 public class VideoHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public SharedPreferences settings;
-    private LinearLayout llMain;
-    private ProgressDialog pDialog;
-    private HTTPURLConnection service;
-    private ConnectionDetector cd;
-    private List<VideosModel> videosModelsList;
-    private JSONObject jsonObject;
-    private SQLiteHandler db;
-    private List<DrawerCategoriesModel> drawerCategoriesModelList;
-
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -54,10 +36,6 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        db = new SQLiteHandler(getApplicationContext());
-        cd = new ConnectionDetector(this);
-
-//        setContentView(R.layout.activity_home_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Videos");
         setSupportActionBar(toolbar);
@@ -73,8 +51,6 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
-        //        disables swipe between fragments
-        viewPager.beginFakeDrag();
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -103,79 +79,42 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-
-    /*private void getAudioCategories(List<DrawerCategoriesModel> drawerCategoriesModelsLists) {
-
-        drawerCategoriesModelList = new ArrayList<>();
-        for (int i = 0; i < drawerCategoriesModelsLists.size(); i++) {
-            if (drawerCategoriesModelsLists.get(i).getCategory_type().equals("VoD")) {
-                drawerCategoriesModelList.add(drawerCategoriesModelsLists.get(i));
-            }
-        }
-        new GetAudio().execute();
-    }*/
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_movies) {
-            Intent intent = new Intent(this, VideoHomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, VideoHomeActivity.class));
 
         } else if (id == R.id.nav_audio) {
-            Intent intent = new Intent(this, AudioHomeActivity.class);
-            startActivity(intent);
-            finish();
+            startActivity(new Intent(this, AudioHomeActivity.class));
 
         } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, HomeActivity.class));
+
+        } else if (id == R.id.nav_tvchannel) {
+            startActivity(new Intent(this, TvChannelActivity.class));
 
         } else if (id == R.id.nav_radio) {
-            //Intent intent = new Intent(this, RadioChannelActivity.class);
-            //startActivity(intent);
+            startActivity(new Intent(this, RadioChannelActivity.class));
 
         } else if (id == R.id.nav_sports) {
-            Intent intent = new Intent(this, NewSportsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewSportsActivity.class));
 
         } else if (id == R.id.nav_news) {
-            Intent intent = new Intent(this, NewNewsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, NewNewsActivity.class));
 
         } else if (id == R.id.nav_myacc) {
-            Intent intent = new Intent(this, MyPreferencesActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MyAccountActivity.class));
 
         } else if (id == R.id.nav_setting) {
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", getString(R.string.url_terms));
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
 
         } else if (id == R.id.nav_privacy) {
-            Intent intent = new Intent(this, WebViewActivity.class);
-            intent.putExtra("url", getString(R.string.url_privacy));
-            startActivity(intent);
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);
@@ -215,39 +154,4 @@ public class VideoHomeActivity extends AppCompatActivity implements NavigationVi
             return mFragmentTitleList.get(position);
         }
     }
-
-   /* private class GetAudio extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            service = new HTTPURLConnection();
-            pDialog = new ProgressDialog(VideoHomeActivity.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... result) {
-            return service.ServerData(getResources().getString(R.string.url_get_video));
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-
-            try {
-                jsonObject = new JSONObject(result);
-                Gson gson = new Gson();
-                videosModelsList = gson.fromJson(jsonObject.getJSONArray("videos").toString(), new TypeToken<List<VideosModel>>() {
-                }.getType());
-                inflateData1();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }*/
 }

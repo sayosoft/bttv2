@@ -19,19 +19,14 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-
-            url = extras.getString("url");
-
+        if (getIntent().getExtras() != null) {
+            url = getIntent().getExtras().getString("url");
         } else {
-            url = "http://bflix.ignitecloud.in/apppages/terms";
+            url = getString(R.string.url_terms);
         }
 
         setContentView(R.layout.activity_web_view);
-
         mWebView = (WebView) findViewById(R.id.activity_main_webview);
-
         mWebView.setWebViewClient(new MyWebViewClient());
 
         // Enable Javascript
@@ -53,15 +48,13 @@ public class WebViewActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             prDialog = new ProgressDialog(WebViewActivity.this);
-            prDialog = ProgressDialog.show(WebViewActivity.this, null, "Please wait...");
-//            prDialog.setMessage("Please wait ...");
-//            prDialog.show();
+            prDialog = ProgressDialog.show(WebViewActivity.this, null, getString(R.string.msg_progress_dialog));
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if(prDialog!=null){
+            if (prDialog != null) {
                 prDialog.dismiss();
             }
         }

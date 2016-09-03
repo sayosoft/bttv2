@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +26,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import bt.bt.bttv.helper.WebRequest;
+
 public class TvChannelInnerActivity extends AppCompatActivity {
 
     // JSON Node names
@@ -37,10 +38,6 @@ public class TvChannelInnerActivity extends AppCompatActivity {
     private static final String TAG_VIDEO_CATEGORY = "channel_category";
     private static final String TAG_VIDEO_POSTER = "channel_poster";
     private static final String TAG_VIDEO_GENRES = "channel_genres";
-    //private static final String TAG_VIDEO_DIRECTOR = "video_director";
-    //private static final String TAG_VIDEO_ACTING = "video_acting";
-    //private static final String TAG_VIDEO_LANGUAGE= "video_language";
-    //private static final String TAG_VIDEO_DURATION= "video_duration";
     private static final String TAG_VIDEO_DESCRIPTION = "channel_description";
     private static final String TAG_VIDEO_SOURCE = "channel_stream_url";
     private static String moviesurl = "http://bflix.ignitecloud.in/jsonApi/getchannel/";
@@ -50,8 +47,6 @@ public class TvChannelInnerActivity extends AppCompatActivity {
     JSONArray related = null;
     String video_source = null;
     String MovieTitle = null;
-    private Integer images[] = {R.drawable.mm1, R.drawable.mm3, R.drawable.mm4, R.drawable.mm3, R.drawable.mm1, R.drawable.mm4};
-    //private static final String TAG_VIDEO_GENRES_TEXT= "video_genre_text";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

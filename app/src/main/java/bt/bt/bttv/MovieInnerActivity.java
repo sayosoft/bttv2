@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.WebRequest;
 
 public class MovieInnerActivity extends AppCompatActivity {
 

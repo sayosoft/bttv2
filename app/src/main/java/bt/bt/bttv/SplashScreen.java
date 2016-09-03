@@ -1,6 +1,5 @@
 package bt.bt.bttv;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ public class SplashScreen extends AppCompatActivity {
     public static List<DrawerCategoriesModel> drawerCategoriesModelsList;
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 4000;
-    private ProgressDialog pDialog;
     private HTTPURLConnection service;
     private JSONObject jsonObject;
     private List<VideosModel> videosModelsList;
@@ -98,10 +96,6 @@ public class SplashScreen extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             service = new HTTPURLConnection();
-            pDialog = new ProgressDialog(SplashScreen.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
         }
 
         @Override
@@ -111,9 +105,6 @@ public class SplashScreen extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-
             try {
                 jsonObject = new JSONObject(result);
                 Gson gson = new Gson();
@@ -134,10 +125,6 @@ public class SplashScreen extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             service = new HTTPURLConnection();
-            pDialog = new ProgressDialog(SplashScreen.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
-            pDialog.show();
         }
 
         @Override
@@ -147,8 +134,6 @@ public class SplashScreen extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (pDialog.isShowing())
-                pDialog.dismiss();
             Gson gson = new Gson();
             audiosModelsList = gson.fromJson(result.toString(), new TypeToken<List<AudiosModel>>() {
             }.getType());

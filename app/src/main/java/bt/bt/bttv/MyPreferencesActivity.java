@@ -94,9 +94,9 @@ public class MyPreferencesActivity extends AppCompatPreferenceActivity {
             Preference myPref6 = findPreference("managewishlist");
             myPref6.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    //open browser or intent here
+                    /*//open browser or intent here
                     Intent i = new Intent(preference.getContext(), WatchlistActivity.class);
-                    startActivity(i);
+                    startActivity(i);*/
                     return true;
                 }
             });

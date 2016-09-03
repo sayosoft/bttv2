@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,8 +31,10 @@ import java.util.List;
 import bt.bt.bttv.GenreActivity;
 import bt.bt.bttv.R;
 import bt.bt.bttv.SplashScreen;
+import bt.bt.bttv.adapter.AudioGenreAdapter;
 import bt.bt.bttv.adapter.AudioHomeAdapter;
 import bt.bt.bttv.adapter.CategoryAdapter;
+import bt.bt.bttv.adapter.VideoGenreAdapter;
 import bt.bt.bttv.adapter.VideoHomeAdapter;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
@@ -164,7 +165,7 @@ public class HomeFragment extends Fragment {
                 recyclerView.setLayoutManager(mLayoutManager);
 
                 stringListHashMap.put(0, audiosModelsList1);
-                AudioHomeAdapter audioHomeAdapter = new AudioHomeAdapter(getActivity(), stringListHashMap.get(0));
+                AudioGenreAdapter audioHomeAdapter = new AudioGenreAdapter(getActivity(), stringListHashMap.get(0));
                 recyclerView.setAdapter(audioHomeAdapter);
                 TextView tvTitle = new TextView(getActivity());
 
@@ -173,7 +174,7 @@ public class HomeFragment extends Fragment {
                 params1.setMargins(10, 10, 0, 0);
                 tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                 tvTitle.setTextColor(getResources().getColor(R.color.colorWhite));
-
+                tvTitle.setText(GlobleMethods.genre_name);
                 llMain.addView(tvTitle);
                 llMain.addView(recyclerView);
             }
@@ -199,7 +200,7 @@ public class HomeFragment extends Fragment {
                 recyclerView.setLayoutManager(mLayoutManager);
 
                 stringListHashMap.put(0, videosModelsList1);
-                VideoHomeAdapter audioHomeAdapter = new VideoHomeAdapter(getActivity(), stringListHashMap.get(0));
+                VideoGenreAdapter audioHomeAdapter = new VideoGenreAdapter(getActivity(), stringListHashMap.get(0));
                 recyclerView.setAdapter(audioHomeAdapter);
                 TextView tvTitle = new TextView(getActivity());
 
@@ -245,7 +246,7 @@ public class HomeFragment extends Fragment {
                         public void onClick(View v) {
                             GlobleMethods.content_type = "GenreSong";
                             GlobleMethods.genre_name = genreModelsList.get(finalI).getGenre_name();
-                            GlobleMethods.genre_type = "AoD";
+                            GlobleMethods.genre_type = "VoD";
                             GlobleMethods.category_id = genreModelsList.get(finalI).getGenre_id();
                             GlobleMethods.toolbar_title = genreModelsList.get(finalI).getGenre_name();
                             Intent genre = new Intent(getActivity(), GenreActivity.class);
@@ -398,6 +399,7 @@ public class HomeFragment extends Fragment {
                     stringListHashMap.put(i, videosModelsList1);
                     VideoHomeAdapter audioHomeAdapter = new VideoHomeAdapter(getActivity(), stringListHashMap.get(i));
                     recyclerView.setAdapter(audioHomeAdapter);
+
                     final int finalI = i;
                     TextView tvTitle = new TextView(getActivity());
                     tvTitle.setOnClickListener(new View.OnClickListener() {
@@ -480,7 +482,7 @@ public class HomeFragment extends Fragment {
             super.onPreExecute();
             service = new HTTPURLConnection();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
+            pDialog.setMessage(getString(R.string.msg_progress_dialog));
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -522,7 +524,7 @@ public class HomeFragment extends Fragment {
             super.onPreExecute();
             service = new HTTPURLConnection();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
+            pDialog.setMessage(getString(R.string.msg_progress_dialog));
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -562,7 +564,7 @@ public class HomeFragment extends Fragment {
             super.onPreExecute();
             service = new HTTPURLConnection();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Please wait...");
+            pDialog.setMessage(getString(R.string.msg_progress_dialog));
             pDialog.setCancelable(false);
             pDialog.show();
         }
