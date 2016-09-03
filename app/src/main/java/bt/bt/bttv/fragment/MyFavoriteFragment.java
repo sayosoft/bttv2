@@ -39,8 +39,8 @@ public class MyFavoriteFragment extends Fragment {
 
     public static final String PREFS_NAME = "MyPrefs";
     public SharedPreferences settings;
-    List<AudiosModel> audiosModelList = new ArrayList<>();
-    List<VideosModel> videosModelList = new ArrayList<>();
+    private List<AudiosModel> audiosModelList = new ArrayList<>();
+    private List<VideosModel> videosModelList = new ArrayList<>();
     private LinearLayout llMain;
     private ProgressDialog pDialog;
     private HTTPURLConnection service;
@@ -163,7 +163,6 @@ public class MyFavoriteFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
 
         @Override
