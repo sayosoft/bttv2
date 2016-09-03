@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
         android:padding="5dp">
 
         <TextView
@@ -30,29 +29,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
                 android:background="@color/bg_main2"
                 android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:weightSum="2">
 
                 <TextView
                     android:id="@+id/tvPlanName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Plan Name           "
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/colorBlack" />
+                    android:text="Plan Name"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
                     android:text="0"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/colorBlack" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -63,7 +65,7 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Video On Demand"
@@ -72,10 +74,11 @@
 
                 <TextView
                     android:id="@+id/tvVOD"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="0dp"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
@@ -89,7 +92,7 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Audo On Demand"
@@ -98,9 +101,10 @@
 
                 <TextView
                     android:id="@+id/tvAOD"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
@@ -114,18 +118,19 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Live TV Channels "
+                    android:text="Live TV Channels"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tvLiveTvChannel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
@@ -139,18 +144,19 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Radio Channels    "
+                    android:text="Radio Channels"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
 
                 <TextView
                     android:id="@+id/tvRadioChannel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
                     android:text="0"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
@@ -164,19 +170,20 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Expiry Date             "
+                    android:text="Expiry Date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
 
 
                 <TextView
                     android:id="@+id/tvExpiryDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
                     android:text="Monthly"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />

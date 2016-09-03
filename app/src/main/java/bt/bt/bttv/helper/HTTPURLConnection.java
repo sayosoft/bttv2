@@ -64,8 +64,8 @@ public class HTTPURLConnection {
             url = new URL(path);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setConnectTimeout(15000);
+            conn.setReadTimeout(50000);
+            conn.setConnectTimeout(50000);
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);

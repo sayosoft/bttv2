@@ -97,7 +97,7 @@
     <string name="url_get_favorite">http://bflix.ignitecloud.in/web_api/get_favorites.php</string>
     <string name="url_genres">http://bflix.ignitecloud.in/jsonApi/genres/</string>
     <string name="get_live_tv_channel">http://bflix.ignitecloud.in/jsonApi/channels/Video/</string>
-    <string name="url_userpackages">http://bflix.ignitecloud.in/jsonApi/userpackages/</string>
+    <string name="url_userpackages">http://bflix.ignitecloud.in/jsonApi/userpackages1/</string>
     <string name="url_terms_conditios">http://bflix.ignitecloud.in/apppages/terms</string>
     <string name="url_privacy_policy">http://bflix.ignitecloud.in/apppages/privacy</string>
     <string name="url_get_radios">http://bflix.ignitecloud.in/jsonApi/radio</string>

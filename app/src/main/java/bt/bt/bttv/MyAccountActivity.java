@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -140,7 +141,6 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         if (userPackagesModelList.size() > 0) {
             for (UserPackagesModel userPackagesModel : userPackagesModelList) {
                 if (userPackagesModel.getPackage_status() != null)
-                    if (userPackagesModel.getPackage_status().equals("Expired"))
                         setData(userPackagesModel);
             }
         }
@@ -219,10 +219,10 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     private void setData(UserPackagesModel userPackagesModel) {
 
         tvPlanName.setText("" + userPackagesModel.getPackage_exp());
-        tvPrice.setText("" + userPackagesModel.getPackage_exp());
+        tvPrice.setText(Html.fromHtml(userPackagesModel.getPackage_price() + "<sup>Nu</sup>"));
         tvVOD.setText("" + userPackagesModel.getPackage_vod());
         tvAOD.setText("" + userPackagesModel.getPackage_aod());
-        tvLiveTvChannel.setText("" + userPackagesModel.getPackage_live());
+        tvLiveTvChannel.setText("" + userPackagesModel.getPackage_live_tv());
         tvRadioChannel.setText("" + userPackagesModel.getPackage_radio());
         tvExpiryDate.setText("" + userPackagesModel.getPackage_exp());
     }

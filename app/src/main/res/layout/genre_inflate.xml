@@ -2,15 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="1dp"
     android:gravity="center_horizontal">
 
     <RelativeLayout
-
         android:id="@+id/myContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -28,8 +26,8 @@
             android:id="@+id/ivMovie"
             android:layout_width="150dp"
             android:layout_height="200dp"
+            android:layout_marginTop="2dp"
             android:adjustViewBounds="true"
-            android:padding="2dp"
             android:scaleType="fitXY" />
 
     </RelativeLayout>

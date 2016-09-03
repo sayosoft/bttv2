@@ -4,38 +4,47 @@ package bt.bt.bttv.model;
  * Created by Sachin on 8/25/2016.
  */
 public class UserPackagesModel {
-
     /**
-     * id : 7
-     * package_id : 6
-     * user_id : 6
-     * package_exp : 6
-     * order_id : 6
-     * package_status : null
+     * id : 92
+     * package_id : 24
+     * user_id : 14
+     * package_exp : Weekly
+     * order_id : null
+     * package_status : Active
      * auto_renew_status : 0
-     * added_time : 2016-08-01 10:35:49
-     * package_title : null
-     * package_vod : null
-     * package_aod : null
-     * package_live : null
-     * package_radio : null
-     * package_duration : null
+     * added_time : 2016-08-29 07:29:20
+     * package_title : One Week
+     * package_type : Individual
+     * package_members : null
+     * package_vod : 25
+     * package_aod : 50
+     * package_live_tv : 2
+     * package_radio : 2
+     * package_price : 50
+     * package_discount : null
+     * package_duration : Weekly
+     * package_coupon : null
      */
 
     private String id;
     private String package_id;
     private String user_id;
     private String package_exp;
-    private String order_id;
-    private Object package_status;
+    private Object order_id;
+    private String package_status;
     private String auto_renew_status;
     private String added_time;
-    private Object package_title;
-    private Object package_vod;
-    private Object package_aod;
-    private Object package_live;
-    private Object package_radio;
-    private Object package_duration;
+    private String package_title;
+    private String package_type;
+    private Object package_members;
+    private String package_vod;
+    private String package_aod;
+    private String package_live_tv;
+    private String package_radio;
+    private String package_price;
+    private Object package_discount;
+    private String package_duration;
+    private Object package_coupon;
 
     public String getId() {
         return id;
@@ -69,19 +78,19 @@ public class UserPackagesModel {
         this.package_exp = package_exp;
     }
 
-    public String getOrder_id() {
+    public Object getOrder_id() {
         return order_id;
     }
 
-    public void setOrder_id(String order_id) {
+    public void setOrder_id(Object order_id) {
         this.order_id = order_id;
     }
 
-    public Object getPackage_status() {
+    public String getPackage_status() {
         return package_status;
     }
 
-    public void setPackage_status(Object package_status) {
+    public void setPackage_status(String package_status) {
         this.package_status = package_status;
     }
 
@@ -101,51 +110,91 @@ public class UserPackagesModel {
         this.added_time = added_time;
     }
 
-    public Object getPackage_title() {
+    public String getPackage_title() {
         return package_title;
     }
 
-    public void setPackage_title(Object package_title) {
+    public void setPackage_title(String package_title) {
         this.package_title = package_title;
     }
 
-    public Object getPackage_vod() {
+    public String getPackage_type() {
+        return package_type;
+    }
+
+    public void setPackage_type(String package_type) {
+        this.package_type = package_type;
+    }
+
+    public Object getPackage_members() {
+        return package_members;
+    }
+
+    public void setPackage_members(Object package_members) {
+        this.package_members = package_members;
+    }
+
+    public String getPackage_vod() {
         return package_vod;
     }
 
-    public void setPackage_vod(Object package_vod) {
+    public void setPackage_vod(String package_vod) {
         this.package_vod = package_vod;
     }
 
-    public Object getPackage_aod() {
+    public String getPackage_aod() {
         return package_aod;
     }
 
-    public void setPackage_aod(Object package_aod) {
+    public void setPackage_aod(String package_aod) {
         this.package_aod = package_aod;
     }
 
-    public Object getPackage_live() {
-        return package_live;
+    public String getPackage_live_tv() {
+        return package_live_tv;
     }
 
-    public void setPackage_live(Object package_live) {
-        this.package_live = package_live;
+    public void setPackage_live_tv(String package_live_tv) {
+        this.package_live_tv = package_live_tv;
     }
 
-    public Object getPackage_radio() {
+    public String getPackage_radio() {
         return package_radio;
     }
 
-    public void setPackage_radio(Object package_radio) {
+    public void setPackage_radio(String package_radio) {
         this.package_radio = package_radio;
     }
 
-    public Object getPackage_duration() {
+    public String getPackage_price() {
+        return package_price;
+    }
+
+    public void setPackage_price(String package_price) {
+        this.package_price = package_price;
+    }
+
+    public Object getPackage_discount() {
+        return package_discount;
+    }
+
+    public void setPackage_discount(Object package_discount) {
+        this.package_discount = package_discount;
+    }
+
+    public String getPackage_duration() {
         return package_duration;
     }
 
-    public void setPackage_duration(Object package_duration) {
+    public void setPackage_duration(String package_duration) {
         this.package_duration = package_duration;
+    }
+
+    public Object getPackage_coupon() {
+        return package_coupon;
+    }
+
+    public void setPackage_coupon(Object package_coupon) {
+        this.package_coupon = package_coupon;
     }
 }
