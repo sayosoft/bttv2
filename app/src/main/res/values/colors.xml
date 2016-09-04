@@ -2,14 +2,14 @@
 <resources>
     <color name="colorPrimary">#333333</color>
     <color name="colorPrimaryDark">#191919</color>
-    <color name="colorAccent">#37ac47</color>
+    <color name="colorAccent">#65bc53</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="colorBflix">#37ac47</color>
+    <color name="colorBflix">#65bc53</color>
     <color name="colorBlack">#000000</color>
 
     <!-- Login Register Colors -->
 
-    <color name="bg_login">#26ae90</color>
+    <color name="bg_login">#65bc53</color>
     <color name="bg_register">#2e3237</color>
     <color name="bg_main">#428bca</color>
     <color name="bg_main2">#D5D5D5</color>
@@ -17,18 +17,15 @@
     <color name="input_login">#222222</color>
     <color name="input_login_hint">#999999</color>
     <color name="input_register">#888888</color>
-    <color name="input_register_bg">#3b4148</color>
+    <color name="input_register_bg">#2f353b</color>
     <color name="input_register_hint">#5e6266</color>
-    <color name="btn_login">#26ae90</color>
+    <color name="btn_login">#65bc53</color>
     <color name="btn_login_bg">#eceef1</color>
 
     <color name="lbl_name">#333333</color>
     <color name="btn_logut_bg">#ff6861</color>
     <color name="btn_continue_bg">#26bf90</color>
-    <color name="tx_continue_bg">#ff8000</color>
-    <color name="tx_continue_bg_green">#39ac39</color>
-
-
-
-
+    <color name="tx_continue_bg">#f17f37</color>
+    <color name="tx_continue_bg_green">#65bc53</color>
+    <color name="red">#de0000</color>
 </resources>

@@ -43,7 +43,7 @@
     <string name="btn_link_to_login">I already have BTTV account</string>
     <string name="welcome">Welcome</string>
     <string name="btn_logout">LOGOUT</string>
-    <string name="hint_mobile">Mobile</string>
+    <string name="hint_mobile">Mobile Number</string>
     <string name="hint_cid">BT CID Number</string>
 
     <!-- Strings related to URL-->
@@ -102,4 +102,15 @@
     <string name="url_privacy_policy">http://bflix.ignitecloud.in/apppages/privacy</string>
     <string name="url_get_radios">http://bflix.ignitecloud.in/jsonApi/radio</string>
     <string name="url_base_image">http://bflix.ignitecloud.in/uploads/images/</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_address">address</string>
+    <string name="hint_city">city</string>
+    <string name="hint_state">State</string>
+    <string name="hint_code">Postal Code</string>
+    <string name="hint_country">Country</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="re_enter_new_password">Re Enter Password</string>
+    <string name="note"><b>Note : </b>Please make sure the above enterd details are correct. The added family member will be sent an invitation email and sms on given email id and mobile number to confirm the invitation. Once the user accepts and fill the remaining profile fields, he/she will be added to your family pack. </string>
+    <string name="add_family_member">please fill following details to add family member</string>
 </resources>

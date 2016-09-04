@@ -97,13 +97,6 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
     }
 
-    public void PlayMovie(Integer gid) {
-
-        Intent intent = new Intent(this, MovieInnerActivity.class);
-        intent.putExtra("vid", gid);
-        startActivity(intent);
-    }
-
     private void setUi(List<UserPackagesModel> userPackagesModelList) {
 
         tvPlanName = (TextView) findViewById(R.id.tvPlanName);
@@ -153,6 +146,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                 startActivity(new Intent(MyAccountActivity.this, NewPackagesActivity.class));
                 break;
             case R.id.tvManageFamilyMembers:
+                startActivity(new Intent(MyAccountActivity.this, ManageFamilyMembersActivity.class));
                 break;
             case R.id.tvManageAddOns:
                 break;
