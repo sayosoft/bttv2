@@ -44,7 +44,7 @@
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="?android:attr/actionBarSize"
                 android:background="@color/tx_continue_bg_green"
                 android:gravity="center"
                 android:padding="5dp"

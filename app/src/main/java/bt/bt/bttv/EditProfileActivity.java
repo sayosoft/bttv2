@@ -1,9 +1,16 @@
 package bt.bt.bttv;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,21 +29,15 @@ import java.util.Map;
 
 import bt.bt.bttv.app.AppConfig;
 import bt.bt.bttv.app.AppController;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
 
-/**
- * Created by sajid on 03-07-2016.
- */
-
-public class EditProfileActivity extends Activity {
+public class EditProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = EditProfileActivity.class.getSimpleName();
     private Button btnUpdate;
-    private Button btnLinkToLogin;
     private EditText inputFullName;
     private EditText inputLastName;
     private EditText inputEmail;
-    private EditText inputPassword;
-    private EditText inputCID;
     private EditText inputMobile;
     private ProgressDialog pDialog;
     private SQLiteHandler db;
@@ -46,13 +47,25 @@ public class EditProfileActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("BTTV");
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(EditProfileActivity.this);
+
         inputFullName = (EditText) findViewById(R.id.name);
         inputLastName = (EditText) findViewById(R.id.last_name);
         inputEmail = (EditText) findViewById(R.id.email);
 
         inputMobile = (EditText) findViewById(R.id.mobilenumber);
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
-        btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -93,13 +106,12 @@ public class EditProfileActivity extends Activity {
                 }
             }
         });
-
     }
 
-    /**
-     * Function to store user in MySQL database will post params(tag, name,
-     * email, password) to register url
-     */
+    public void clear(View v) {
+        Toast.makeText(getApplicationContext(), "Clicked on clear", Toast.LENGTH_LONG).show();
+    }
+
     private void updateUser(final String name, final String email, final String mobile, final String last_name, final String user_id) {
         // Tag used to cancel the request
         String tag_string_req = "req_register";
@@ -119,8 +131,6 @@ public class EditProfileActivity extends Activity {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
                     if (!error) {
-                        // User successfully stored in MySQL
-                        // Now store the user in sqlite
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
@@ -167,16 +177,23 @@ public class EditProfileActivity extends Activity {
                 params.put("first_name", name);
                 params.put("email", email);
                 params.put("last_name", last_name);
-
                 params.put("mobile", mobile);
 
                 return params;
             }
 
         };
-
-        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void showDialog() {
@@ -187,5 +204,52 @@ public class EditProfileActivity extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_movies) {
+            startActivity(new Intent(this, VideoHomeActivity.class));
+
+        } else if (id == R.id.nav_audio) {
+            startActivity(new Intent(this, AudioHomeActivity.class));
+
+        } else if (id == R.id.nav_home) {
+            startActivity(new Intent(this, HomeActivity.class));
+
+        } else if (id == R.id.nav_tvchannel) {
+            startActivity(new Intent(this, TvChannelActivity.class));
+
+        } else if (id == R.id.nav_radio) {
+            startActivity(new Intent(this, RadioChannelActivity.class));
+
+        } else if (id == R.id.nav_sports) {
+            startActivity(new Intent(this, NewSportsActivity.class));
+
+        } else if (id == R.id.nav_news) {
+            startActivity(new Intent(this, NewNewsActivity.class));
+
+        } else if (id == R.id.nav_myacc) {
+            startActivity(new Intent(this, MyAccountActivity.class));
+
+        } else if (id == R.id.nav_setting) {
+            startActivity(new Intent(this, SettingsActivity.class));
+
+        } else if (id == R.id.nav_terms) {
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
+
+        } else if (id == R.id.nav_privacy) {
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+
+        } else if (id == R.id.nav_logout) {
+            GlobleMethods globleMethods = new GlobleMethods(this);
+            globleMethods.logoutUser();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return false;
     }
 }

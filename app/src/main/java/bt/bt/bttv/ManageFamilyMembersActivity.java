@@ -1,6 +1,10 @@
 package bt.bt.bttv;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,18 +16,30 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
+import bt.bt.bttv.helper.HTTPURLConnection;
+import io.vov.vitamio.utils.Log;
 
 public class ManageFamilyMembersActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String PREFS_NAME = "MyPrefs";
+    public SharedPreferences settings;
     RecyclerView rvFamilyMembers;
     private FloatingActionButton FAB;
+    private ProgressDialog pDialog;
+    private HTTPURLConnection service;
+    private ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_family_members);
+
+        cd = new ConnectionDetector(this);
+        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("BTTV");
@@ -42,6 +58,11 @@ public class ManageFamilyMembersActivity extends AppCompatActivity implements Vi
         FAB.setOnClickListener(this);
 
         rvFamilyMembers = (RecyclerView) findViewById(R.id.rvFamilyMembers);
+        if (cd.isConnectingToInternet()) {
+//                new GetFamilyMembers().execute();
+        } else {
+            Toast.makeText(this, "Internet not available..!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -100,7 +121,6 @@ public class ManageFamilyMembersActivity extends AppCompatActivity implements Vi
         return false;
     }
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -108,6 +128,31 @@ public class ManageFamilyMembersActivity extends AppCompatActivity implements Vi
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private class GetFamilyMembers extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            service = new HTTPURLConnection();
+            pDialog = new ProgressDialog(ManageFamilyMembersActivity.this);
+            pDialog.setMessage(getString(R.string.msg_progress_dialog));
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... result) {
+            return service.ServerData(getResources().getString(R.string.url_genres) + GlobleMethods.genre_type);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+            Log.d("Family members", result);
         }
     }
 }
