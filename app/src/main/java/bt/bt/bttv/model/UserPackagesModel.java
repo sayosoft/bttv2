@@ -1,9 +1,23 @@
 package bt.bt.bttv.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Sachin on 8/25/2016.
  */
-public class UserPackagesModel {
+public class UserPackagesModel implements Parcelable {
+    public static final Parcelable.Creator<UserPackagesModel> CREATOR = new Parcelable.Creator<UserPackagesModel>() {
+        @Override
+        public UserPackagesModel createFromParcel(Parcel source) {
+            return new UserPackagesModel(source);
+        }
+
+        @Override
+        public UserPackagesModel[] newArray(int size) {
+            return new UserPackagesModel[size];
+        }
+    };
     /**
      * id : 92
      * package_id : 24
@@ -30,21 +44,46 @@ public class UserPackagesModel {
     private String package_id;
     private String user_id;
     private String package_exp;
-    private Object order_id;
+    private String order_id;
     private String package_status;
     private String auto_renew_status;
     private String added_time;
     private String package_title;
     private String package_type;
-    private Object package_members;
+    private String package_members;
     private String package_vod;
     private String package_aod;
     private String package_live_tv;
     private String package_radio;
     private String package_price;
-    private Object package_discount;
+    private String package_discount;
     private String package_duration;
-    private Object package_coupon;
+    private String package_coupon;
+
+    public UserPackagesModel() {
+    }
+
+    protected UserPackagesModel(Parcel in) {
+        this.id = in.readString();
+        this.package_id = in.readString();
+        this.user_id = in.readString();
+        this.package_exp = in.readString();
+        this.order_id = in.readParcelable(Object.class.getClassLoader());
+        this.package_status = in.readString();
+        this.auto_renew_status = in.readString();
+        this.added_time = in.readString();
+        this.package_title = in.readString();
+        this.package_type = in.readString();
+        this.package_members = in.readParcelable(Object.class.getClassLoader());
+        this.package_vod = in.readString();
+        this.package_aod = in.readString();
+        this.package_live_tv = in.readString();
+        this.package_radio = in.readString();
+        this.package_price = in.readString();
+        this.package_discount = in.readParcelable(Object.class.getClassLoader());
+        this.package_duration = in.readString();
+        this.package_coupon = in.readParcelable(Object.class.getClassLoader());
+    }
 
     public String getId() {
         return id;
@@ -82,7 +121,7 @@ public class UserPackagesModel {
         return order_id;
     }
 
-    public void setOrder_id(Object order_id) {
+    public void setOrder_id(String order_id) {
         this.order_id = order_id;
     }
 
@@ -130,7 +169,7 @@ public class UserPackagesModel {
         return package_members;
     }
 
-    public void setPackage_members(Object package_members) {
+    public void setPackage_members(String package_members) {
         this.package_members = package_members;
     }
 
@@ -178,7 +217,7 @@ public class UserPackagesModel {
         return package_discount;
     }
 
-    public void setPackage_discount(Object package_discount) {
+    public void setPackage_discount(String package_discount) {
         this.package_discount = package_discount;
     }
 
@@ -194,7 +233,35 @@ public class UserPackagesModel {
         return package_coupon;
     }
 
-    public void setPackage_coupon(Object package_coupon) {
+    public void setPackage_coupon(String package_coupon) {
         this.package_coupon = package_coupon;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.package_id);
+        dest.writeString(this.user_id);
+        dest.writeString(this.package_exp);
+        dest.writeString(this.order_id);
+        dest.writeString(this.package_status);
+        dest.writeString(this.auto_renew_status);
+        dest.writeString(this.added_time);
+        dest.writeString(this.package_title);
+        dest.writeString(this.package_type);
+        dest.writeString(this.package_members);
+        dest.writeString(this.package_vod);
+        dest.writeString(this.package_aod);
+        dest.writeString(this.package_live_tv);
+        dest.writeString(this.package_radio);
+        dest.writeString(this.package_price);
+        dest.writeString(this.package_discount);
+        dest.writeString(this.package_duration);
+        dest.writeString(this.package_coupon);
     }
 }

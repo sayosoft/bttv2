@@ -21,6 +21,7 @@ import android.widget.Toast;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.HTTPURLConnection;
+import bt.bt.bttv.model.UserPackagesModel;
 import io.vov.vitamio.utils.Log;
 
 public class ManageFamilyMembersActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -28,6 +29,7 @@ public class ManageFamilyMembersActivity extends AppCompatActivity implements Vi
     public static final String PREFS_NAME = "MyPrefs";
     public SharedPreferences settings;
     RecyclerView rvFamilyMembers;
+    UserPackagesModel userPackageModel;
     private FloatingActionButton FAB;
     private ProgressDialog pDialog;
     private HTTPURLConnection service;
@@ -37,6 +39,8 @@ public class ManageFamilyMembersActivity extends AppCompatActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_family_members);
+
+        userPackageModel = getIntent().getParcelableExtra("userPackageModel");
 
         cd = new ConnectionDetector(this);
         settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
