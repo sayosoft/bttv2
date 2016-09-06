@@ -16,9 +16,9 @@ import bt.bt.bttv.model.MyPlayListModel;
 
 public class MyPlaylistsAdapter extends RecyclerView.Adapter<MyPlaylistsAdapter.ViewHolder> {
     Context context;
-    List<MyPlayListModel> myPlayListModelList;
+    List<MyPlayListModel.ArrayBean> myPlayListModelList;
 
-    public MyPlaylistsAdapter(Context context, List<MyPlayListModel> myPlayListModelList) {
+    public MyPlaylistsAdapter(Context context, List<MyPlayListModel.ArrayBean> myPlayListModelList) {
         super();
         this.context = context;
         this.myPlayListModelList = myPlayListModelList;

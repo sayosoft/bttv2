@@ -3,34 +3,35 @@ package bt.bt.bttv.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.util.HashMap;
 
 import bt.bt.bttv.R;
 import bt.bt.bttv.adapter.MyPlaylistsAdapter;
+import bt.bt.bttv.helper.APiAsync;
+import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.HTTPURLConnection;
+import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.MyPlayListModel;
 
-
-public class MyPlaylistsFragment extends Fragment implements View.OnClickListener {
+public class MyPlaylistsFragment extends Fragment implements View.OnClickListener, ApiInt {
 
     public static final String PREFS_NAME = "MyPrefs";
     public SharedPreferences settings;
@@ -39,11 +40,11 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
     RecyclerView.Adapter mAdapter;
     EditText etPlayListName;
     Button btnAddPlayList;
-    private ProgressDialog pDialog;
-    private HTTPURLConnection service;
     private ConnectionDetector cd;
-    private List<MyPlayListModel> myPlayListModelList;
-    private JSONObject jsonObject;
+    private MyPlayListModel myPlayListModel;
+    private SQLiteHandler db;
+    private TextView altText;
+    private APiAsync aPiAsync;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,9 +53,11 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.myplaylist_fragment, container, false);
         cd = new ConnectionDetector(getActivity());
         settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        db = new SQLiteHandler(getActivity());
 
         rvMyPlayList = (RecyclerView) view.findViewById(R.id.rvMyPlayList);
         rvMyPlayList.setHasFixedSize(true);
+        altText = (TextView) view.findViewById(R.id.altText);
 
         etPlayListName = (EditText) view.findViewById(R.id.etPlayListName);
         btnAddPlayList = (Button) view.findViewById(R.id.btnAddPlayList);
@@ -64,10 +67,11 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
         rvMyPlayList.setLayoutManager(mLayoutManager);
 
         if (cd.isConnectingToInternet()) {
-            if (myPlayListModelList == null) {
-                new GetPlayLists().execute();
+            if (myPlayListModel == null) {
+                aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getActivity().getString(R.string.msg_progress_dialog));
+                aPiAsync.execute();
             } else {
-                mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModelList);
+                mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModel.getArray());
                 rvMyPlayList.setAdapter(mAdapter);
             }
         } else {
@@ -88,40 +92,17 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private class GetPlayLists extends AsyncTask<String, Void, String> {
+    @Override
+    public void onSuccess(String response) {
+        Gson gson = new Gson();
+        myPlayListModel = gson.fromJson(response.toString(), MyPlayListModel.class);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            service = new HTTPURLConnection();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(getString(R.string.msg_progress_dialog));
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... result) {
-            return service.ServerData(getResources().getString(R.string.url_get_movie_playlists));
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (pDialog.isShowing())
-                pDialog.dismiss();
-            try {
-                jsonObject = new JSONObject(result);
-                if (jsonObject.getJSONArray("array").length() > 0) {
-                    Gson gson = new Gson();
-                    myPlayListModelList = gson.fromJson(jsonObject.getJSONArray("array").toString(), new TypeToken<List<MyPlayListModel>>() {
-                    }.getType());
-
-                    mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModelList);
-                    rvMyPlayList.setAdapter(mAdapter);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModel.getArray());
+        rvMyPlayList.setAdapter(mAdapter);
+        if (mAdapter.getItemCount() == 0) {
+            altText.setVisibility(View.VISIBLE);
+        } else {
+            altText.setVisibility(View.GONE);
         }
     }
 

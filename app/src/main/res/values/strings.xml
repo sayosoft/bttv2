@@ -88,7 +88,7 @@
     <string name="url_privacy">http://bflix.ignitecloud.in/apppages/privacy</string>
     <string name="url_image">http://bflix.ignitecloud.in/uploads/images/</string>
     <string name="url_news">http://bflix.ignitecloud.in/jsonApi/slides/News</string>
-    <string name="url_get_movie_playlists">http://bflix.ignitecloud.in/jsonApi/getplaylist2/8</string>
+    <string name="url_get_movie_playlists">http://bflix.ignitecloud.in/jsonApi/getplaylist2/</string>
     <string name="url_get_home_categories">http://bflix.ignitecloud.in/web_api/get_home_categories.php</string>
     <string name="url_get_video">http://bflix.ignitecloud.in/jsonApi/vod/</string>
     <string name="url_drawer_categories">http://bflix.ignitecloud.in/jsonApi/categories</string>
