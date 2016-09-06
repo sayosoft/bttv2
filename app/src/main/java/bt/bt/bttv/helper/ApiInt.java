@@ -5,5 +5,6 @@ package bt.bt.bttv.helper;
  */
 public interface ApiInt {
 
-    void getResponse(String response);
+    void onSuccess(String response);
+
 }

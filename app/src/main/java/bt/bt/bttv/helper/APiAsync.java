@@ -23,8 +23,10 @@ public class APiAsync extends AsyncTask<String, Void, String> {
         mContext = activityContext;
         this.url = url;
         this.progressDialogMsg = progressDialogMsg;
-
-        mListener = (ApiInt) fragmentContext;
+        if (fragmentContext != null)
+            mListener = (ApiInt) fragmentContext;
+        else
+            mListener = (ApiInt) activityContext;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class APiAsync extends AsyncTask<String, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
-        mListener.getResponse(result);
+        mListener.onSuccess(result);
     }
 }
 

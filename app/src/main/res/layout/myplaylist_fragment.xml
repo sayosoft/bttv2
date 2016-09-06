@@ -8,15 +8,15 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/llBottom"/>
 
-  <!--  <TextView
+    <TextView
         android:id="@+id/altText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="?android:attr/textAppearanceLarge"
+        android:textSize="18sp"
         android:text="You don't have playlist"
         android:textColor="@color/colorBlack"
         android:visibility="gone"
-        android:gravity="center"/>-->
+        android:gravity="center"/>
 
     <LinearLayout
         android:id="@+id/llBottom"
