@@ -38,7 +38,7 @@ import java.util.List;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
 
-public class MovieInnerActivity extends AppCompatActivity {
+public class MovieInnerActivity extends AppCompatActivity implements View.OnClickListener {
 
     // JSON Node names
     private static final String TAG_VIDEO_INFO = "videos";
@@ -74,7 +74,7 @@ public class MovieInnerActivity extends AppCompatActivity {
     String VResume = null;
     String pvalues = null;
     Boolean autoplay = false;
-    private ImageButton FavBtn, AddBtn;
+    private ImageButton FavBtn, AddBtn, btnLater, btnShare;
     private SQLiteHandler db;
 
     @Override
@@ -152,37 +152,31 @@ public class MovieInnerActivity extends AppCompatActivity {
         ImageButton imgbtn = (ImageButton) findViewById(R.id.imageButton);
         FavBtn = (ImageButton) findViewById(R.id.favbtn);
         AddBtn = (ImageButton) findViewById(R.id.addbtn);
+        btnLater = (ImageButton) findViewById(R.id.btnLater);
+        btnShare = (ImageButton) findViewById(R.id.btnShare);
 
         LayerDrawable stars = (LayerDrawable) rate_bar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         String Ret = addrelated(related);
-        FavBtn.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Added to Favorites",
-                        Toast.LENGTH_LONG).show();
+        FavBtn.setOnClickListener(this);
+        AddBtn.setOnClickListener(this);
+        btnLater.setOnClickListener(this);
+        btnShare.setOnClickListener(this);
 
-            }
-        });
-
-        AddBtn.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                PlaylistAlertDialogView();
-            }
-        });
         if (Ret == "NOTOK") {
             Toast.makeText(getApplicationContext(), "Could Not Find Related Videos",
                     Toast.LENGTH_LONG).show();
         }
+
         for (int i = 0; i < movie.length(); i++) {
             JSONObject m = movie.getJSONObject(i);
             video_source = "";
             video_source = m.getString(TAG_VIDEO_SOURCE);
             String c_purchased = m.getString(TAG_VIDEO_PUR);
-            String mpost = "http://bflix.ignitecloud.in/uploads/images/" + m.getString(TAG_VIDEO_POSTER);
+            String mpost = getString(R.string.url_base_image) + m.getString(TAG_VIDEO_POSTER);
             Ion.with(movieposter)
                     .placeholder(R.drawable.loadingposter)
                     .load(mpost);
@@ -330,11 +324,9 @@ public class MovieInnerActivity extends AppCompatActivity {
                         relatedVideos = jsonObj.getJSONArray(TAG_VIDEO_RELATED_INFO);
                     else
                         relatedVideos = null;
-                    Log.i("CategoriesObj 410: ", "> " + movies);
                 } catch (JSONException e) {
                     movies = null;
                     relatedVideos = null;
-                    Log.i("CategoriesObj 413: ", "> " + "Movies Object Null");
                     e.printStackTrace();
                 }
                 mvs = movies;
@@ -408,6 +400,28 @@ public class MovieInnerActivity extends AppCompatActivity {
     public void showSettings(MenuItem item) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.favbtn:
+                Toast.makeText(getApplicationContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.addbtn:
+                PlaylistAlertDialogView();
+                break;
+            case R.id.btnLater:
+                Toast.makeText(getApplicationContext(), "Added to Watch Later",
+                        Toast.LENGTH_LONG).show();
+                break;
+            case R.id.btnShare:
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, "This is the shared link.");
+                startActivity(Intent.createChooser(share, "Share"));
+                break;
+        }
     }
 
     private class GetMovies extends AsyncTask<Void, Void, Void> {
