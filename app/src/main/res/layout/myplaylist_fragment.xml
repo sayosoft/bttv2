@@ -1,12 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvMyPlayList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/llBottom" />
+        android:layout_above="@+id/llBottom"/>
+
+  <!--  <TextView
+        android:id="@+id/altText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="?android:attr/textAppearanceLarge"
+        android:text="You don't have playlist"
+        android:textColor="@color/colorBlack"
+        android:visibility="gone"
+        android:gravity="center"/>-->
 
     <LinearLayout
         android:id="@+id/llBottom"
@@ -22,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:hint="Enter Playlist Name"
-            android:inputType="text" />
+            android:inputType="text"/>
 
         <Button
             android:id="@+id/btnAddPlayList"
@@ -31,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:onClick="createPlayList"
-            android:text="Create" />
+            android:text="Create"/>
 
     </LinearLayout>
 
