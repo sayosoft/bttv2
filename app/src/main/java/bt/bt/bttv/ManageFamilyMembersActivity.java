@@ -106,10 +106,10 @@ public class ManageFamilyMembersActivity extends AppCompatActivity implements Vi
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms_conditios)));
 
         } else if (id == R.id.nav_privacy) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy_policy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);

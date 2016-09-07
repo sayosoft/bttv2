@@ -27,8 +27,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import bt.bt.bttv.app.AppConfig;
-import bt.bt.bttv.app.AppController;
+import bt.bt.bttv.helper.AppController;
 import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
 
@@ -119,8 +118,7 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         pDialog.setMessage("Updateing ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST,
-                AppConfig.URL_UPDATE, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST,getString(R.string.url_user_update), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -238,10 +236,10 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms_conditios)));
 
         } else if (id == R.id.nav_privacy) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy_policy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);

@@ -25,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.ImageListener;
 
 import org.json.JSONArray;
@@ -85,7 +85,9 @@ public class NewNewsActivity extends AppCompatActivity
                                 e.printStackTrace();
                             }
                         }
-                        Ion.with(getApplicationContext()).load(slideimgs[position]).intoImageView(imageView);
+                        Picasso.with(getApplicationContext())
+                                .load(slideimgs[position])
+                                .into(imageView);
                     }
                 }
             }, 1200);
@@ -193,9 +195,10 @@ public class NewNewsActivity extends AppCompatActivity
             }
         });
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        Ion.with(imageView)
+        Picasso.with(NewNewsActivity.this)
+                .load(newimage)
                 .placeholder(R.drawable.loadingposter)
-                .load(newimage);
+                .into(imageView);
 
         return imageView;
     }
@@ -257,10 +260,10 @@ public class NewNewsActivity extends AppCompatActivity
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms_conditios)));
 
         } else if (id == R.id.nav_privacy) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy_policy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);

@@ -31,7 +31,7 @@ import android.widget.Toast;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -216,10 +216,10 @@ public class MovieActivity extends AppCompatActivity
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         RotateAnimation rotateAnimation = new RotateAnimation(30, 90,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        Ion.with(imageView)
+        Picasso.with(MovieActivity.this)
+                .load(newimage)
                 .placeholder(R.drawable.loadingposter)
-
-                .load(newimage);
+                .into(imageView);
 
         return imageView;
     }
@@ -281,10 +281,10 @@ public class MovieActivity extends AppCompatActivity
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms_conditios)));
 
         } else if (id == R.id.nav_privacy) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy_policy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);

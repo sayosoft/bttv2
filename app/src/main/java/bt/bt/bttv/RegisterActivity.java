@@ -25,8 +25,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bt.bt.bttv.app.AppConfig;
-import bt.bt.bttv.app.AppController;
+import bt.bt.bttv.helper.AppController;
 import bt.bt.bttv.helper.SQLiteHandler;
 
 /**
@@ -155,8 +154,7 @@ public class RegisterActivity extends Activity {
         pDialog.setMessage("Registering ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST,
-                AppConfig.URL_REGISTER, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST,getString(R.string.url_register), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

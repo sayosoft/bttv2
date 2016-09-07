@@ -22,7 +22,7 @@ public class WebViewActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             url = getIntent().getExtras().getString("url");
         } else {
-            url = getString(R.string.url_terms);
+            url = getString(R.string.url_terms_conditios);
         }
 
         setContentView(R.layout.activity_web_view);

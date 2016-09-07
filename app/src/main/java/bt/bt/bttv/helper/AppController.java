@@ -1,4 +1,4 @@
-package bt.bt.bttv.app;
+package bt.bt.bttv.helper;
 
 import android.app.Application;
 import android.text.TextUtils;

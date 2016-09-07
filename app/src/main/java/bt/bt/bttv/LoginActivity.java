@@ -30,11 +30,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import bt.bt.bttv.app.AppConfig;
-import bt.bt.bttv.app.AppController;
+import bt.bt.bttv.helper.AppController;
 import bt.bt.bttv.helper.SQLiteHandler;
 
 public class LoginActivity extends Activity implements View.OnClickListener {
+
     public static final String PREFS_NAME = "MyPrefs";
     public static final String logFlag = "logFlag";
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -101,8 +101,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         pDialog.setMessage("Logging in ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST,
-                AppConfig.URL_LOGIN, new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST,getString(R.string.url_login), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {

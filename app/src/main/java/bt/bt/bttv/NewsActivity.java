@@ -27,7 +27,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.ImageListener;
 
 import org.json.JSONArray;
@@ -89,9 +89,9 @@ public class NewsActivity extends AppCompatActivity
                                 e.printStackTrace();
                             }
                         }
-
-
-                        Ion.with(getApplicationContext()).load(slideimgs[position]).intoImageView(imageView);
+                        Picasso.with(getApplicationContext())
+                                .load(slideimgs[position])
+                                .into(imageView);
 
 
                     } else {
@@ -210,10 +210,10 @@ public class NewsActivity extends AppCompatActivity
             startActivity(new Intent(this, SettingsActivity.class));
 
         } else if (id == R.id.nav_terms) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_terms_conditios)));
 
         } else if (id == R.id.nav_privacy) {
-            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy)));
+            startActivity(new Intent(this, WebViewActivity.class).putExtra("url", getString(R.string.url_privacy_policy)));
 
         } else if (id == R.id.nav_logout) {
             GlobleMethods globleMethods = new GlobleMethods(this);
@@ -404,9 +404,9 @@ public class NewsActivity extends AppCompatActivity
             } else {
                 imageView = (ImageView) convertView;
             }
-
-            //imageView.setImageResource(mThumbIds[position]);
-            Ion.with(imageView).load(mbThumbIds2[position]);
+            Picasso.with(getApplicationContext())
+                    .load(mbThumbIds2[position])
+                    .into(imageView);
 
             return imageView;
         }
