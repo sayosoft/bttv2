@@ -100,7 +100,7 @@ public class SplashScreen extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... result) {
-            return service.ServerData(getResources().getString(R.string.url_get_video));
+            return service.ServerData(getResources().getString(R.string.url_get_videos));
         }
 
         @Override

@@ -89,6 +89,7 @@
     <string name="re_enter_new_password">Re Enter Password</string>
     <string name="note"><b>Note : </b>Please make sure the above enterd details are correct. The added family member will be sent an invitation email and sms on given email id and mobile number to confirm the invitation. Once the user accepts and fill the remaining profile fields, he/she will be added to your family pack. </string>
     <string name="add_family_member">please fill following details to add family member</string>
+    <string name="msg_no_connection">No Internet Connection..!</string>
 
 
     <string name="url_login">http://bflix.ignitecloud.in/JsonLoginCheck/user_action</string>
@@ -99,7 +100,7 @@
     <string name="url_news">http://bflix.ignitecloud.in/jsonApi/slides/News</string>
     <string name="url_get_movie_playlists">http://bflix.ignitecloud.in/jsonApi/getplaylist2/</string>
     <string name="url_get_home_categories">http://bflix.ignitecloud.in/web_api/get_home_categories.php</string>
-    <string name="url_get_video">http://bflix.ignitecloud.in/jsonApi/vod/</string>
+    <string name="url_get_videos">http://bflix.ignitecloud.in/jsonApi/vod/</string>
     <string name="url_drawer_categories">http://bflix.ignitecloud.in/jsonApi/categories</string>
     <string name="url_audio">http://bflix.ignitecloud.in/jsonApi/aod</string>
     <string name="url_watch_later">http://bflix.ignitecloud.in/web_api/get_watch_later.php</string>
@@ -111,4 +112,10 @@
     <string name="url_privacy_policy">http://bflix.ignitecloud.in/apppages/privacy</string>
     <string name="url_get_radios">http://bflix.ignitecloud.in/jsonApi/radio</string>
     <string name="url_base_image">http://bflix.ignitecloud.in/uploads/images/</string>
+    <string name="url_get_video">http://bflix.ignitecloud.in/jsonApi/getvod/</string>
+    <string name="url_add_favorite">http://bflix.ignitecloud.in/jsonApi/addtofav1/</string>
+    <string name="url_create_playlist">http://bflix.ignitecloud.in/jsonApi/createPlaylist/</string>
+    <string name="url_add_to_playlist">http://bflix.ignitecloud.in/jsonApi/savetoplaylist/</string>
+    <string name="url_add_to_watchlist">http://bflix.ignitecloud.in/jsonApi/addtoWatchlist/</string>
+
 </resources>

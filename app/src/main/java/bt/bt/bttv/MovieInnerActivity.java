@@ -24,6 +24,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONArray;
@@ -35,10 +36,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import bt.bt.bttv.helper.APiAsync;
+import bt.bt.bttv.helper.ApiInt;
+import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.MyPlayListModel;
 
-public class MovieInnerActivity extends AppCompatActivity implements View.OnClickListener {
+public class MovieInnerActivity extends AppCompatActivity implements View.OnClickListener, ApiInt {
 
     // JSON Node names
     private static final String TAG_VIDEO_INFO = "videos";
@@ -58,9 +63,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     private static final String TAG_VIDEO_RATING = "video_rating";
     private static final String TAG_VIDEO_PUR = "video_purchased";
     private static final String TAG_VIDEO_RESUME = "video_resume";
-    private static String moviesurl = "http://bflix.ignitecloud.in/jsonApi/getvod/";
-    final HashMap<String, String> onlymovie = new HashMap<String, String>();
-    ArrayList<HashMap<String, String>> moviesList2 = new ArrayList<HashMap<String, String>>();
+    private static String postParams = "";
     JSONArray mvs = null;
     JSONArray related = null;
     String video_source = null;
@@ -72,16 +75,21 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     String MovieDirector = null;
     String VideoID = null;
     String VResume = null;
-    String pvalues = null;
+    String strPlaylistName = null;
     Boolean autoplay = false;
+    int position;
     private TextView tvFavourite, tvAddToPlaylist, tvLater, tvShare;
     private SQLiteHandler db;
+    private ConnectionDetector cd;
+    private APiAsync aPiAsync;
+    private MyPlayListModel myPlayListModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_inner);
 
+        cd = new ConnectionDetector(this);
         db = new SQLiteHandler(getApplicationContext());
         // Fetching user details from sqlite
         HashMap<String, String> user = db.getUserDetails();
@@ -93,12 +101,11 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
             if (ap != null) {
                 autoplay = true;
             }
-            moviesurl = "";
-            String furl = "http://bflix.ignitecloud.in/jsonApi/getvod/";
-            moviesurl = furl + value + "/" + uid;
-            Log.i("INTENTVALUE:", moviesurl);
+            postParams = "";
+            postParams = value + "/" + uid;
+            Log.i("INTENTVALUE:", postParams);
         } else {
-            Log.i("INTENTVALUE:", moviesurl);
+            Log.i("INTENTVALUE:", postParams);
         }
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -121,7 +128,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                 Integer c_id = Integer.parseInt(m.getString(TAG_VIDEO_ID));
                 String c_title = m.getString(TAG_VIDEO_TITLE);
                 String c_poster = m.getString(TAG_VIDEO_POSTER);
-                String FinalImage = "http://bflix.ignitecloud.in/uploads/images/" + c_poster;
+                String FinalImage = getString(R.string.url_base_image) + c_poster;
                 if (imageGallery != null) {
                     imageGallery.addView(getImageView(FinalImage, c_id));
                     System.gc();
@@ -138,8 +145,8 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         NavUtils.navigateUpFromSameTask(this);
     }
 
-
     private void SetMovieValues(JSONArray movie) throws JSONException {
+
         TextView movietitle = (TextView) findViewById(R.id.movietitle);
         TextView movieduration = (TextView) findViewById(R.id.movieduration);
         TextView moviegenre = (TextView) findViewById(R.id.moviegenre);
@@ -209,22 +216,24 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void PlaylistAlertDialogView() {
-        final CharSequence[] items = {"Watchlist", "Default", "General"};
+    private void PlaylistAlertDialogView(final MyPlayListModel myPlayListModel) {
+
+        CharSequence[] items = new CharSequence[myPlayListModel.getArray().size()];
+        for (int i = 0; i < myPlayListModel.getArray().size(); i++) {
+            items[i] = myPlayListModel.getArray().get(i).getPlaylist_name();
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(MovieInnerActivity.this);//ERROR ShowDialog cannot be resolved to a type
         builder.setTitle("Add to Playlist");
         builder.setSingleChoiceItems(items, -1,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        Toast.makeText(getApplicationContext(), items[item],
-                                Toast.LENGTH_SHORT).show();
-                        pvalues = items[item].toString();
+                        position = item;
                     }
                 });
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(getApplicationContext(), "Added Video to " + pvalues,
-                        Toast.LENGTH_SHORT).show();
+                strPlaylistName = myPlayListModel.getArray().get(position).getPlaylist_name();
+                apiAddToPlaylist(myPlayListModel.getArray().get(position).getPlaylist_id());
             }
         });
 
@@ -234,6 +243,15 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void apiAddToPlaylist(String playlist_id) {
+        if (cd.isConnectingToInternet()) {
+            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102);
+            aPiAsync.execute();
+        } else {
+            Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
+        }
     }
 
     private View getImageView(String newimage, Integer uid) {
@@ -369,23 +387,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                     movie.put(TAG_VIDEO_RATING, m_rating);
                     movie.put(TAG_VIDEO_PUR, m_pur);
                     movie.put(TAG_VIDEO_RESUME, m_res);
-                    onlymovie.put(TAG_VIDEO_ID, m_id);
-                    onlymovie.put(TAG_VIDEO_TITLE, m_title);
-                    onlymovie.put(TAG_VIDEO_CATEGORY, m_category);
-                    onlymovie.put(TAG_VIDEO_POSTER, m_poster);
-                    onlymovie.put(TAG_VIDEO_GENRES, m_genres);
-                    onlymovie.put(TAG_VIDEO_DIRECTOR, m_director);
-                    onlymovie.put(TAG_VIDEO_ACTING, m_acting);
-                    onlymovie.put(TAG_VIDEO_LANGUAGE, m_lang);
-                    onlymovie.put(TAG_VIDEO_DURATION, m_duration);
-                    onlymovie.put(TAG_VIDEO_DESCRIPTION, m_description);
-                    onlymovie.put(TAG_VIDEO_SOURCE, m_source);
-                    onlymovie.put(TAG_VIDEO_GENRES_TEXT, m_genres_text);
-                    onlymovie.put(TAG_VIDEO_RATING, m_rating);
-                    onlymovie.put(TAG_VIDEO_PUR, m_pur);
-                    onlymovie.put(TAG_VIDEO_RESUME, m_res);
                     moviesList.add(movie);
-                    moviesList2.add(onlymovie);
                 }
                 return moviesList;
             } catch (JSONException e) {
@@ -407,12 +409,23 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvFavourite:
-                Toast.makeText(getApplicationContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
+                if (cd.isConnectingToInternet()) {
+                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100);
+                    aPiAsync.execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.tvAddToPlaylist:
-                PlaylistAlertDialogView();
+                apiGetPlayLists();
                 break;
             case R.id.tvLater:
+                if (cd.isConnectingToInternet()) {
+                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103);
+                    aPiAsync.execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
+                }
                 Toast.makeText(getApplicationContext(), "Added to Watch Later",
                         Toast.LENGTH_LONG).show();
                 break;
@@ -425,11 +438,56 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private void apiGetPlayLists() {
+
+        if (cd.isConnectingToInternet()) {
+            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101);
+            aPiAsync.execute();
+        } else {
+            Toast.makeText(MovieInnerActivity.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onSuccess(String response, int requestType) {
+        switch (requestType) {
+            case 100:
+                Log.e("response fav", response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("success").equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("success"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 101:
+                Gson gson = new Gson();
+                myPlayListModel = gson.fromJson(response.toString(), MyPlayListModel.class);
+                PlaylistAlertDialogView(myPlayListModel);
+                break;
+            case 102:
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("success").equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Added Video to " + strPlaylistName, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("success"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
+
     private class GetMovies extends AsyncTask<Void, Void, Void> {
 
         ArrayList<HashMap<String, String>> moviesList;
         ProgressDialog proDialog;
-        String TestMovies = null;
 
         @Override
         protected void onPreExecute() {
@@ -445,18 +503,14 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         @Override
         protected Void doInBackground(Void... arg0) {
             WebRequest webreq = new WebRequest();
-            String MoviesStr = webreq.makeWebServiceCall(moviesurl, WebRequest.GETRequest);
+            String MoviesStr = webreq.makeWebServiceCall(getString(R.string.url_get_video) + postParams, WebRequest.GETRequest);
             moviesList = ParseJSONMovie(MoviesStr);
-            TestMovies = MoviesStr;
             return null;
         }
 
         @Override
         protected void onPostExecute(Void requestresult) {
             super.onPostExecute(requestresult);
-            proDialog.dismiss();
-            ArrayList<HashMap<String, String>> movList;
-            movList = ParseJSONMovie(TestMovies);
             if (proDialog.isShowing()) {
                 proDialog.dismiss();
             }

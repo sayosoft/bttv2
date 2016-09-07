@@ -29,6 +29,7 @@ import bt.bt.bttv.adapter.AudioHomeAdapter;
 import bt.bt.bttv.adapter.VideoHomeAdapter;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.HTTPURLConnection;
+import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.AudiosModel;
 import bt.bt.bttv.model.MyFavoriteModel;
 import bt.bt.bttv.model.VideosModel;
@@ -45,10 +46,13 @@ public class MyFavoriteFragment extends Fragment {
     private ProgressDialog pDialog;
     private HTTPURLConnection service;
     private ConnectionDetector cd;
+    private SQLiteHandler db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        db = new SQLiteHandler(getActivity());
         cd = new ConnectionDetector(getActivity());
         settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
@@ -158,7 +162,7 @@ public class MyFavoriteFragment extends Fragment {
 
             jsonObject = new JSONObject();
             try {
-                jsonObject.put("user_id", "14");
+                jsonObject.put("user_id", db.getUserDetails().get("uid"));
                 jsonObject.put("media_type", "1");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -212,7 +216,7 @@ public class MyFavoriteFragment extends Fragment {
 
             jsonObject = new JSONObject();
             try {
-                jsonObject.put("user_id", "14");
+                jsonObject.put("user_id", db.getUserDetails().get("uid"));
                 jsonObject.put("media_type", "2");
             } catch (JSONException e) {
                 e.printStackTrace();

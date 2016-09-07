@@ -1,13 +1,11 @@
 package bt.bt.bttv.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +16,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 import bt.bt.bttv.R;
 import bt.bt.bttv.adapter.MyPlaylistsAdapter;
 import bt.bt.bttv.helper.APiAsync;
 import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.ConnectionDetector;
-import bt.bt.bttv.helper.HTTPURLConnection;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.MyPlayListModel;
 
@@ -66,9 +62,15 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
         mLayoutManager = new GridLayoutManager(getActivity(), 1);
         rvMyPlayList.setLayoutManager(mLayoutManager);
 
+        apiGetPlayLists();
+        return view;
+    }
+
+    private void apiGetPlayLists() {
+
         if (cd.isConnectingToInternet()) {
             if (myPlayListModel == null) {
-                aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getActivity().getString(R.string.msg_progress_dialog));
+                aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getActivity().getString(R.string.msg_progress_dialog), 100);
                 aPiAsync.execute();
             } else {
                 mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModel.getArray());
@@ -77,7 +79,6 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
         } else {
             Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
         }
-        return view;
     }
 
     @Override
@@ -85,7 +86,12 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
         switch (v.getId()) {
             case R.id.btnAddPlayList:
                 if (etPlayListName.getText().length() > 0) {
-
+                    if (cd.isConnectingToInternet()) {
+                        aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_create_playlist) + db.getUserDetails().get("uid") + "/" + etPlayListName.getText().toString().replace(" ", "%20"), getActivity().getString(R.string.msg_progress_dialog), 101);
+                        aPiAsync.execute();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.msg_no_connection, Toast.LENGTH_SHORT).show();
+                    }
                 } else
                     Toast.makeText(getActivity(), "Please enter playlist name", Toast.LENGTH_SHORT).show();
                 break;
@@ -93,16 +99,36 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onSuccess(String response) {
-        Gson gson = new Gson();
-        myPlayListModel = gson.fromJson(response.toString(), MyPlayListModel.class);
+    public void onSuccess(String response, int requestType) {
+        switch (requestType) {
+            case 100:
+                Gson gson = new Gson();
+                myPlayListModel = gson.fromJson(response.toString(), MyPlayListModel.class);
 
-        mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModel.getArray());
-        rvMyPlayList.setAdapter(mAdapter);
-        if (mAdapter.getItemCount() == 0) {
-            altText.setVisibility(View.VISIBLE);
-        } else {
-            altText.setVisibility(View.GONE);
+                mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModel.getArray());
+                rvMyPlayList.setAdapter(mAdapter);
+                if (mAdapter.getItemCount() == 0) {
+                    altText.setVisibility(View.VISIBLE);
+                } else {
+                    altText.setVisibility(View.GONE);
+                }
+                break;
+
+            case 101:
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("success").equals("success")) {
+                        Toast.makeText(getActivity(), "Playlist Created Successfully..!", Toast.LENGTH_SHORT).show();
+                        etPlayListName.setText("");
+                        myPlayListModel = null;
+                        apiGetPlayLists();
+                    } else {
+                        Toast.makeText(getActivity(), jsonObject.getString("success"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 

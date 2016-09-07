@@ -571,7 +571,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... res) {
-            return service.ServerData(getResources().getString(R.string.url_get_video));
+            return service.ServerData(getResources().getString(R.string.url_get_videos));
         }
 
         @Override
