@@ -47,6 +47,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     private TextView tvPlanName, tvPrice, tvVOD, tvAOD, tvLiveTvChannel, tvRadioChannel, tvExpiryDate, tvManageSubscriptions, tvManageFamilyMembers, tvManageAddOns, tvAddBalance, tvEditProfile;
     private Switch switchAutoRenew;
     private HashMap<String, String> user;
+    private UserPackagesModel userPackagesModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +134,8 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
 
         if (userPackagesModelList.size() > 0) {
             for (UserPackagesModel userPackagesModel : userPackagesModelList) {
-                if (userPackagesModel.getPackage_status() != null)
-                        setData(userPackagesModel);
+                if (userPackagesModel.getPackage_status().equals("Active"))
+                    setData(userPackagesModel);
             }
         }
     }
@@ -146,7 +147,10 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                 startActivity(new Intent(MyAccountActivity.this, NewPackagesActivity.class));
                 break;
             case R.id.tvManageFamilyMembers:
-                startActivity(new Intent(MyAccountActivity.this, ManageFamilyMembersActivity.class));
+                if (userPackagesModel.getPackage_type().equals("Family"))
+                    startActivity(new Intent(MyAccountActivity.this, ManageFamilyMembersActivity.class).putExtra("userPackageModel", userPackagesModel));
+                else
+                    Toast.makeText(MyAccountActivity.this, "You have not subscribed for family pack !", Toast.LENGTH_LONG).show();
                 break;
             case R.id.tvManageAddOns:
                 break;
@@ -171,7 +175,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             startActivity(intent);
             finish();
 
-        }else if (id == R.id.nav_home) {
+        } else if (id == R.id.nav_home) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
 
