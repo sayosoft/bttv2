@@ -74,7 +74,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     String VResume = null;
     String pvalues = null;
     Boolean autoplay = false;
-    private ImageButton FavBtn, AddBtn, btnLater, btnShare;
+    private TextView tvFavourite, tvAddToPlaylist, tvLater, tvShare;
     private SQLiteHandler db;
 
     @Override
@@ -150,10 +150,11 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         RatingBar rate_bar = (RatingBar) findViewById(R.id.ratingBar);
         Button buynowbutton = (Button) findViewById(R.id.buynowbtn);
         ImageButton imgbtn = (ImageButton) findViewById(R.id.imageButton);
-        FavBtn = (ImageButton) findViewById(R.id.favbtn);
-        AddBtn = (ImageButton) findViewById(R.id.addbtn);
-        btnLater = (ImageButton) findViewById(R.id.btnLater);
-        btnShare = (ImageButton) findViewById(R.id.btnShare);
+
+        tvFavourite = (TextView) findViewById(R.id.tvFavourite);
+        tvAddToPlaylist = (TextView) findViewById(R.id.tvAddToPlaylist);
+        tvLater = (TextView) findViewById(R.id.tvLater);
+        tvShare = (TextView) findViewById(R.id.tvShare);
 
         LayerDrawable stars = (LayerDrawable) rate_bar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
@@ -161,10 +162,10 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         stars.getDrawable(1).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         String Ret = addrelated(related);
 
-        FavBtn.setOnClickListener(this);
-        AddBtn.setOnClickListener(this);
-        btnLater.setOnClickListener(this);
-        btnShare.setOnClickListener(this);
+        tvFavourite.setOnClickListener(this);
+        tvAddToPlaylist.setOnClickListener(this);
+        tvLater.setOnClickListener(this);
+        tvShare.setOnClickListener(this);
 
         if (Ret == "NOTOK") {
             Toast.makeText(getApplicationContext(), "Could Not Find Related Videos",
@@ -405,17 +406,17 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.favbtn:
+            case R.id.tvFavourite:
                 Toast.makeText(getApplicationContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
                 break;
-            case R.id.addbtn:
+            case R.id.tvAddToPlaylist:
                 PlaylistAlertDialogView();
                 break;
-            case R.id.btnLater:
+            case R.id.tvLater:
                 Toast.makeText(getApplicationContext(), "Added to Watch Later",
                         Toast.LENGTH_LONG).show();
                 break;
-            case R.id.btnShare:
+            case R.id.tvShare:
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
                 share.putExtra(Intent.EXTRA_TEXT, "This is the shared link.");
