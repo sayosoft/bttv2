@@ -192,6 +192,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/login_bg"
+                        android:onClick="reset"
                         android:text="Reset"
                         android:textColor="#fff" />
                 </LinearLayout>

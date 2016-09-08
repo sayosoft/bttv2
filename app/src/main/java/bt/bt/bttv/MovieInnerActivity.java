@@ -430,7 +430,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
             case R.id.tvShare:
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_TEXT, "This is the shared link.");
+                share.putExtra(Intent.EXTRA_TEXT, "This is the shared link. " + " https://play.google.com/store/apps/details?id=markaz.ki.awaz#" + VideoID + "#2");
                 startActivity(Intent.createChooser(share, "Share"));
                 break;
         }

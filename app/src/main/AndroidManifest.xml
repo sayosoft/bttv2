@@ -206,6 +206,18 @@
         <activity
             android:name=".AddFamilyMemberActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".DeepLinkActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <data
+                    android:host="play.google.com"
+                    android:pathPrefix="/store"
+                    android:scheme="https" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

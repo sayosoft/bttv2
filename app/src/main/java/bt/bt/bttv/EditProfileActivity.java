@@ -90,18 +90,16 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         // Register Button Click event
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+
                 String name = inputFullName.getText().toString().trim();
                 String last_name = inputLastName.getText().toString().trim();
                 String email = inputEmail.getText().toString().trim();
-
                 String mobileno = inputMobile.getText().toString().trim();
 
                 if (!name.isEmpty() && !email.isEmpty()) {
                     updateUser(name, email, mobileno, last_name, userid);
                 } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter your details!", Toast.LENGTH_LONG)
-                            .show();
+                    Toast.makeText(getApplicationContext(), "Please enter your details!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -109,6 +107,13 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
 
     public void clear(View v) {
         Toast.makeText(getApplicationContext(), "Clicked on clear", Toast.LENGTH_LONG).show();
+    }
+
+    public void reset(View v) {
+        inputFullName.setText("");
+        inputLastName.setText("");
+        inputEmail.setText("");
+        inputMobile.setText("");
     }
 
     private void updateUser(final String name, final String email, final String mobile, final String last_name, final String user_id) {
