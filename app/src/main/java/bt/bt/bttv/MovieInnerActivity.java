@@ -426,8 +426,6 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
                 }
-                Toast.makeText(getApplicationContext(), "Added to Watch Later",
-                        Toast.LENGTH_LONG).show();
                 break;
             case R.id.tvShare:
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -474,6 +472,18 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("success").equals("success")) {
                         Toast.makeText(getApplicationContext(), "Added Video to " + strPlaylistName, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("success"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 103:
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("success").equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Added to Watch Later", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getApplicationContext(), jsonObject.getString("success"), Toast.LENGTH_LONG).show();
                     }
