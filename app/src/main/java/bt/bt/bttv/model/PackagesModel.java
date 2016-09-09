@@ -1,10 +1,24 @@
 package bt.bt.bttv.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by spoton on 24/8/16.
  */
-public class PackagesModel {
+public class PackagesModel implements Parcelable {
 
+    public static final Parcelable.Creator<PackagesModel> CREATOR = new Parcelable.Creator<PackagesModel>() {
+        @Override
+        public PackagesModel createFromParcel(Parcel source) {
+            return new PackagesModel(source);
+        }
+
+        @Override
+        public PackagesModel[] newArray(int size) {
+            return new PackagesModel[size];
+        }
+    };
     /**
      * package_id : 22
      * package_title : One Day
@@ -24,16 +38,35 @@ public class PackagesModel {
     private String package_id;
     private String package_title;
     private String package_type;
-    private Object package_members;
+    private String package_members;
     private String package_vod;
     private String package_aod;
     private String package_live_tv;
     private String package_radio;
     private String package_price;
-    private Object package_discount;
+    private String package_discount;
     private String package_duration;
-    private Object package_coupon;
+    private String package_coupon;
     private String package_status;
+
+    public PackagesModel() {
+    }
+
+    protected PackagesModel(Parcel in) {
+        this.package_id = in.readString();
+        this.package_title = in.readString();
+        this.package_type = in.readString();
+        this.package_members = in.readString();
+        this.package_vod = in.readString();
+        this.package_aod = in.readString();
+        this.package_live_tv = in.readString();
+        this.package_radio = in.readString();
+        this.package_price = in.readString();
+        this.package_discount = in.readString();
+        this.package_duration = in.readString();
+        this.package_coupon = in.readString();
+        this.package_status = in.readString();
+    }
 
     public String getPackage_id() {
         return package_id;
@@ -59,11 +92,11 @@ public class PackagesModel {
         this.package_type = package_type;
     }
 
-    public Object getPackage_members() {
+    public String getPackage_members() {
         return package_members;
     }
 
-    public void setPackage_members(Object package_members) {
+    public void setPackage_members(String package_members) {
         this.package_members = package_members;
     }
 
@@ -107,11 +140,11 @@ public class PackagesModel {
         this.package_price = package_price;
     }
 
-    public Object getPackage_discount() {
+    public String getPackage_discount() {
         return package_discount;
     }
 
-    public void setPackage_discount(Object package_discount) {
+    public void setPackage_discount(String package_discount) {
         this.package_discount = package_discount;
     }
 
@@ -123,11 +156,11 @@ public class PackagesModel {
         this.package_duration = package_duration;
     }
 
-    public Object getPackage_coupon() {
+    public String getPackage_coupon() {
         return package_coupon;
     }
 
-    public void setPackage_coupon(Object package_coupon) {
+    public void setPackage_coupon(String package_coupon) {
         this.package_coupon = package_coupon;
     }
 
@@ -137,5 +170,27 @@ public class PackagesModel {
 
     public void setPackage_status(String package_status) {
         this.package_status = package_status;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.package_id);
+        dest.writeString(this.package_title);
+        dest.writeString(this.package_type);
+        dest.writeString(this.package_members);
+        dest.writeString(this.package_vod);
+        dest.writeString(this.package_aod);
+        dest.writeString(this.package_live_tv);
+        dest.writeString(this.package_radio);
+        dest.writeString(this.package_price);
+        dest.writeString(this.package_discount);
+        dest.writeString(this.package_duration);
+        dest.writeString(this.package_coupon);
+        dest.writeString(this.package_status);
     }
 }

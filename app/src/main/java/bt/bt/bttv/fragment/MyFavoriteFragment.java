@@ -60,11 +60,7 @@ public class MyFavoriteFragment extends Fragment {
         llMain = (LinearLayout) view.findViewById(R.id.llMain);
 
         if (cd.isConnectingToInternet()) {
-            if (MyFavoriteModel.audioIdList.size() == 0)
                 new GetMyFavoriteAudios().execute();
-            else
-                getFavoriteLists();
-
         } else {
             Toast.makeText(getActivity(), "Internet not available..!", Toast.LENGTH_SHORT).show();
         }
@@ -195,7 +191,7 @@ public class MyFavoriteFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (MyFavoriteModel.videoIdList.size() == 0)
+//            if (MyFavoriteModel.videoIdList.size() == 0)
                 new GetFavoriteVideos().execute();
 
         }

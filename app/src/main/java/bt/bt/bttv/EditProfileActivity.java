@@ -47,7 +47,7 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_editprofile);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("BTTV");
+        toolbar.setTitle("Your Profile");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -36,26 +36,6 @@
                 android:layout_marginTop="?android:attr/actionBarSize"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:attr/actionBarSize"
-                    android:background="@color/tx_continue_bg_green"
-                    android:gravity="center"
-                    android:text="My Account"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:attr/actionBarSize"
-                    android:background="@color/colorBlack"
-                    android:gravity="center"
-                    android:text="Your Profile"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"

@@ -209,6 +209,7 @@
         <activity android:name=".DeepLinkActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <data
                     android:host="play.google.com"
                     android:pathPrefix="/store"
@@ -218,6 +219,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".PlaylistContentActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

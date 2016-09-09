@@ -11,6 +11,17 @@ import java.util.List;
  */
 public class MyPlayListModel implements Parcelable {
 
+    public static final Parcelable.Creator<MyPlayListModel> CREATOR = new Parcelable.Creator<MyPlayListModel>() {
+        @Override
+        public MyPlayListModel createFromParcel(Parcel source) {
+            return new MyPlayListModel(source);
+        }
+
+        @Override
+        public MyPlayListModel[] newArray(int size) {
+            return new MyPlayListModel[size];
+        }
+    };
     /**
      * playlist_id : 25
      * playlist_name : Test1
@@ -18,6 +29,14 @@ public class MyPlayListModel implements Parcelable {
      */
 
     private List<ArrayBean> array;
+
+    public MyPlayListModel() {
+    }
+
+    protected MyPlayListModel(Parcel in) {
+        this.array = new ArrayList<ArrayBean>();
+        in.readList(this.array, ArrayBean.class.getClassLoader());
+    }
 
     public List<ArrayBean> getArray() {
         return array;
@@ -27,10 +46,40 @@ public class MyPlayListModel implements Parcelable {
         this.array = array;
     }
 
-    public static class ArrayBean {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.array);
+    }
+
+    public static class ArrayBean implements Parcelable {
+        public static final Creator<ArrayBean> CREATOR = new Creator<ArrayBean>() {
+            @Override
+            public ArrayBean createFromParcel(Parcel source) {
+                return new ArrayBean(source);
+            }
+
+            @Override
+            public ArrayBean[] newArray(int size) {
+                return new ArrayBean[size];
+            }
+        };
         private String playlist_id;
         private String playlist_name;
         private String playlist_user;
+
+        public ArrayBean() {
+        }
+
+        protected ArrayBean(Parcel in) {
+            this.playlist_id = in.readString();
+            this.playlist_name = in.readString();
+            this.playlist_user = in.readString();
+        }
 
         public String getPlaylist_id() {
             return playlist_id;
@@ -55,35 +104,17 @@ public class MyPlayListModel implements Parcelable {
         public void setPlaylist_user(String playlist_user) {
             this.playlist_user = playlist_user;
         }
-    }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(this.array);
-    }
-
-    public MyPlayListModel() {
-    }
-
-    protected MyPlayListModel(Parcel in) {
-        this.array = new ArrayList<ArrayBean>();
-        in.readList(this.array, ArrayBean.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<MyPlayListModel> CREATOR = new Parcelable.Creator<MyPlayListModel>() {
         @Override
-        public MyPlayListModel createFromParcel(Parcel source) {
-            return new MyPlayListModel(source);
+        public int describeContents() {
+            return 0;
         }
 
         @Override
-        public MyPlayListModel[] newArray(int size) {
-            return new MyPlayListModel[size];
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.playlist_id);
+            dest.writeString(this.playlist_name);
+            dest.writeString(this.playlist_user);
         }
-    };
+    }
 }

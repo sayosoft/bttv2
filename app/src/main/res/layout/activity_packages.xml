@@ -23,16 +23,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:background="@color/bg_main2"
                 android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
+                android:padding="5dp"
                 android:weightSum="2">
 
                 <TextView
@@ -62,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
+                android:paddingLeft="5dp"
                 android:weightSum="2">
 
                 <TextView
@@ -89,6 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
+                android:paddingLeft="5dp"
                 android:weightSum="2">
 
                 <TextView
@@ -115,6 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
+                android:paddingLeft="5dp"
                 android:weightSum="2">
 
                 <TextView
@@ -141,6 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
+                android:paddingLeft="5dp"
                 android:weightSum="2">
 
                 <TextView
@@ -167,6 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
+                android:paddingLeft="5dp"
                 android:weightSum="2">
 
                 <TextView
@@ -176,7 +180,6 @@
                     android:text="Expiry Date"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorBlack" />
-
 
                 <TextView
                     android:id="@+id/tvExpiryDate"
@@ -215,45 +218,55 @@
             android:id="@+id/tvManageSubscriptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
             android:text="Manage Subscriptions"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBlack" />
 
         <TextView
             android:id="@+id/tvManageFamilyMembers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
             android:text="Manage Family Members"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBlack" />
 
         <TextView
             android:id="@+id/tvManageAddOns"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
             android:text="Manage Add Ons"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBlack" />
 
         <TextView
             android:id="@+id/tvAddBalance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
             android:text="Add Balance"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBlack" />
 
         <TextView
             android:id="@+id/tvEditProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
             android:text="Edit Profile"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBlack" />
 
     </LinearLayout>

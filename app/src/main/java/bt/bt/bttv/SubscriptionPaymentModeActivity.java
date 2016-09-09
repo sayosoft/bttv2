@@ -1,13 +1,22 @@
 package bt.bt.bttv;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+
+import bt.bt.bttv.model.PackagesModel;
+import bt.bt.bttv.model.UserModel;
 
 /**
  * Created by Rani on 28/08/2016.
@@ -15,27 +24,36 @@ import android.widget.TextView;
 
 public class SubscriptionPaymentModeActivity extends AppCompatActivity {
 
+    public static final String PREFS_NAME = "MyPrefs";
+    public static final String logFlag = "logFlag";
+    public SharedPreferences settings;
+    PackagesModel packagesModel;
     private TextView tvPackCost;
-    private LinearLayout llMain;
-    private LinearLayout llScratchCard;
-    private LinearLayout llBWallet;
-    private LinearLayout llCard;
-    private EditText etScratchCardNumber;
-    private EditText etWalletUserName;
-    private EditText etWalletPassword;
-    private EditText etCardNo;
-    private EditText etCardExpiry;
-    private EditText etCardCv;
+    private LinearLayout llMain, llScratchCard, llBWallet, llCard;
+    private EditText etScratchCardNumber, etWalletUserName, etWalletPassword, etCardNo, etCardExpiry, etCardCv;
+    private Button btn_account_balance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_mode);
+
+        settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Payment Mode");
         setSupportActionBar(toolbar);
 
+        btn_account_balance = (Button) findViewById(R.id.btn_account_balance);
+        if (getIntent().getBooleanExtra("fromAddBalance", false)) {
+            btn_account_balance.setVisibility(View.GONE);
+        }
+
+        Gson gson = new Gson();
+        UserModel userModel = gson.fromJson(settings.getString("logFlag", ""), UserModel.class);
+
         tvPackCost = (TextView) findViewById(R.id.tv_pack_cost);
+        tvPackCost.setText(Html.fromHtml("<b>" + userModel.getUser().getAccount_balance() + "<sup>Nu</sup></b>"));
         llMain = (LinearLayout) findViewById(R.id.ll_main_view);
         llScratchCard = (LinearLayout) findViewById(R.id.ll_scratch_card);
         llBWallet = (LinearLayout) findViewById(R.id.ll_b_wallet);
@@ -48,6 +66,7 @@ public class SubscriptionPaymentModeActivity extends AppCompatActivity {
         etCardExpiry = (EditText) findViewById(R.id.et_card_expiry);
         etCardCv = (EditText) findViewById(R.id.et_card_cv);
 
+        packagesModel = getIntent().getParcelableExtra("packagesModel");
     }
 
 //    @Override
@@ -83,7 +102,7 @@ public class SubscriptionPaymentModeActivity extends AppCompatActivity {
     public void ADPaymentSuccessful() {
         new AlertDialog.Builder(this)
                 .setTitle("Payment Successful")
-                .setMessage("Your subscription pack has been changed <pack name> Thank You, Enjoy BTTV")
+                .setMessage("Your subscription pack has been changed " + packagesModel.getPackage_title() + " Thank You, Enjoy BTTV")
                 .show();
     }
 

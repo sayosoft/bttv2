@@ -105,7 +105,6 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();

@@ -52,7 +52,7 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
         viewHolder.setClickListener(new ItemClickListener() {
             @Override
-            public void onClick(View view, int position, boolean isLongClick) {
+            public void onClick(View view, final int position, boolean isLongClick) {
                 if (isLongClick) {
                     Toast.makeText(context, "#" + position + " - " + packagesModelList.get(position) + " (Long click)", Toast.LENGTH_SHORT).show();
 //                    context.startActivity(new Intent(context, MainActivity.class));
@@ -60,21 +60,16 @@ public class PackageAdapter extends RecyclerView.Adapter<PackageAdapter.ViewHold
 
                     new AlertDialog.Builder(context)
                             .setTitle("Confirm")
-                            .setMessage("are you sure, you want to change your existing subscription pack to <pack name> for <pack value>?")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setMessage("are you sure, you want to change your existing subscription pack to " + packagesModelList.get(position).getPackage_title() + " for " + Html.fromHtml(packagesModelList.get(position).getPackage_price() + "<sup>Nu</sup>") + "?")
+                            .setIcon(R.mipmap.ic_launcher)
                             .setPositiveButton(R.string.yes_dialog, new DialogInterface.OnClickListener() {
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    Intent intent = new Intent(context, SubscriptionPaymentModeActivity.class);
-                                    context.startActivity(intent);
-
+                                    context.startActivity(new Intent(context, SubscriptionPaymentModeActivity.class).putExtra("packagesModel", packagesModelList.get(position)));
                                 }
                             })
                             .setNegativeButton(android.R.string.no, null).show();
-
-
                 }
-//                    Toast.makeText(context, "#" + position + " - " + packagesModelList.get(position), Toast.LENGTH_SHORT).show();
             }
         });
     }

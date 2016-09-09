@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 import bt.bt.bttv.LoginActivity;
+import bt.bt.bttv.R;
 
 public class GlobleMethods {
 
@@ -80,7 +81,7 @@ public class GlobleMethods {
         new android.support.v7.app.AlertDialog.Builder(_context)
                 .setTitle("Logout?")
                 .setMessage("are you sure you want to logout??")
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.mipmap.ic_launcher)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {

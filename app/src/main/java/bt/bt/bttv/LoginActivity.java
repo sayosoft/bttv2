@@ -124,16 +124,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                         String email = user.getString("email");
                         String last_name = user.getString("last_name");
                         String mobile = user.getString("mobile");
-                        String created_at = user
-                                .getString("created_at");
+                        String created_at = user.getString("created_at");
 
                         // Inserting row in users table
                         db.addUser(name, email, uid, created_at, last_name, mobile);
 
                         // Launch main activity
                         settings.edit().putString(logFlag, response).commit();
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         finish();
                     } else {
                         // Error in login. Get the error message

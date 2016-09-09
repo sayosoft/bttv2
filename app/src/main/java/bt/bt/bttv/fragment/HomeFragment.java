@@ -223,7 +223,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < genreModelsList.size(); i++) {
             List<VideosModel> videosModelsList1 = new ArrayList<>();
             for (int j = 0; j < videosModelsList.size(); j++) {
-                if (genreModelsList.get(i).getGenre_id().equals(videosModelsList.get(j).getVideo_genre())) {
+                if (genreModelsList.get(i).getGenre_id().equals(videosModelsList.get(j).getVideo_genre()) && videosModelsList.get(j).getVideo_category().equals(GlobleMethods.category_id)) {
                     videosModelsList1.add(videosModelsList.get(j));
                 }
             }
@@ -273,7 +273,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < genreModelsList.size(); i++) {
             List<AudiosModel> audiosModelsList1 = new ArrayList<>();
             for (int j = 0; j < audiosModelsList.size(); j++) {
-                if (genreModelsList.get(i).getGenre_id().equals(audiosModelsList.get(j).getAudio_genre())) {
+                if (genreModelsList.get(i).getGenre_id().equals(audiosModelsList.get(j).getAudio_genre()) && audiosModelsList.get(j).getAudio_category().equals(GlobleMethods.category_id)) {
                     audiosModelsList1.add(audiosModelsList.get(j));
                 }
             }
@@ -343,7 +343,7 @@ public class HomeFragment extends Fragment {
 
             TextView tvTitle = new TextView(getActivity());
             final int finalI = i;
-            tvTitle.setOnClickListener(new View.OnClickListener() {
+           /* tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     GlobleMethods.content_type = "Genre";
@@ -353,7 +353,7 @@ public class HomeFragment extends Fragment {
                     Intent genre = new Intent(getActivity(), GenreActivity.class);
                     startActivity(genre);
                 }
-            });
+            });*/
             LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             tvTitle.setLayoutParams(params1);
             params1.setMargins(10, 10, 0, 0);

@@ -691,13 +691,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         return statusBarHeight;
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(this, MovieActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     @Override
     protected void onDestroy() {

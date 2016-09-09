@@ -44,10 +44,10 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     private ConnectionDetector cd;
     private String video_source = null;
     private List<UserPackagesModel> userPackagesModelList;
+    private UserPackagesModel userPackagesModel;
     private TextView tvPlanName, tvPrice, tvVOD, tvAOD, tvLiveTvChannel, tvRadioChannel, tvExpiryDate, tvManageSubscriptions, tvManageFamilyMembers, tvManageAddOns, tvAddBalance, tvEditProfile;
     private Switch switchAutoRenew;
     private HashMap<String, String> user;
-    private UserPackagesModel userPackagesModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +87,11 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void PlayMoviePlayer(View view) {
-        Intent intent = new Intent(this, PlayVideo.class);
-        intent.putExtra("vurl", video_source);
-        startActivity(intent);
+        startActivity(new Intent(this, PlayVideo.class).putExtra("vurl", video_source));
     }
 
     public void newpackages(View view) {
-        Intent intent = new Intent(this, NewPackagesActivity.class);
-        intent.putExtra("pid", 1);
-        startActivity(intent);
+        startActivity(new Intent(this, NewPackagesActivity.class).putExtra("pid", 1));
     }
 
     private void setUi(List<UserPackagesModel> userPackagesModelList) {
@@ -119,9 +115,9 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Toast.makeText(MyAccountActivity.this, "Switch is currently ON", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyAccountActivity.this, "Auto Renew On", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MyAccountActivity.this, "Switch is currently OFF", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyAccountActivity.this, "Auto Renew Off", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -133,9 +129,9 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         tvEditProfile.setOnClickListener(this);
 
         if (userPackagesModelList.size() > 0) {
-            for (UserPackagesModel userPackagesModel : userPackagesModelList) {
-                if (userPackagesModel.getPackage_status().equals("Active"))
-                    setData(userPackagesModel);
+            for (int i = 0; i < userPackagesModelList.size(); i++) {
+                if (userPackagesModelList.get(i).getPackage_status().equals("Active"))
+                    setData(userPackagesModelList.get(i));
             }
         }
     }
@@ -155,6 +151,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             case R.id.tvManageAddOns:
                 break;
             case R.id.tvAddBalance:
+                startActivity(new Intent(MyAccountActivity.this, SubscriptionPaymentModeActivity.class).putExtra("fromAddBalance", true));
                 break;
             case R.id.tvEditProfile:
                 startActivity(new Intent(MyAccountActivity.this, EditProfileActivity.class));
@@ -215,6 +212,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setData(UserPackagesModel userPackagesModel) {
+        this.userPackagesModel = userPackagesModel;
 
         tvPlanName.setText("" + userPackagesModel.getPackage_exp());
         tvPrice.setText(Html.fromHtml(userPackagesModel.getPackage_price() + "<sup>Nu</sup>"));
