@@ -118,5 +118,6 @@
     <string name="url_add_to_playlist">http://bflix.ignitecloud.in/jsonApi/savetoplaylist/</string>
     <string name="url_add_to_watchlist">http://bflix.ignitecloud.in/jsonApi/addtoWatchlist/</string>
     <string name="url_get_playlist_content">http://bflix.ignitecloud.in/jsonApi/playlist/</string>
+    <string name="url_get_tv_channels">http://bflix.ignitecloud.in/jsonApi/getchannel/</string>
 
 </resources>

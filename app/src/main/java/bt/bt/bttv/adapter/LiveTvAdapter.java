@@ -30,7 +30,6 @@ public class LiveTvAdapter extends RecyclerView.Adapter<LiveTvAdapter.ViewHolder
         this.liveTvModelList = liveTvModelList;
     }
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())

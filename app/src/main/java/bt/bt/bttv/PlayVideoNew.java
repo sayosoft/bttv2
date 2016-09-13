@@ -40,6 +40,7 @@ import java.util.List;
 
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.MovieInnerModel;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;
@@ -85,6 +86,9 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        MovieInnerModel movieInnerModel = getIntent().getParcelableExtra("movieInnerModel");
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             path = extras.getString("vurl");
@@ -670,7 +674,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             Log.i("Current Position:", ct);
         }
     }
-
 
     public int getHeightPixel(Activity activity) {
         DisplayMetrics localDisplayMetrics = new DisplayMetrics();

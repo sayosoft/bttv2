@@ -31,9 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.APiAsync;
@@ -41,6 +39,7 @@ import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.MovieInnerModel;
 import bt.bt.bttv.model.MyPlayListModel;
 
 public class MovieInnerActivity extends AppCompatActivity implements View.OnClickListener, ApiInt {
@@ -83,6 +82,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     private ConnectionDetector cd;
     private APiAsync aPiAsync;
     private MyPlayListModel myPlayListModel;
+    private MovieInnerModel movieInnerModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,21 +91,10 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
 
         cd = new ConnectionDetector(this);
         db = new SQLiteHandler(getApplicationContext());
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-        String uid = user.get("uid");
-        Intent extras = getIntent();
-        if (extras != null) {
-            Integer value = Integer.parseInt(extras.getStringExtra("vid"));
-            String ap = extras.getStringExtra("autoplay");
-            if (ap != null) {
-                autoplay = true;
-            }
-            postParams = "";
-            postParams = value + "/" + uid;
-            Log.i("INTENTVALUE:", postParams);
-        } else {
-            Log.i("INTENTVALUE:", postParams);
+
+        String ap = getIntent().getStringExtra("autoplay");
+        if (ap != null) {
+            autoplay = true;
         }
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -117,18 +106,16 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         new GetMovies().execute();
     }
 
-    private void addImagesToThegallery(JSONArray imgs) throws JSONException {
+    private void addImagesToThegallery(List<MovieInnerModel.RelatedBean> relatedlist) throws JSONException {
         LinearLayout imageGallery = (LinearLayout) findViewById(R.id.relatedGallery);
-        if (imgs != null) {
-            for (int i = 0; i < imgs.length(); i++) {
-                JSONObject m = imgs.getJSONObject(i);
-                String c_genres = m.getString(TAG_VIDEO_GENRES);
-                String c_genres_text = m.getString(TAG_VIDEO_GENRES_TEXT);
-                List<String> genre = Arrays.asList(c_genres.split("\\s*,\\s*"));
-                Integer c_id = Integer.parseInt(m.getString(TAG_VIDEO_ID));
-                String c_title = m.getString(TAG_VIDEO_TITLE);
-                String c_poster = m.getString(TAG_VIDEO_POSTER);
-                String FinalImage = getString(R.string.url_base_image) + c_poster;
+        if (relatedlist != null) {
+            for (int i = 0; i < relatedlist.size(); i++) {
+                String c_genres = relatedlist.get(i).getVideo_genre();
+                String c_genres_text = relatedlist.get(i).getVideo_genre_text();
+                List<String> genre = Arrays.asList(c_genres.split(","));
+                Integer c_id = Integer.parseInt(relatedlist.get(i).getVideo_id());
+                String c_title = relatedlist.get(i).getVideo_title();
+                String FinalImage = getString(R.string.url_base_image) + relatedlist.get(i).getVideo_poster();
                 if (imageGallery != null) {
                     imageGallery.addView(getImageView(FinalImage, c_id));
                     System.gc();
@@ -145,7 +132,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         NavUtils.navigateUpFromSameTask(this);
     }
 
-    private void SetMovieValues(JSONArray movie) throws JSONException {
+    private void SetMovieValues(MovieInnerModel movieInnerModel) throws JSONException {
 
         TextView movietitle = (TextView) findViewById(R.id.movietitle);
         TextView movieduration = (TextView) findViewById(R.id.movieduration);
@@ -167,7 +154,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         stars.getDrawable(2).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
-        String Ret = addrelated(related);
+        String Ret = addrelated(movieInnerModel.getRelated());
 
         tvFavourite.setOnClickListener(this);
         tvAddToPlaylist.setOnClickListener(this);
@@ -175,44 +162,42 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         tvShare.setOnClickListener(this);
 
         if (Ret == "NOTOK") {
-            Toast.makeText(getApplicationContext(), "Could Not Find Related Videos",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Could Not Find Related Videos", Toast.LENGTH_LONG).show();
         }
 
-        for (int i = 0; i < movie.length(); i++) {
-            JSONObject m = movie.getJSONObject(i);
+        for (int i = 0; i < movieInnerModel.getVideos().size(); i++) {
             video_source = "";
-            video_source = m.getString(TAG_VIDEO_SOURCE);
-            String c_purchased = m.getString(TAG_VIDEO_PUR);
-            String mpost = getString(R.string.url_base_image) + m.getString(TAG_VIDEO_POSTER);
+            video_source = movieInnerModel.getVideos().get(i).getAndroid_video_source_url();
+            String c_purchased = movieInnerModel.getVideos().get(i).getVideo_purchased();
+            String mpost = getString(R.string.url_base_image) + movieInnerModel.getVideos().get(i).getVideo_poster();
             Ion.with(movieposter)
                     .placeholder(R.drawable.loadingposter)
                     .load(mpost);
             assert movietitle != null;
-            movietitle.setText(m.getString(TAG_VIDEO_TITLE));
+            movietitle.setText(movieInnerModel.getVideos().get(i).getVideo_title());
             assert movieduration != null;
-            movieduration.setText(m.getString(TAG_VIDEO_DURATION));
+            movieduration.setText(movieInnerModel.getVideos().get(i).getVideo_duration());
             assert moviegenre != null;
-            moviegenre.setText(m.getString(TAG_VIDEO_GENRES_TEXT));
+            moviegenre.setText(movieInnerModel.getVideos().get(i).getVideo_genre_text());
             assert moviedesc != null;
-            moviedesc.setText(m.getString(TAG_VIDEO_DESCRIPTION));
+            moviedesc.setText(movieInnerModel.getVideos().get(i).getVideo_description());
             assert moviecast != null;
-            moviecast.setText(m.getString(TAG_VIDEO_ACTING));
+            moviecast.setText(movieInnerModel.getVideos().get(i).getVideo_acting());
             assert moviedirector != null;
-            moviedirector.setText(m.getString(TAG_VIDEO_DIRECTOR));
+            moviedirector.setText(movieInnerModel.getVideos().get(i).getVideo_director());
             assert rate_bar != null;
-            rate_bar.setRating(Float.parseFloat(m.getString(TAG_VIDEO_RATING)));
-            MovieTitle = m.getString(TAG_VIDEO_TITLE);
-            VideoID = m.getString(TAG_VIDEO_ID);
-            VResume = m.getString(TAG_VIDEO_RESUME);
-            MovieDuration = m.getString(TAG_VIDEO_DURATION);
-            MovieGenre = m.getString(TAG_VIDEO_GENRES_TEXT);
-            MovieDesciption = m.getString(TAG_VIDEO_DESCRIPTION);
-            MovieCast = m.getString(TAG_VIDEO_ACTING);
-            MovieDirector = m.getString(TAG_VIDEO_DIRECTOR);
+            rate_bar.setRating(Float.parseFloat(movieInnerModel.getVideos().get(i).getVideo_rating()));
+            MovieTitle = movieInnerModel.getVideos().get(i).getVideo_title();
+            VideoID = movieInnerModel.getVideos().get(i).getVideo_id();
+            VResume = movieInnerModel.getVideos().get(i).getVideo_resume();
+            MovieDuration = movieInnerModel.getVideos().get(i).getVideo_duration();
+            MovieGenre = movieInnerModel.getVideos().get(i).getVideo_genre_text();
+            MovieDesciption = movieInnerModel.getVideos().get(i).getVideo_description();
+            MovieCast = movieInnerModel.getVideos().get(i).getVideo_acting();
+            MovieDirector = movieInnerModel.getVideos().get(i).getVideo_director();
         }
         if (autoplay) {
-            PlayMoviePlayer2();
+            PlayMoviePlayer(null);
         }
     }
 
@@ -254,7 +239,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private View getImageView(String newimage, Integer uid) {
+    private View getImageView(String newimage, Integer video_id) {
         ImageView imageView = new ImageView(getApplicationContext());
         final float scale = getResources().getDisplayMetrics().density;
         int dpWidthInPx = (int) (130 * scale);
@@ -262,12 +247,11 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dpWidthInPx, dpHeightInPx);
         lp.setMargins(0, 0, 20, 30);
         imageView.setLayoutParams(lp);
-        imageView.setId(uid);
+        imageView.setId(video_id);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Integer gid = v.getId();
-                PlayMovie(gid);
+                startActivity(new Intent(MovieInnerActivity.this, MovieInnerActivity.class).putExtra("vid", "" + v.getId()));
             }
         });
         Ion.with(imageView).load(newimage);
@@ -288,33 +272,11 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         startActivity(intent);
     }
 
-    public void PlayMoviePlayer2() {
-        Intent intent = new Intent(this, PlayVideoNew.class);
-        intent.putExtra("vurl", video_source);
-        intent.putExtra("title", MovieTitle);
-        intent.putExtra("vid", VideoID);
-        intent.putExtra("vresume", VResume);
-        intent.putExtra("duration", MovieDuration);
-        intent.putExtra("desc", MovieDesciption);
-        intent.putExtra("genre", MovieGenre);
-        intent.putExtra("cast", MovieCast);
-        intent.putExtra("director", MovieDirector);
-        startActivity(intent);
-    }
-
-    public void PlayMovie(Integer gid) {
-        Intent intent = new Intent(this, MovieInnerActivity.class);
-        intent.putExtra("vid", gid);
-        startActivity(intent);
-    }
-
     public void StartOrder(View view) {
-        Intent intent = new Intent(this, NewOrderActivity.class);
-        intent.putExtra("type", "video");
-        startActivity(intent);
+        startActivity(new Intent(this, NewOrderActivity.class).putExtra("type", "video"));
     }
 
-    private String addrelated(JSONArray related) {
+    private String addrelated(List<MovieInnerModel.RelatedBean> related) {
         if (related != null) {
             try {
                 addImagesToThegallery(related);
@@ -324,85 +286,13 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                 return "NOTOK";
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Error Getting Related Videos",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Error Getting Related Videos", Toast.LENGTH_LONG).show();
         }
         return "NOTOK";
     }
 
-    private ArrayList<HashMap<String, String>> ParseJSONMovie(String json) {
-        if (json != null) {
-            try {
-                ArrayList<HashMap<String, String>> moviesList = new ArrayList<HashMap<String, String>>();
-                JSONObject jsonObj = new JSONObject(json);
-                JSONArray movies;
-                JSONArray relatedVideos;
-                try {
-                    movies = jsonObj.getJSONArray(TAG_VIDEO_INFO);
-                    if (jsonObj.has(TAG_VIDEO_RELATED_INFO))
-                        relatedVideos = jsonObj.getJSONArray(TAG_VIDEO_RELATED_INFO);
-                    else
-                        relatedVideos = null;
-                } catch (JSONException e) {
-                    movies = null;
-                    relatedVideos = null;
-                    e.printStackTrace();
-                }
-                mvs = movies;
-                if (relatedVideos != null) {
-                    related = relatedVideos;
-                } else {
-                    related = null;
-                }
-                for (int i = 0; i < movies.length(); i++) {
-                    JSONObject c = movies.getJSONObject(i);
-                    String m_id = c.getString(TAG_VIDEO_ID);
-                    String m_title = c.getString(TAG_VIDEO_TITLE);
-                    String m_category = c.getString(TAG_VIDEO_CATEGORY);
-                    String m_poster = c.getString(TAG_VIDEO_POSTER);
-                    String m_genres = c.getString(TAG_VIDEO_GENRES);
-                    String m_director = c.getString(TAG_VIDEO_DIRECTOR);
-                    String m_acting = c.getString(TAG_VIDEO_ACTING);
-                    String m_lang = c.getString(TAG_VIDEO_LANGUAGE);
-                    String m_duration = c.getString(TAG_VIDEO_DURATION);
-                    String m_description = c.getString(TAG_VIDEO_DESCRIPTION);
-                    String m_source = c.getString(TAG_VIDEO_SOURCE);
-                    String m_genres_text = c.getString(TAG_VIDEO_GENRES_TEXT);
-                    String m_rating = c.getString(TAG_VIDEO_RATING);
-                    String m_pur = c.getString(TAG_VIDEO_PUR);
-                    String m_res = c.getString(TAG_VIDEO_RESUME);
-                    HashMap<String, String> movie = new HashMap<String, String>();
-                    movie.put(TAG_VIDEO_ID, m_id);
-                    movie.put(TAG_VIDEO_TITLE, m_title);
-                    movie.put(TAG_VIDEO_CATEGORY, m_category);
-                    movie.put(TAG_VIDEO_POSTER, m_poster);
-                    movie.put(TAG_VIDEO_GENRES, m_genres);
-                    movie.put(TAG_VIDEO_DIRECTOR, m_director);
-                    movie.put(TAG_VIDEO_ACTING, m_acting);
-                    movie.put(TAG_VIDEO_LANGUAGE, m_lang);
-                    movie.put(TAG_VIDEO_DURATION, m_duration);
-                    movie.put(TAG_VIDEO_DESCRIPTION, m_description);
-                    movie.put(TAG_VIDEO_SOURCE, m_source);
-                    movie.put(TAG_VIDEO_GENRES_TEXT, m_genres_text);
-                    movie.put(TAG_VIDEO_RATING, m_rating);
-                    movie.put(TAG_VIDEO_PUR, m_pur);
-                    movie.put(TAG_VIDEO_RESUME, m_res);
-                    moviesList.add(movie);
-                }
-                return moviesList;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else {
-            Log.e("ServiceHandler", "No data received from HTTP Request");
-            return null;
-        }
-    }
-
     public void showSettings(MenuItem item) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     @Override
@@ -496,8 +386,9 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
 
     private class GetMovies extends AsyncTask<Void, Void, Void> {
 
-        ArrayList<HashMap<String, String>> moviesList;
         ProgressDialog proDialog;
+        String MoviesStr;
+
 
         @Override
         protected void onPreExecute() {
@@ -513,8 +404,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         @Override
         protected Void doInBackground(Void... arg0) {
             WebRequest webreq = new WebRequest();
-            String MoviesStr = webreq.makeWebServiceCall(getString(R.string.url_get_video) + postParams, WebRequest.GETRequest);
-            moviesList = ParseJSONMovie(MoviesStr);
+            MoviesStr = webreq.makeWebServiceCall(getString(R.string.url_get_video) + getIntent().getStringExtra("vid") + "/" + db.getUserDetails().get("uid"), WebRequest.GETRequest);
             return null;
         }
 
@@ -525,7 +415,10 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                 proDialog.dismiss();
             }
             try {
-                SetMovieValues(mvs);
+                Gson gson = new Gson();
+                movieInnerModel = gson.fromJson(MoviesStr, MovieInnerModel.class);
+                if (movieInnerModel != null)
+                    SetMovieValues(movieInnerModel);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
