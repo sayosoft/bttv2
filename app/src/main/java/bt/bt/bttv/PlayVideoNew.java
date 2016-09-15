@@ -40,7 +40,6 @@ import java.util.List;
 
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
-import bt.bt.bttv.model.MovieInnerModel;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;
@@ -59,7 +58,7 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     private ProgressBar pb;
     private TextView downloadRateView, loadRateView, titleTextview, durationTextview, genreTextview, descTextview, castTextview, directorTextview;
     private ImageButton PPBtn, ShareBtn;
-    private ImageView btnShare, volIcon, backIcon, settIcon, PlaylistIcon;
+    private ImageView volIcon, backIcon, settIcon;
     private FrameLayout fl_controller;
     private LinearLayout infoView;
     private long mPosition = 0;
@@ -86,8 +85,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        MovieInnerModel movieInnerModel = getIntent().getParcelableExtra("movieInnerModel");
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -206,13 +203,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             } else {
                 Toast.makeText(PlayVideoNew.this, "seek bar progress failed as its null:", Toast.LENGTH_SHORT).show();
             }
-            if (btnShare != null) {
-                btnShare.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        shareIt();
-                    }
-                });
-            }
             mVideoView.setMediaController(mc);
             mc.setVisibility(View.GONE);
             PPBtn.setVisibility(View.GONE);
@@ -326,14 +316,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     SettingChoice();
                 }
             });
-
-            PlaylistIcon.setOnClickListener(new View.OnClickListener() {
-
-                public void onClick(View v) {
-                    PlaylistAlertDialogView();
-                }
-            });
-
 
             volIcon.setOnClickListener(new View.OnClickListener() {
 
@@ -557,11 +539,9 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             }
             public void onFinish() {
                 PPBtn.setVisibility(View.GONE);
-                btnShare.setVisibility(View.GONE);
                 volIcon.setVisibility(View.GONE);
                 backIcon.setVisibility(View.GONE);
                 settIcon.setVisibility(View.GONE);
-                PlaylistIcon.setVisibility(View.GONE);
             }
         }.start();
     }
@@ -733,35 +713,28 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         //Log.i(TAG, "View under finger: " + findViewAtPosition(getApplicationContext().getRootView(), (int)ev.getRawX(), (int)ev.getRawY()));
         if (ev.getAction() == MotionEvent.ACTION_DOWN && !isBuffering) {
             PPBtn = (ImageButton) findViewById(R.id.ppbtn);
-            btnShare.setVisibility(View.VISIBLE);
             volIcon.setVisibility(View.VISIBLE);
             backIcon.setVisibility(View.VISIBLE);
             settIcon.setVisibility(View.VISIBLE);
-            PlaylistIcon.setVisibility(View.VISIBLE);
             if (mVideoView.isPlaying()) {
                 PPBtn.setBackgroundResource(R.drawable.pauseicon);
                 PPBtn.setVisibility(View.VISIBLE);
                 backIcon.setVisibility(View.VISIBLE);
                 settIcon.setVisibility(View.VISIBLE);
-                PlaylistIcon.setVisibility(View.VISIBLE);
             } else {
                 PPBtn.setBackgroundResource(R.drawable.playicon);
                 PPBtn.setVisibility(View.VISIBLE);
-                btnShare.setVisibility(View.VISIBLE);
                 volIcon.setVisibility(View.VISIBLE);
                 settIcon.setVisibility(View.VISIBLE);
-                PlaylistIcon.setVisibility(View.VISIBLE);
             }
             new CountDownTimer(3000, 1000) { // 5000 = 5 sec
                 public void onTick(long millisUntilFinished) {
                 }
                 public void onFinish() {
                     PPBtn.setVisibility(View.GONE);
-                    btnShare.setVisibility(View.GONE);
                     volIcon.setVisibility(View.GONE);
                     backIcon.setVisibility(View.GONE);
                     settIcon.setVisibility(View.GONE);
-                    PlaylistIcon.setVisibility(View.GONE);
                 }
             }.start();
             return true;
