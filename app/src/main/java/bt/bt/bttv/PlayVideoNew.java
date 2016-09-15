@@ -127,11 +127,9 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         castTextview = (TextView) findViewById(R.id.moviecast);
         directorTextview = (TextView) findViewById(R.id.moviedirector);
         infoView = (LinearLayout) findViewById(R.id.infoview);
-        btnShare = (ImageView) findViewById(R.id.mediacontroller_play_share_new);
         volIcon = (ImageView) findViewById(R.id.vol_icon);
         backIcon = (ImageView) findViewById(R.id.back_icon);
         settIcon = (ImageView) findViewById(R.id.sett_icon);
-        PlaylistIcon = (ImageView) findViewById(R.id.playlist_icon);
         if (path == "") {
             return;
         } else {
@@ -152,9 +150,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             mc.setOnControllerClick(new MediaController.OnControllerClick() {
                 @Override
                 public void OnClick(int type) {
-                    if (type == 1) {
-                        shareIt();
-                    }
                     if (type == 0) {
                         avoidLoop = true;
                         if (isPortrait) {

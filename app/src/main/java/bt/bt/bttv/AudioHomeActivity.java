@@ -1,6 +1,5 @@
 package bt.bt.bttv;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,9 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +23,7 @@ import bt.bt.bttv.fragment.HomeFragment;
 import bt.bt.bttv.fragment.LaterFragment;
 import bt.bt.bttv.fragment.MyFavoriteFragment;
 import bt.bt.bttv.fragment.MyPlaylistsFragment;
-import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.HTTPURLConnection;
-import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.model.DrawerCategoriesModel;
-import bt.bt.bttv.model.VideosModel;
 
 /**
  * Created by Sachin on 8/23/2016.
@@ -41,14 +32,6 @@ import bt.bt.bttv.model.VideosModel;
 public class AudioHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public SharedPreferences settings;
-    private LinearLayout llMain;
-    private ProgressDialog pDialog;
-    private HTTPURLConnection service;
-    private ConnectionDetector cd;
-    private List<VideosModel> videosModelsList;
-    private JSONObject jsonObject;
-    private SQLiteHandler db;
-    private List<DrawerCategoriesModel> drawerCategoriesModelList;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -57,9 +40,6 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        db = new SQLiteHandler(getApplicationContext());
-        cd = new ConnectionDetector(this);
 
 //        setContentView(R.layout.activity_home_category);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -130,7 +110,7 @@ public class AudioHomeActivity extends AppCompatActivity implements NavigationVi
             startActivity(new Intent(this, NewNewsActivity.class));
 
         } else if (id == R.id.nav_myacc) {
-            startActivity(new Intent(this, MyPreferencesActivity.class));
+            startActivity(new Intent(this, MyAccountActivity.class));
 
         } else if (id == R.id.nav_setting) {
             startActivity(new Intent(this, SettingsActivity.class));

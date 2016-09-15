@@ -27,12 +27,6 @@
 
     <string name="no_internet">No Internet Connection, Please Connect to internet</string>
 
-
-    <!-- URLS -->
-
-    <!-- USER Login - Register Strings -->
-
-
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_name">First Name</string>
@@ -45,14 +39,6 @@
     <string name="btn_logout">LOGOUT</string>
     <string name="hint_mobile">Mobile Number</string>
     <string name="hint_cid">BT CID Number</string>
-
-    <!-- Strings related to URL-->
-
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-
-    <!-- Example settings for Data & Sync -->
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">

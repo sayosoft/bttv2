@@ -150,16 +150,16 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         tvLater = (TextView) findViewById(R.id.tvLater);
         tvShare = (TextView) findViewById(R.id.tvShare);
 
+        tvFavourite.setOnClickListener(this);
+        tvAddToPlaylist.setOnClickListener(this);
+        tvLater.setOnClickListener(this);
+        tvShare.setOnClickListener(this);
+
         LayerDrawable stars = (LayerDrawable) rate_bar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
         String Ret = addrelated(movieInnerModel.getRelated());
-
-        tvFavourite.setOnClickListener(this);
-        tvAddToPlaylist.setOnClickListener(this);
-        tvLater.setOnClickListener(this);
-        tvShare.setOnClickListener(this);
 
         if (Ret == "NOTOK") {
             Toast.makeText(getApplicationContext(), "Could Not Find Related Videos", Toast.LENGTH_LONG).show();

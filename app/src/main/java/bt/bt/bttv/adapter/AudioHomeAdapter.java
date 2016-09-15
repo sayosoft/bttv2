@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -40,19 +39,16 @@ public class AudioHomeAdapter extends RecyclerView.Adapter<AudioHomeAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Picasso.with(context)
-                .load("http://bflix.ignitecloud.in/uploads/images/" + audiosModelList.get(i).getAudio_poster())
+                .load(context.getString(R.string.url_base_image)+ audiosModelList.get(i).getAudio_poster())
                 .into(viewHolder.ivMovie);
 
         viewHolder.setClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
                 if (isLongClick) {
-                    Toast.makeText(context, "#" + position + " - " + audiosModelList.get(position).getAudio_id() + " (Long click)", Toast.LENGTH_SHORT).show();
-//                    context.startActivity(new Intent(context, Ca.class));
                 } else {
 
-                    Intent intent = new Intent(context, PlayAudio.class);
-                    intent.putExtra("vurl", audiosModelList.get(position).getAudio_url());
+                  /*  intent.putExtra("vurl", audiosModelList.get(position).getAudio_url());
                     intent.putExtra("title", audiosModelList.get(position).getAudio_title());
                     intent.putExtra("vid", audiosModelList.get(position).getAudio_id());
                     intent.putExtra("vresume", "0");
@@ -60,12 +56,8 @@ public class AudioHomeAdapter extends RecyclerView.Adapter<AudioHomeAdapter.View
                     intent.putExtra("desc", audiosModelList.get(position).getAudio_description());
                     intent.putExtra("genre", audiosModelList.get(position).getAudio_genre());
                     intent.putExtra("cast", audiosModelList.get(position).getAudio_is_album());
-                    intent.putExtra("director", audiosModelList.get(position).getAudio_artist());
-                    context.startActivity(intent);
-
-                    /*Intent i = new Intent(context, AudioActivity.class);
-                    i.putExtra("song_url", audiosModelList.get(position).getAudio_url());
-                    context.startActivity(i);*/
+                    intent.putExtra("director", audiosModelList.get(position).getAudio_artist());*/
+                    context.startActivity(new Intent(context, PlayAudio.class).putExtra("audioModel",audiosModelList.get(position)));
                 }
             }
         });
