@@ -34,18 +34,28 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import bt.bt.bttv.helper.APiAsync;
+import bt.bt.bttv.helper.ApiInt;
+import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.AudiosModel;
+import bt.bt.bttv.model.MyPlayListModel;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;
 import io.vov.vitamio.widget.VideoView;
 
-public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener {
+public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener, View.OnClickListener,ApiInt {
 
     private static String TAG = "PlayVideoNew";
     final Handler h = new Handler();
@@ -59,7 +69,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     private ProgressBar pb;
     private TextView downloadRateView, loadRateView, titleTextview, durationTextview, genreTextview, descTextview, castTextview, directorTextview;
     private ImageButton PPBtn;
-    private ImageView btnShare, volIcon, backIcon, settIcon, PlaylistIcon;
+    private ImageView volIcon, backIcon, settIcon;
     private FrameLayout fl_controller;
     private LinearLayout infoView;
     private long mPosition = 0;
@@ -82,41 +92,44 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     private AudioManager audioManager = null;
     private boolean isBuffering = false;
     private SQLiteHandler db;
+    private ConnectionDetector cd;
+    private TextView tvFavourite, tvAddToPlaylist, tvLater, tvShare;
+    private AudiosModel audiosModel;
+    private APiAsync aPiAsync;
+    private MyPlayListModel myPlayListModel;
+    int position;
+    String strPlaylistName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            path = extras.getString("vurl");
-            Title = extras.getString("title");
-            VideoID = extras.getString("vid");
-            VideoResume = extras.getString("vresume");
-            MovieDuration = extras.getString("duration");
-            MovieGenre = extras.getString("genre");
-            MovieDesciption = extras.getString("desc");
-            MovieCast = extras.getString("cast");
-            MovieDirector = extras.getString("director");
+
+        audiosModel = getIntent().getParcelableExtra("audioModel");
+            path = audiosModel.getAudio_url();
+            Title = audiosModel.getAudio_title();
+            VideoID = audiosModel.getAudio_id();
+            VideoResume = "0";
+            MovieDuration = "05:00";
+            MovieGenre = audiosModel.getAudio_genre();
+            MovieDesciption = audiosModel.getAudio_description();
+            MovieCast = audiosModel.getAudio_is_album();
+            MovieDirector = audiosModel.getAudio_artist();
             if (VideoResume != null) {
                 mPosition = Long.parseLong(VideoResume);
             }
-            Log.i("Vitamio Video Path:", path);
-            //The key argument here must match that used in the other activity
-        } else {
-            Log.i("Vitamio Video Path:", path);
-        }
         if (!LibsChecker.checkVitamioLibs(this)) {
             return;
         }
         setContentView(R.layout.activity_play_video_new);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        /*hp = getHeightPixel(PlayAudio.this);
-        wp = getWidthPixel(PlayAudio.this);
-        sp = getStatusBarHeight(PlayAudio.this);*/
         init();
     }
 
     private void init() {
+
+        cd = new ConnectionDetector(this);
+        db = new SQLiteHandler(getApplicationContext());
+
         mVideoView = (VideoView) findViewById(R.id.buffer);
         mSubtitleView = (TextView) findViewById(R.id.subtitle_view);
         fl_controller = (FrameLayout) findViewById(R.id.fl_controller);
@@ -131,11 +144,20 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         castTextview = (TextView) findViewById(R.id.moviecast);
         directorTextview = (TextView) findViewById(R.id.moviedirector);
         infoView = (LinearLayout) findViewById(R.id.infoview);
-        btnShare = (ImageView) findViewById(R.id.mediacontroller_play_share_new);
         volIcon = (ImageView) findViewById(R.id.vol_icon);
         backIcon = (ImageView) findViewById(R.id.back_icon);
         settIcon = (ImageView) findViewById(R.id.sett_icon);
-        PlaylistIcon = (ImageView) findViewById(R.id.playlist_icon);
+
+        tvFavourite = (TextView) findViewById(R.id.tvFavourite);
+        tvAddToPlaylist = (TextView) findViewById(R.id.tvAddToPlaylist);
+        tvLater = (TextView) findViewById(R.id.tvLater);
+        tvShare = (TextView) findViewById(R.id.tvShare);
+
+        tvFavourite.setOnClickListener(this);
+        tvAddToPlaylist.setOnClickListener(this);
+        tvLater.setOnClickListener(this);
+        tvShare.setOnClickListener(this);
+
         if (path == "") {
             return;
         } else {
@@ -157,9 +179,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             mc.setOnControllerClick(new MediaController.OnControllerClick() {
                 @Override
                 public void OnClick(int type) {
-                    if (type == 1) {
-                        shareIt();
-                    }
                     if (type == 0) {
                         avoidLoop = true;
                         if (isPortrait) {
@@ -209,7 +228,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
                     }
 
                     public void onStartTrackingTouch(SeekBar seekBar) {
-                        // TODO Auto-generated method stub
                     }
 
                     public void onStopTrackingTouch(SeekBar seekBar) {
@@ -218,17 +236,9 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
                     }
                 });
             } else {
-                Toast.makeText(PlayAudio.this, "seek bar progress failed as its null:",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlayAudio.this, "seek bar progress failed as its null:",Toast.LENGTH_SHORT).show();
             }
-            if (btnShare != null) {
-                btnShare.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
 
-                        shareIt();
-                    }
-                });
-            }
             mVideoView.setMediaController(mc);
             mc.setVisibility(View.GONE);
             PPBtn.setVisibility(View.GONE);
@@ -321,7 +331,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             PPBtn.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     if (mVideoView.isPlaying()) {
                         PPBtn.setBackgroundResource(R.drawable.pauseicon);
                         mVideoView.pause();
@@ -335,7 +344,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             backIcon.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     finish();
                 }
             });
@@ -343,16 +351,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             settIcon.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     SettingChoice();
-                }
-            });
-
-            PlaylistIcon.setOnClickListener(new View.OnClickListener() {
-
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    PlaylistAlertDialogView();
                 }
             });
 
@@ -360,7 +359,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             volIcon.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     audio.adjustStreamVolume(AudioManager.STREAM_MUSIC,
                             AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
@@ -405,29 +403,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    private void PlaylistAlertDialogView() {
-        final CharSequence[] items = {"Favorites", "Playlist", "Watch Later"};
-        final int[] playitems = {2, 0, 1};
-        AlertDialog.Builder builder = new AlertDialog.Builder(PlayAudio.this);//ERROR ShowDialog cannot be resolved to a type
-        builder.setTitle("Add to ");
-        builder.setSingleChoiceItems(items, -1,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        Playlist = items[item].toString();
-                        PlaylistID = playitems[item];
-                        if (PlaylistID != 0) {
-                            new PlaylistAsync().execute();
-                            dialog.dismiss();
-                        } else {
-                            NewPlaylistDialog();
-                            dialog.dismiss();
-                        }
                     }
                 });
         AlertDialog alert = builder.create();
@@ -533,16 +508,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         alert.show();
     }
 
-    private void shareIt() {
-        mVideoView.pause();
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        String shareBody = "Please Check out" + Title + "BTTV, Bhutans Only Premier Video Streaming Service, click on this link http://www.bttv.bt/movies/detail/" + VideoID;
-        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "BTTV");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        startActivity(Intent.createChooser(sharingIntent, "Share via"));
-    }
-
     public void changerot() {
         if (!isPortrait) {
             infoView.setVisibility(View.INVISIBLE);
@@ -587,11 +552,9 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
             public void onFinish() {
                 PPBtn.setVisibility(View.GONE);
-                btnShare.setVisibility(View.GONE);
                 volIcon.setVisibility(View.GONE);
                 backIcon.setVisibility(View.GONE);
                 settIcon.setVisibility(View.GONE);
-                PlaylistIcon.setVisibility(View.GONE);
             }
         }.start();
     }
@@ -774,24 +737,19 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         //Log.i(TAG, "View under finger: " + findViewAtPosition(getApplicationContext().getRootView(), (int)ev.getRawX(), (int)ev.getRawY()));
         if (ev.getAction() == MotionEvent.ACTION_DOWN && !isBuffering) {
             PPBtn = (ImageButton) findViewById(R.id.ppbtn);
-            btnShare.setVisibility(View.VISIBLE);
             volIcon.setVisibility(View.VISIBLE);
             backIcon.setVisibility(View.VISIBLE);
             settIcon.setVisibility(View.VISIBLE);
-            PlaylistIcon.setVisibility(View.VISIBLE);
             if (mVideoView.isPlaying()) {
                 PPBtn.setBackgroundResource(R.drawable.pauseicon);
                 PPBtn.setVisibility(View.VISIBLE);
                 backIcon.setVisibility(View.VISIBLE);
                 settIcon.setVisibility(View.VISIBLE);
-                PlaylistIcon.setVisibility(View.VISIBLE);
             } else {
                 PPBtn.setBackgroundResource(R.drawable.playicon);
                 PPBtn.setVisibility(View.VISIBLE);
-                btnShare.setVisibility(View.VISIBLE);
                 volIcon.setVisibility(View.VISIBLE);
                 settIcon.setVisibility(View.VISIBLE);
-                PlaylistIcon.setVisibility(View.VISIBLE);
             }
             new CountDownTimer(3000, 1000) { // 5000 = 5 sec
                 public void onTick(long millisUntilFinished) {
@@ -799,11 +757,9 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
                 public void onFinish() {
                     PPBtn.setVisibility(View.GONE);
-                    btnShare.setVisibility(View.GONE);
                     volIcon.setVisibility(View.GONE);
                     backIcon.setVisibility(View.GONE);
                     settIcon.setVisibility(View.GONE);
-                    PlaylistIcon.setVisibility(View.GONE);
                 }
             }.start();
             return true;
@@ -834,6 +790,134 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tvFavourite:
+                if (cd.isConnectingToInternet()) {
+                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100);
+                    aPiAsync.execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.tvAddToPlaylist:
+                apiGetPlayLists();
+                break;
+            case R.id.tvLater:
+                if (cd.isConnectingToInternet()) {
+                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103);
+                    aPiAsync.execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.tvShare:
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_TEXT, "This is the shared link. " + " https://play.google.com/store/apps/details?id=markaz.ki.awaz#" + VideoID + "#2");
+                startActivity(Intent.createChooser(share, "Share"));
+                break;
+        }
+    }
+
+    private void apiGetPlayLists() {
+
+        if (cd.isConnectingToInternet()) {
+            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101);
+            aPiAsync.execute();
+        } else {
+            Toast.makeText(PlayAudio.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onSuccess(String response, int requestType) {
+        switch (requestType) {
+            case 100:
+                Log.e("response fav", response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("success").equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Added to Favorites", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("success"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 101:
+                Gson gson = new Gson();
+                myPlayListModel = gson.fromJson(response.toString(), MyPlayListModel.class);
+                PlaylistAlertDialogView(myPlayListModel);
+                break;
+            case 102:
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("success").equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Added Video to " + strPlaylistName, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("success"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 103:
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("success").equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Added to Watch Later", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("success"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
+
+    private void PlaylistAlertDialogView(final MyPlayListModel myPlayListModel) {
+
+        CharSequence[] items = new CharSequence[myPlayListModel.getArray().size()];
+        for (int i = 0; i < myPlayListModel.getArray().size(); i++) {
+            items[i] = myPlayListModel.getArray().get(i).getPlaylist_name();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(PlayAudio.this);//ERROR ShowDialog cannot be resolved to a type
+        builder.setTitle("Add to Playlist");
+        builder.setSingleChoiceItems(items, -1,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        position = item;
+                    }
+                });
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                strPlaylistName = myPlayListModel.getArray().get(position).getPlaylist_name();
+                apiAddToPlaylist(myPlayListModel.getArray().get(position).getPlaylist_id());
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void apiAddToPlaylist(String playlist_id) {
+        if (cd.isConnectingToInternet()) {
+            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102);
+            aPiAsync.execute();
+        } else {
+            Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
     class ResumeAsync extends AsyncTask<String, String, String> {
         protected void onPreExecute() {
             Log.d("PreExceute", "On pre Exceute......");
@@ -843,8 +927,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             Log.d("DoINBackGround", "On doInBackground...");
             String test;
             test = "Test";
-            // SqLite database handler
-            db = new SQLiteHandler(getApplicationContext());
             // Fetching user details from sqlite
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
@@ -868,10 +950,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
         protected String doInBackground(String... arg) {
             Log.d("DoINBackGround", "On doInBackground...");
-            String test;
-            test = "Test";
-            // SqLite database handler
-            db = new SQLiteHandler(getApplicationContext());
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
             WebRequest webreq = new WebRequest();
@@ -904,11 +982,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         }
 
         protected String doInBackground(String... arg) {
-            Log.d("DoINBackGround", "On doInBackground...NewPlayListAsync");
-            String test;
-            test = "Test";
-            // SqLite database handler
-            db = new SQLiteHandler(getApplicationContext());
             // Fetching user details from sqlite
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
@@ -925,13 +998,10 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         }
 
         protected void onPostExecute(String result) {
-            //Log.d(""+result);
             if (result == "ok") {
-                Toast.makeText(PlayAudio.this, "Video added to " + Playlist, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(PlayAudio.this, "Video added to " + Playlist, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(PlayAudio.this, "Video added in " + Playlist, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(PlayAudio.this, "Video added in " + Playlist, Toast.LENGTH_SHORT).show();
             }
         }
     }

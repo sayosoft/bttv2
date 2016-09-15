@@ -1,9 +1,12 @@
 package bt.bt.bttv.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Sachin on 8/25/2016.
  */
-public class AudiosModel {
+public class AudiosModel implements Parcelable {
 
     /**
      * audio_id : 3
@@ -76,9 +79,9 @@ public class AudiosModel {
     private String audio_ios_publish_to;
     private String audio_windows_publish_from;
     private String audio_windows_publish_to;
-    private Object audio_has_album;
+    private String audio_has_album;
     private String audio_track_no;
-    private Object audio_memberships;
+    private String audio_memberships;
     private String audio_status;
 
     public String getAudio_id() {
@@ -337,11 +340,11 @@ public class AudiosModel {
         this.audio_windows_publish_to = audio_windows_publish_to;
     }
 
-    public Object getAudio_has_album() {
+    public String getAudio_has_album() {
         return audio_has_album;
     }
 
-    public void setAudio_has_album(Object audio_has_album) {
+    public void setAudio_has_album(String audio_has_album) {
         this.audio_has_album = audio_has_album;
     }
 
@@ -353,11 +356,11 @@ public class AudiosModel {
         this.audio_track_no = audio_track_no;
     }
 
-    public Object getAudio_memberships() {
+    public String getAudio_memberships() {
         return audio_memberships;
     }
 
-    public void setAudio_memberships(Object audio_memberships) {
+    public void setAudio_memberships(String audio_memberships) {
         this.audio_memberships = audio_memberships;
     }
 
@@ -368,4 +371,103 @@ public class AudiosModel {
     public void setAudio_status(String audio_status) {
         this.audio_status = audio_status;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.audio_id);
+        dest.writeString(this.audio_title);
+        dest.writeString(this.audio_is_album);
+        dest.writeString(this.audio_category);
+        dest.writeString(this.audio_album_id);
+        dest.writeString(this.audio_genre);
+        dest.writeString(this.audio_poster);
+        dest.writeString(this.audio_url);
+        dest.writeString(this.audio_content_provider);
+        dest.writeString(this.audio_artist);
+        dest.writeString(this.audio_language);
+        dest.writeString(this.audio_year);
+        dest.writeString(this.audio_month);
+        dest.writeString(this.audio_day);
+        dest.writeString(this.audio_description);
+        dest.writeString(this.audio_web_price);
+        dest.writeString(this.audio_android_price);
+        dest.writeString(this.audio_ios_price);
+        dest.writeString(this.audio_windows_price);
+        dest.writeString(this.audio_web_publish);
+        dest.writeString(this.audio_android_publish);
+        dest.writeString(this.audio_ios_publish);
+        dest.writeString(this.audio_windows_publish);
+        dest.writeString(this.audio_tags);
+        dest.writeString(this.audio_web_publish_from);
+        dest.writeString(this.audio_web_publish_to);
+        dest.writeString(this.audio_android_publish_from);
+        dest.writeString(this.audio_android_publish_to);
+        dest.writeString(this.audio_ios_publish_from);
+        dest.writeString(this.audio_ios_publish_to);
+        dest.writeString(this.audio_windows_publish_from);
+        dest.writeString(this.audio_windows_publish_to);
+        dest.writeString(this.audio_has_album);
+        dest.writeString(this.audio_track_no);
+        dest.writeString(this.audio_memberships);
+        dest.writeString(this.audio_status);
+    }
+
+    public AudiosModel() {
+    }
+
+    protected AudiosModel(Parcel in) {
+        this.audio_id = in.readString();
+        this.audio_title = in.readString();
+        this.audio_is_album = in.readString();
+        this.audio_category = in.readString();
+        this.audio_album_id = in.readString();
+        this.audio_genre = in.readString();
+        this.audio_poster = in.readString();
+        this.audio_url = in.readString();
+        this.audio_content_provider = in.readString();
+        this.audio_artist = in.readString();
+        this.audio_language = in.readString();
+        this.audio_year = in.readString();
+        this.audio_month = in.readString();
+        this.audio_day = in.readString();
+        this.audio_description = in.readString();
+        this.audio_web_price = in.readString();
+        this.audio_android_price = in.readString();
+        this.audio_ios_price = in.readString();
+        this.audio_windows_price = in.readString();
+        this.audio_web_publish = in.readString();
+        this.audio_android_publish = in.readString();
+        this.audio_ios_publish = in.readString();
+        this.audio_windows_publish = in.readString();
+        this.audio_tags = in.readString();
+        this.audio_web_publish_from = in.readString();
+        this.audio_web_publish_to = in.readString();
+        this.audio_android_publish_from = in.readString();
+        this.audio_android_publish_to = in.readString();
+        this.audio_ios_publish_from = in.readString();
+        this.audio_ios_publish_to = in.readString();
+        this.audio_windows_publish_from = in.readString();
+        this.audio_windows_publish_to = in.readString();
+        this.audio_has_album = in.readString();
+        this.audio_track_no = in.readString();
+        this.audio_memberships = in.readString();
+        this.audio_status = in.readString();
+    }
+
+    public static final Parcelable.Creator<AudiosModel> CREATOR = new Parcelable.Creator<AudiosModel>() {
+        @Override
+        public AudiosModel createFromParcel(Parcel source) {
+            return new AudiosModel(source);
+        }
+
+        @Override
+        public AudiosModel[] newArray(int size) {
+            return new AudiosModel[size];
+        }
+    };
 }

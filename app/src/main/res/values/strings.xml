@@ -39,14 +39,6 @@
     <string name="hint_mobile">Mobile Number</string>
     <string name="hint_cid">BT CID Number</string>
 
-    <!-- Strings related to URL-->
-
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-
-    <!-- Example settings for Data & Sync -->
-
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
         <item>15 minutes</item>
