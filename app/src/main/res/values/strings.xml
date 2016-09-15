@@ -24,14 +24,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <string name="yes_dialog">YES</string>
-
     <string name="no_internet">No Internet Connection, Please Connect to internet</string>
-
-
-    <!-- URLS -->
-
-    <!-- USER Login - Register Strings -->
-
 
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
@@ -119,5 +112,6 @@
     <string name="url_add_to_watchlist">http://bflix.ignitecloud.in/jsonApi/addtoWatchlist/</string>
     <string name="url_get_playlist_content">http://bflix.ignitecloud.in/jsonApi/playlist/</string>
     <string name="url_get_tv_channels">http://bflix.ignitecloud.in/jsonApi/getchannel/</string>
+    <string name="saveresume">http://bflix.ignitecloud.in/jsonApi/saveresume/</string>
 
 </resources>

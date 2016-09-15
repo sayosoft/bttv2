@@ -201,22 +201,19 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         progressChanged = progress;
                     }
+
                     public void onStartTrackingTouch(SeekBar seekBar) {
-                        // TODO Auto-generated method stub
                     }
                     public void onStopTrackingTouch(SeekBar seekBar) {
-                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                                progressChanged, 0);
+                        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progressChanged, 0);
                     }
                 });
             } else {
-                Toast.makeText(PlayVideoNew.this, "seek bar progress failed as its null:",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlayVideoNew.this, "seek bar progress failed as its null:", Toast.LENGTH_SHORT).show();
             }
             if (btnShare != null) {
                 btnShare.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-
                         shareIt();
                     }
                 });
@@ -293,7 +290,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
                     if ((visibility & (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)) == 0) {
                         if (!isPortrait) {
                             if (Build.VERSION.SDK_INT > 18) {
-                                // Hide the status bar.
                                 int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
                                 decorView.setSystemUiVisibility(uiOptions);
                             }
@@ -312,7 +308,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             PPBtn.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     if (mVideoView.isPlaying()) {
                         PPBtn.setBackgroundResource(R.drawable.pauseicon);
                         mVideoView.pause();
@@ -326,7 +321,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             backIcon.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     finish();
                 }
             });
@@ -334,7 +328,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             settIcon.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     SettingChoice();
                 }
             });
@@ -342,7 +335,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             PlaylistIcon.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     PlaylistAlertDialogView();
                 }
             });
@@ -351,7 +343,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             volIcon.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
-                    // TODO Auto-generated method stub
                     AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     audio.adjustStreamVolume(AudioManager.STREAM_MUSIC,
                             AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
@@ -545,9 +536,7 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
             if (Build.VERSION.SDK_INT > 18) {
                 View decorView = getWindow().getDecorView();
-                // Hide the status bar.
                 int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-
                 decorView.setSystemUiVisibility(uiOptions);
             }
             isPortrait = false;
@@ -561,13 +550,10 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             infoView.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT > 18) {
                 View decorView = getWindow().getDecorView();
-                // Hide the status bar.
                 int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-
                 decorView.setSystemUiVisibility(uiOptions);
             }
             avoidLoop = true;
-            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             isPortrait = true;
             }
 
@@ -594,7 +580,6 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // if(!avoidLoop) {
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             isPortrait = false;
             changerot();
@@ -818,43 +803,32 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         }
 
         protected String doInBackground(String... arg) {
-            Log.d("DoINBackGround", "On doInBackground...");
             String test;
             test = "Test";
-            // SqLite database handler
             db = new SQLiteHandler(getApplicationContext());
-            // Fetching user details from sqlite
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
             WebRequest webreq = new WebRequest();
-            // Making a request to url and getting response
-            String newurl = "http://bflix.ignitecloud.in/jsonApi/saveresume/" + uid + "/" + VideoID + "/" + mPos;
+            String newurl = getString(R.string.saveresume) + uid + "/" + VideoID + "/" + mPos;
             String Res = webreq.makeWebServiceCall(newurl, WebRequest.GETRequest);
-            //return "You are at PostExecute";
             return test;
         }
 
         protected void onPostExecute(String result) {
-            //Log.d(""+result);
         }
     }
 
     class PlaylistAsync extends AsyncTask<String, String, String> {
         protected void onPreExecute() {
-            Log.d("ExceutePlaylistAsync", "PlaylistAsyncPreExecute");
         }
 
         protected String doInBackground(String... arg) {
-            Log.d("DoINBackGround", "On doInBackground...");
-            String test;
-            test = "Test";
-            // SqLite database handler
             db = new SQLiteHandler(getApplicationContext());
             HashMap<String, String> user = db.getUserDetails();
             String uid = user.get("uid");
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
-            String newurl = "http://bflix.ignitecloud.in/jsonApi/savetoplaylist/" + uid + "/" + VideoID + "/" + PlaylistID;
+            String newurl = getString(R.string.url_add_to_playlist) + uid + "/" + VideoID + "/" + PlaylistID;
             String Res = webreq.makeWebServiceCall(newurl, WebRequest.GETRequest);
             //return "You are at PostExecute";
             if (Res != null) {
@@ -864,13 +838,10 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             }
         }
         protected void onPostExecute(String result) {
-            //Log.d(""+result);
             if (result == "ok") {
-                Toast.makeText(PlayVideoNew.this, "Video added to " + Playlist, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(PlayVideoNew.this, "Video added to " + Playlist, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(PlayVideoNew.this, "Video added in " + Playlist, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(PlayVideoNew.this, "Video added in " + Playlist, Toast.LENGTH_SHORT).show();
             }
         }
     }
