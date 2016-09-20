@@ -105,5 +105,13 @@
     <string name="url_get_playlist_content">http://bflix.ignitecloud.in/jsonApi/playlist/</string>
     <string name="url_get_tv_channels">http://bflix.ignitecloud.in/jsonApi/getchannel/</string>
     <string name="saveresume">http://bflix.ignitecloud.in/jsonApi/saveresume/</string>
+    <string name="cid_number">CID Number</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="country">Country</string>
+    <string name="re_enter_password">Re-Enter Password</string>
+    <string name="submit">Submit</string>
 
 </resources>

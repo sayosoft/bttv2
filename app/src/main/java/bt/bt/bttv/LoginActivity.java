@@ -52,6 +52,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.login_main);
 
         settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);

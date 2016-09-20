@@ -46,7 +46,7 @@ public class ManageFamilyMembersActivity extends AppCompatActivity implements Vi
         settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("BTTV");
+        toolbar.setTitle("Manage Family Member");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

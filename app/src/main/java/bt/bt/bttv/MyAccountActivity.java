@@ -68,6 +68,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         navigationView.setNavigationItemSelectedListener(this);
 
         db = new SQLiteHandler(getApplicationContext());
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
         cd = new ConnectionDetector(this);
 
         // Fetching user details from sqlite
@@ -215,7 +216,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         this.userPackagesModel = userPackagesModel;
 
         tvPlanName.setText("" + userPackagesModel.getPackage_exp());
-        tvPrice.setText(Html.fromHtml(userPackagesModel.getPackage_price() + "<sup>Nu</sup>"));
+        tvPrice.setText(Html.fromHtml(settings.getString(GlobleMethods.ACCOUNT_BALANCE, "") + "<sup>Nu</sup>"));
         tvVOD.setText("" + userPackagesModel.getPackage_vod());
         tvAOD.setText("" + userPackagesModel.getPackage_aod());
         tvLiveTvChannel.setText("" + userPackagesModel.getPackage_live_tv());
@@ -254,10 +255,11 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         @Override
         protected void onPostExecute(Void requestresult) {
             super.onPostExecute(requestresult);
-
             try {
                 JSONObject jsonObjectPackages = new JSONObject(strUserPackages);
                 Gson gson = new Gson();
+
+                settings.edit().putString(GlobleMethods.ACCOUNT_BALANCE, jsonObjectPackages.getJSONArray("packages").getJSONObject(0).getString("account_balance")).commit();
                 userPackagesModelList = gson.fromJson(jsonObjectPackages.getJSONArray("packages").toString(), new TypeToken<List<UserPackagesModel>>() {
                 }.getType());
                 setUi(userPackagesModelList);

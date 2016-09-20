@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Add Family Member"
+                android:textColor="@color/colorWhite"
                 android:textSize="25sp"
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
@@ -40,18 +41,6 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="0dp">
-
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                android:background="@color/tx_continue_bg_green"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/add_family_member"
-                android:textColor="#fff"
-                android:textSize="15sp"
-                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

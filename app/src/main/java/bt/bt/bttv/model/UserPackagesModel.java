@@ -68,21 +68,21 @@ public class UserPackagesModel implements Parcelable {
         this.package_id = in.readString();
         this.user_id = in.readString();
         this.package_exp = in.readString();
-        this.order_id = in.readParcelable(Object.class.getClassLoader());
+        this.order_id = in.readString();
         this.package_status = in.readString();
         this.auto_renew_status = in.readString();
         this.added_time = in.readString();
         this.package_title = in.readString();
         this.package_type = in.readString();
-        this.package_members = in.readParcelable(Object.class.getClassLoader());
+        this.package_members = in.readString();
         this.package_vod = in.readString();
         this.package_aod = in.readString();
         this.package_live_tv = in.readString();
         this.package_radio = in.readString();
         this.package_price = in.readString();
-        this.package_discount = in.readParcelable(Object.class.getClassLoader());
+        this.package_discount = in.readString();
         this.package_duration = in.readString();
-        this.package_coupon = in.readParcelable(Object.class.getClassLoader());
+        this.package_coupon = in.readString();
     }
 
     public String getId() {
@@ -117,7 +117,7 @@ public class UserPackagesModel implements Parcelable {
         this.package_exp = package_exp;
     }
 
-    public Object getOrder_id() {
+    public String getOrder_id() {
         return order_id;
     }
 
@@ -165,7 +165,7 @@ public class UserPackagesModel implements Parcelable {
         this.package_type = package_type;
     }
 
-    public Object getPackage_members() {
+    public String getPackage_members() {
         return package_members;
     }
 
@@ -213,7 +213,7 @@ public class UserPackagesModel implements Parcelable {
         this.package_price = package_price;
     }
 
-    public Object getPackage_discount() {
+    public String getPackage_discount() {
         return package_discount;
     }
 
@@ -229,7 +229,7 @@ public class UserPackagesModel implements Parcelable {
         this.package_duration = package_duration;
     }
 
-    public Object getPackage_coupon() {
+    public String getPackage_coupon() {
         return package_coupon;
     }
 

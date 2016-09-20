@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.model.PackagesModel;
 import bt.bt.bttv.model.UserModel;
 
@@ -53,7 +54,7 @@ public class SubscriptionPaymentModeActivity extends AppCompatActivity {
         UserModel userModel = gson.fromJson(settings.getString("logFlag", ""), UserModel.class);
 
         tvPackCost = (TextView) findViewById(R.id.tv_pack_cost);
-        tvPackCost.setText(Html.fromHtml("<b>" + userModel.getUser().getAccount_balance() + "<sup>Nu</sup></b>"));
+        tvPackCost.setText(Html.fromHtml("<b>" + settings.getString(GlobleMethods.ACCOUNT_BALANCE, "") + "<sup>Nu</sup></b>"));
         llMain = (LinearLayout) findViewById(R.id.ll_main_view);
         llScratchCard = (LinearLayout) findViewById(R.id.ll_scratch_card);
         llBWallet = (LinearLayout) findViewById(R.id.ll_b_wallet);
