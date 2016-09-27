@@ -81,7 +81,7 @@ public class PlaylistContentActivity extends AppCompatActivity implements Naviga
 
     private void apiGetPlaylistContent(String playlist_id) {
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, PlaylistContentActivity.this, getResources().getString(R.string.url_get_playlist_content) + db.getUserDetails().get("uid") + "/" + playlist_id, getString(R.string.msg_progress_dialog), 100);
+            aPiAsync = new APiAsync(null, PlaylistContentActivity.this, getResources().getString(R.string.url_get_playlist_content) + db.getUserDetails().get("uid") + "/" + playlist_id, getString(R.string.msg_progress_dialog), APiAsync.PLAYLIST_CONTENT, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(PlaylistContentActivity.this, getString(R.string.msg_no_connection), Toast.LENGTH_SHORT).show();
@@ -91,7 +91,7 @@ public class PlaylistContentActivity extends AppCompatActivity implements Naviga
     @Override
     public void onSuccess(String response, int requestcode) {
         switch (requestcode) {
-            case 100:
+            case APiAsync.PLAYLIST_CONTENT:
                 Log.e("Playlist content", response);
                 Gson gson = new Gson();
                 myPlayListContentModel = gson.fromJson(response.toString(), MyPlayListContentModel.class);

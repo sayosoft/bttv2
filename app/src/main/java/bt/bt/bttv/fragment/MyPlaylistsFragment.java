@@ -70,7 +70,7 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
 
         if (cd.isConnectingToInternet()) {
             if (myPlayListModel == null) {
-                aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getActivity().getString(R.string.msg_progress_dialog), 100);
+                aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getActivity().getString(R.string.msg_progress_dialog), APiAsync.GET_PLAYLIST, null);
                 aPiAsync.execute();
             } else {
                 mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModel.getArray());
@@ -87,7 +87,7 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
             case R.id.btnAddPlayList:
                 if (etPlayListName.getText().length() > 0) {
                     if (cd.isConnectingToInternet()) {
-                        aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_create_playlist) + db.getUserDetails().get("uid") + "/" + etPlayListName.getText().toString().replace(" ", "%20"), getActivity().getString(R.string.msg_progress_dialog), 101);
+                        aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_create_playlist) + db.getUserDetails().get("uid") + "/" + etPlayListName.getText().toString().replace(" ", "%20"), getActivity().getString(R.string.msg_progress_dialog), APiAsync.CREATE_PLAYLIST, null);
                         aPiAsync.execute();
                     } else {
                         Toast.makeText(getActivity(), R.string.msg_no_connection, Toast.LENGTH_SHORT).show();
@@ -101,7 +101,7 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
     @Override
     public void onSuccess(String response, int requestType) {
         switch (requestType) {
-            case 100:
+            case APiAsync.GET_PLAYLIST:
                 Gson gson = new Gson();
                 myPlayListModel = gson.fromJson(response.toString(), MyPlayListModel.class);
 
@@ -114,7 +114,7 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
                 }
                 break;
 
-            case 101:
+            case APiAsync.CREATE_PLAYLIST:
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("success").equals("success")) {

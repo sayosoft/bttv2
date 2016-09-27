@@ -63,6 +63,8 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     boolean avoidLoop = false;
     Context context;
     Runnable sendData;
+    int position;
+    String strPlaylistName = null;
     private String path = "http://flv2.bn.netease.com/tvmrepo/2016/5/N/3/EBMTJBGN3/SD/EBMTJBGN3-mobile.mp4";
     private Uri uri;
     private VideoView mVideoView;
@@ -97,8 +99,6 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     private AudiosModel audiosModel;
     private APiAsync aPiAsync;
     private MyPlayListModel myPlayListModel;
-    int position;
-    String strPlaylistName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -795,7 +795,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         switch (v.getId()) {
             case R.id.tvFavourite:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100);
+                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -806,7 +806,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
                 break;
             case R.id.tvLater:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103);
+                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -824,7 +824,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     private void apiGetPlayLists() {
 
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101);
+            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(PlayAudio.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
@@ -910,7 +910,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
     private void apiAddToPlaylist(String playlist_id) {
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102);
+            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();

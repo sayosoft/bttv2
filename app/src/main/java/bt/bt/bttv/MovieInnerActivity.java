@@ -232,7 +232,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
 
     private void apiAddToPlaylist(String playlist_id) {
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102);
+            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -300,7 +300,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.tvFavourite:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100);
+                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -311,7 +311,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.tvLater:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103);
+                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -329,7 +329,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     private void apiGetPlayLists() {
 
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101);
+            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(MovieInnerActivity.this, "Internet not available..!", Toast.LENGTH_SHORT).show();

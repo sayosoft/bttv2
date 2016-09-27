@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,24 +26,30 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import bt.bt.bttv.helper.APiAsync;
+import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.AppController;
+import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.SQLiteHandler;
 
-public class EditProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = EditProfileActivity.class.getSimpleName();
-    private Button btnUpdate;
-    private EditText inputFullName;
-    private EditText inputLastName;
-    private EditText inputEmail;
-    private EditText inputMobile;
+public class EditProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ApiInt {
+
+    private Button btnUpdate, btnChangePassword;
+    private EditText inputFullName, inputLastName, inputEmail, inputMobile, et_current_password, et_new_password, et_re_password;
     private ProgressDialog pDialog;
     private SQLiteHandler db;
+    private HashMap<String, String> user;
+    private JSONObject jsonObject;
+    private ConnectionDetector cd;
+    private APiAsync aPiAsync;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
+
+        cd = new ConnectionDetector(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Your Profile");
@@ -66,6 +71,11 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         inputMobile = (EditText) findViewById(R.id.mobilenumber);
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
 
+        et_current_password = (EditText) findViewById(R.id.et_current_password);
+        et_new_password = (EditText) findViewById(R.id.et_new_password);
+        et_re_password = (EditText) findViewById(R.id.et_re_password);
+        btnChangePassword = (Button) findViewById(R.id.btnChangePassword);
+
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -74,9 +84,7 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         db = new SQLiteHandler(getApplicationContext());
 
         // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-
-        final String userid = user.get("uid");
+        user = db.getUserDetails();
         String user_first_name = user.get("name");
         String user_last_name = user.get("last_name");
         String user_mobile = user.get("mobile");
@@ -88,21 +96,8 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         inputEmail.setText(user_email);
 
         // Register Button Click event
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-
-                String name = inputFullName.getText().toString().trim();
-                String last_name = inputLastName.getText().toString().trim();
-                String email = inputEmail.getText().toString().trim();
-                String mobileno = inputMobile.getText().toString().trim();
-
-                if (!name.isEmpty() && !email.isEmpty()) {
-                    updateUser(name, email, mobileno, last_name, userid);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please enter your details!", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        btnUpdate.setOnClickListener(this);
+        btnChangePassword.setOnClickListener(this);
     }
 
     public void clear(View v) {
@@ -123,13 +118,11 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         pDialog.setMessage("Updateing ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST,getString(R.string.url_user_update), new Response.Listener<String>() {
+        StringRequest strReq = new StringRequest(Method.POST, getString(R.string.url_user_update), new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Update Response: " + response.toString());
                 hideDialog();
-
                 try {
                     JSONObject jObj = new JSONObject(response);
                     boolean error = jObj.getBoolean("error");
@@ -165,9 +158,7 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Update Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
         }) {
@@ -254,5 +245,73 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnUpdate:
+                String name = inputFullName.getText().toString().trim();
+                String last_name = inputLastName.getText().toString().trim();
+                String email = inputEmail.getText().toString().trim();
+                String mobileno = inputMobile.getText().toString().trim();
+
+                if (!name.isEmpty() && !email.isEmpty()) {
+                    updateUser(name, email, mobileno, last_name, db.getUserDetails().get("uid"));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please enter your details!", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.btnChangePassword:
+                String current_password = et_current_password.getText().toString().trim();
+                String new_password = et_new_password.getText().toString().trim();
+                String re_enter_password = et_re_password.getText().toString().trim();
+                if (!current_password.isEmpty() && !new_password.isEmpty() && !re_enter_password.isEmpty()) {
+                    if (new_password.equals(re_enter_password)) {
+                        try {
+                            jsonObject = new JSONObject();
+                            jsonObject.put("token", "");
+                            jsonObject.put("current_password", current_password);
+                            jsonObject.put("new_password", new_password);
+                            jsonObject.put("confirm_new_password", re_enter_password);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        apiChangePassword();
+                    } else {
+                        Toast.makeText(EditProfileActivity.this, "new password and re-entered password are not same!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please enter your details!", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
+    private void apiChangePassword() {
+        if (cd.isConnectingToInternet()) {
+            aPiAsync = new APiAsync(null, EditProfileActivity.this, getResources().getString(R.string.url_change_password), getString(R.string.msg_progress_dialog), APiAsync.CHANGE_PASSWORD, this.jsonObject);
+            aPiAsync.execute();
+        } else {
+            Toast.makeText(EditProfileActivity.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onSuccess(String response, int requestType) {
+        switch (requestType) {
+            case APiAsync.CHANGE_PASSWORD:
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("status").equals("success"))
+                        Toast.makeText(EditProfileActivity.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(EditProfileActivity.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
     }
 }
