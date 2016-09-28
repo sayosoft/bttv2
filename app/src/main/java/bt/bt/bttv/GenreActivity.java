@@ -30,7 +30,6 @@ import bt.bt.bttv.fragment.MyPlaylistsFragment;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.HTTPURLConnection;
-import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.DrawerCategoriesModel;
 import bt.bt.bttv.model.VideosModel;
 
@@ -44,7 +43,6 @@ public class GenreActivity extends AppCompatActivity implements NavigationView.O
     private ConnectionDetector cd;
     private List<VideosModel> videosModelsList;
     private JSONObject jsonObject;
-    private SQLiteHandler db;
     private List<DrawerCategoriesModel> drawerCategoriesModelList;
 
     private TabLayout tabLayout;
@@ -54,8 +52,6 @@ public class GenreActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

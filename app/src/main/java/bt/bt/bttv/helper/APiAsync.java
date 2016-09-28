@@ -16,6 +16,10 @@ public class APiAsync extends AsyncTask<String, Void, String> {
     public static final int CREATE_PLAYLIST = 8;
     public static final int GET_PLAYLIST = 9;
     public static final int PLAYLIST_CONTENT = 10;
+    public static final int REGISTER_USER = 1;
+    public static final int VERIFY_OTP = 2;
+    public static final int LOGIN = 3;
+    public static final int USER_PROFILE_UPDATE = 5;
 
     Fragment mFragmentContext;
     Context mContext;

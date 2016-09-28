@@ -1,6 +1,8 @@
 package bt.bt.bttv;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,33 +20,38 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.adapter.PackageAdapter;
-import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 import bt.bt.bttv.model.PackagesModel;
 
 public class NewPackagesActivity extends AppCompatActivity {
-    private SQLiteHandler db;
 
+    public SharedPreferences settings;
     private List<PackagesModel> packagesModelList;
     private RecyclerView.Adapter packageAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView rvPackages;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        db = new SQLiteHandler(getApplicationContext());
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
+        gson = new Gson();
 
         rvPackages = (RecyclerView) findViewById(R.id.rvPackages);
         rvPackages.setHasFixedSize(true);
 
         mLayoutManager = new GridLayoutManager(this, 1);
         rvPackages.setLayoutManager(mLayoutManager);
-        HashMap<String, String> user = db.getUserDetails();
 
-        String uid = user.get("uid");
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
+
+        String uid = loginResponseModel.getUser().getUser_id();
         new GetStudents().execute();
     }
     private class GetStudents extends AsyncTask<Void, Void, Void> {

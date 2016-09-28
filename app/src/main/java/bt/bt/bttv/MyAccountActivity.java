@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -28,26 +27,26 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 import bt.bt.bttv.model.UserPackagesModel;
 
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+
     public SharedPreferences settings;
-    Context context;
-    private SQLiteHandler db;
+    private Context context;
     private ConnectionDetector cd;
     private String video_source = null;
     private List<UserPackagesModel> userPackagesModelList;
     private UserPackagesModel userPackagesModel;
     private TextView tvPlanName, tvPrice, tvVOD, tvAOD, tvLiveTvChannel, tvRadioChannel, tvExpiryDate, tvManageSubscriptions, tvManageFamilyMembers, tvManageAddOns, tvAddBalance, tvEditProfile;
     private Switch switchAutoRenew;
-    private HashMap<String, String> user;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +66,11 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        db = new SQLiteHandler(getApplicationContext());
         settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
         cd = new ConnectionDetector(this);
+        gson = new Gson();
 
-        // Fetching user details from sqlite
-        user = db.getUserDetails();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
         if (cd.isConnectingToInternet()) {
             new GetUserPackages().execute();
@@ -247,8 +245,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         @Override
         protected Void doInBackground(Void... arg0) {
             WebRequest webreq = new WebRequest();
-            Log.e("user id :", user.get("uid"));
-            strUserPackages = webreq.makeWebServiceCall(getString(R.string.url_userpackages) + "" + user.get("uid"), WebRequest.GETRequest);
+            strUserPackages = webreq.makeWebServiceCall(getString(R.string.url_userpackages) + "" + loginResponseModel.getUser().getUser_id(), WebRequest.GETRequest);
             return null;
         }
 

@@ -12,6 +12,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import bt.bt.bttv.LoginActivity;
 import bt.bt.bttv.R;
 
@@ -29,7 +32,6 @@ public class GlobleMethods {
 
     public SharedPreferences settings;
     private Context _context;
-    private SQLiteHandler db;
 
     public GlobleMethods(Context context) {
         this._context = context;
@@ -46,6 +48,20 @@ public class GlobleMethods {
         }
 
         mp.start();
+    }
+
+    public static boolean isEmailValid(String email) {
+        boolean isValid = false;
+
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+        if (matcher.matches()) {
+            isValid = true;
+        }
+        return isValid;
     }
 
     public boolean isConnectingToInternet() {
@@ -77,7 +93,6 @@ public class GlobleMethods {
     public void logoutUser() {
 
         settings = _context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        db = new SQLiteHandler(_context);
 
         new android.support.v7.app.AlertDialog.Builder(_context)
                 .setTitle("Logout?")
@@ -87,7 +102,6 @@ public class GlobleMethods {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Toast.makeText(_context, "Logging Out", Toast.LENGTH_SHORT).show();
-                        db.deleteUsers();
                         SharedPreferences.Editor editor = settings.edit();
                         editor.remove(logFlag);
                         editor.commit();

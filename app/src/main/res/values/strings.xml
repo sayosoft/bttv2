@@ -77,9 +77,14 @@
     <string name="msg_no_connection">No Internet Connection..!</string>
 
 
-    <string name="url_login">http://bflix.ignitecloud.in/JsonLoginCheck/user_action</string>
-    <string name="url_register">http://bflix.ignitecloud.in/JsonRegister/user_action</string>
-    <string name="url_user_update">http://bflix.ignitecloud.in/JsonUpdate/user_action</string>
+    <string name="url_register">http://bflix.ignitecloud.in/JsonUserApi/register</string>
+    <string name="url_change_password">http://bflix.ignitecloud.in/JsonUserApi/change_password</string>
+    <string name="url_verify_otp">http://bflix.ignitecloud.in/JsonUserApi/verify_otp</string>
+    <string name="url_login">http://bflix.ignitecloud.in/JsonUserApi/user_login</string>
+    <!--<string name="url_login">http://bflix.ignitecloud.in/JsonLoginCheck/user_action</string>-->
+    <!--<string name="url_register">http://bflix.ignitecloud.in/JsonRegister/user_action</string>-->
+    <string name="url_user_profile_update">http://bflix.ignitecloud.in/JsonUserApi/profile_update</string>
+    <!--<string name="url_user_update">http://bflix.ignitecloud.in/JsonUpdate/user_action</string>-->
     <string name="url_get_packages">http://bflix.ignitecloud.in/jsonApi/packages/</string>
     <string name="url_image">http://bflix.ignitecloud.in/uploads/images/</string>
     <string name="url_news">http://bflix.ignitecloud.in/jsonApi/slides/News</string>
@@ -113,6 +118,5 @@
     <string name="country">Country</string>
     <string name="re_enter_password">Re-Enter Password</string>
     <string name="submit">Submit</string>
-    <string name="url_change_password">http://bflix.ignitecloud.in/JsonUserApi/change_password</string>
 
 </resources>

@@ -2,6 +2,7 @@ package bt.bt.bttv;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.ImageListener;
 
@@ -39,12 +41,11 @@ import java.util.List;
 
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 
 
-public class NewNewsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class NewNewsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "DeviceTypeRuntimeCheck";
     // JSON Node names
@@ -58,6 +59,7 @@ public class NewNewsActivity extends AppCompatActivity
     private static final String TAG_SLIDES_ID = "slide_id";
     private static final String TAG_SLIDES_IMAGE = "slide_image_url";
     final HashMap<String, String> onlymovie = new HashMap<String, String>();
+    public SharedPreferences settings;
     Integer sc = 6;
     final String[] slideimgs = new String[sc];
     ArrayList<HashMap<String, String>> moviesList2 = new ArrayList<HashMap<String, String>>();
@@ -93,8 +95,9 @@ public class NewNewsActivity extends AppCompatActivity
             }, 1200);
         }
     };
-    private SQLiteHandler db;
     private ConnectionDetector cd;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,13 +129,12 @@ public class NewNewsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        // SqLite database handler
-        db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
-        HashMap<String, String> user = db.getUserDetails();
+        gson = new Gson();
 
-        String name = user.get("name");
-        String email = user.get("email");
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
+        String name = loginResponseModel.getUser().getName();
+        String email = loginResponseModel.getUser().getEmail();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

@@ -4,6 +4,7 @@ package bt.bt.bttv;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
@@ -32,9 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import bt.bt.bttv.helper.ConnectionDetector;
-import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.helper.SessionManager;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 
 public class PlaylistinnerActivity extends AppCompatActivity {
     // JSON Node names
@@ -45,20 +47,22 @@ public class PlaylistinnerActivity extends AppCompatActivity {
     private static final String TAG_VIDEO_POSTER = "video_poster";
     private static String url = "http://bflix.ignitecloud.in/jsonApi/playlist/";
     private static String url2 = "http://bflix.ignitecloud.in/jsonApi/playlist2/";
+    public SharedPreferences settings;
     Context context = this;
     ArrayAdapter<JsonObject> playAdapter;
-    private SQLiteHandler db;
-    private SessionManager session;
     private int PlaylistID = 1;
     private ConnectionDetector cd;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String bartitle = "Playlist";
 
-        db = new SQLiteHandler(getApplicationContext());
         cd = new ConnectionDetector(this);
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
+        gson = new Gson();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -67,10 +71,9 @@ public class PlaylistinnerActivity extends AppCompatActivity {
             PlaylistID = value;
         }
 
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
+        String uid = loginResponseModel.getUser().getUser_id();
 
-        String uid = user.get("uid");
         url = "";
         url = "http://bflix.ignitecloud.in/jsonApi/playlist/" + uid + "/" + PlaylistID;
         url2 = "";
@@ -221,17 +224,6 @@ public class PlaylistinnerActivity extends AppCompatActivity {
             Log.e("ServiceHandler", "No data received from HTTP Request");
             return null;
         }
-    }
-
-    private void logoutUser() {
-        session.setLogin(false);
-
-        db.deleteUsers();
-
-        // Launching the login activity
-        Intent intent = new Intent(PlaylistinnerActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     /**

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -40,15 +41,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.APiAsync;
 import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.ConnectionDetector;
-import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
 import bt.bt.bttv.model.AudiosModel;
+import bt.bt.bttv.model.LoginResponseModel;
 import bt.bt.bttv.model.MyPlayListModel;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
@@ -59,6 +60,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
     private static String TAG = "PlayVideoNew";
     final Handler h = new Handler();
+    public SharedPreferences settings;
     boolean isPortrait = true;
     boolean avoidLoop = false;
     Context context;
@@ -93,12 +95,13 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     private SeekBar volumeControl = null;
     private AudioManager audioManager = null;
     private boolean isBuffering = false;
-    private SQLiteHandler db;
     private ConnectionDetector cd;
     private TextView tvFavourite, tvAddToPlaylist, tvLater, tvShare;
     private AudiosModel audiosModel;
     private APiAsync aPiAsync;
     private MyPlayListModel myPlayListModel;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,8 +130,11 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
     private void init() {
 
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
         cd = new ConnectionDetector(this);
-        db = new SQLiteHandler(getApplicationContext());
+        gson = new Gson();
+
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
         mVideoView = (VideoView) findViewById(R.id.buffer);
         mSubtitleView = (TextView) findViewById(R.id.subtitle_view);
@@ -795,7 +801,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         switch (v.getId()) {
             case R.id.tvFavourite:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100, null);
+                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + loginResponseModel.getUser().getUser_id() + "/" + "2", getString(R.string.msg_progress_dialog), 100, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -806,7 +812,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
                 break;
             case R.id.tvLater:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103, null);
+                    aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + loginResponseModel.getUser().getUser_id() + "/" + "2", getString(R.string.msg_progress_dialog), 103, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -824,7 +830,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
     private void apiGetPlayLists() {
 
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101, null);
+            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_get_movie_playlists) + loginResponseModel.getUser().getUser_id(), getString(R.string.msg_progress_dialog), 101, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(PlayAudio.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
@@ -910,7 +916,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
     private void apiAddToPlaylist(String playlist_id) {
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102, null);
+            aPiAsync = new APiAsync(null, PlayAudio.this, getResources().getString(R.string.url_add_to_playlist) + loginResponseModel.getUser().getUser_id() + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -928,8 +934,8 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             String test;
             test = "Test";
             // Fetching user details from sqlite
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/saveresume/" + uid + "/" + VideoID + "/" + mPos;
@@ -950,8 +956,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
 
         protected String doInBackground(String... arg) {
             Log.d("DoINBackGround", "On doInBackground...");
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/savetoplaylist/" + uid + "/" + VideoID + "/" + PlaylistID;
@@ -982,9 +987,8 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
         }
 
         protected String doInBackground(String... arg) {
-            // Fetching user details from sqlite
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/newsavetoplaylist/" + uid + "/" + VideoID + "/" + Playlist;
@@ -1018,11 +1022,7 @@ public class PlayAudio extends AppCompatActivity implements MediaPlayer.OnInfoLi
             Log.d("DoINBackGround", "On doInBackground...NewPlayListAsync");
             String test;
             test = "Test";
-            // SqLite database handler
-            db = new SQLiteHandler(getApplicationContext());
-            // Fetching user details from sqlite
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/getplaylist3/" + uid + "/s";

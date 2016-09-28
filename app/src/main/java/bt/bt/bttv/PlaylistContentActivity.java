@@ -31,8 +31,8 @@ import bt.bt.bttv.helper.APiAsync;
 import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.AudiosModel;
+import bt.bt.bttv.model.LoginResponseModel;
 import bt.bt.bttv.model.MyPlayListContentModel;
 import bt.bt.bttv.model.MyPlayListModel;
 import bt.bt.bttv.model.VideosModel;
@@ -46,9 +46,10 @@ public class PlaylistContentActivity extends AppCompatActivity implements Naviga
     List<AudiosModel> audiosModelListFiltered = new ArrayList<>();
     List<VideosModel> videoModelListFiltered = new ArrayList<>();
     private ConnectionDetector cd;
-    private SQLiteHandler db;
     private APiAsync aPiAsync;
     private LinearLayout llMain;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,9 @@ public class PlaylistContentActivity extends AppCompatActivity implements Naviga
 
         cd = new ConnectionDetector(this);
         settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        db = new SQLiteHandler(this);
+
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(arrayBean.getPlaylist_name() + " Content");
@@ -81,7 +84,7 @@ public class PlaylistContentActivity extends AppCompatActivity implements Naviga
 
     private void apiGetPlaylistContent(String playlist_id) {
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, PlaylistContentActivity.this, getResources().getString(R.string.url_get_playlist_content) + db.getUserDetails().get("uid") + "/" + playlist_id, getString(R.string.msg_progress_dialog), APiAsync.PLAYLIST_CONTENT, null);
+            aPiAsync = new APiAsync(null, PlaylistContentActivity.this, getResources().getString(R.string.url_get_playlist_content) + loginResponseModel.getUser().getUser_id() + "/" + playlist_id, getString(R.string.msg_progress_dialog), APiAsync.PLAYLIST_CONTENT, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(PlaylistContentActivity.this, getString(R.string.msg_no_connection), Toast.LENGTH_SHORT).show();

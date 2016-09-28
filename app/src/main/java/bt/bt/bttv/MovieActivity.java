@@ -1,11 +1,10 @@
 package bt.bt.bttv;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -13,7 +12,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,11 +23,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -42,8 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 
 
 public class MovieActivity extends AppCompatActivity
@@ -61,14 +56,14 @@ public class MovieActivity extends AppCompatActivity
     private static final String TAG_SLIDES_ID = "slide_id";
     private static final String TAG_SLIDES_IMAGE = "slide_image_url";
     final HashMap<String, String> onlymovie = new HashMap<String, String>();
+    public SharedPreferences settings;
     Integer sc = 6;
     final String[] slideimgs = new String[sc];
     ArrayList<HashMap<String, String>> moviesList2 = new ArrayList<HashMap<String, String>>();
     JSONArray mvs = null;
     JSONArray Slides = null;
-
-    private SQLiteHandler db;
-    private GoogleApiClient client;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +98,11 @@ public class MovieActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        db = new SQLiteHandler(getApplicationContext());
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
-        HashMap<String, String> user = db.getUserDetails();
-
-        String name = user.get("name");
-        String email = user.get("email");
+        String name = loginResponseModel.getUser().getName();
+        String email = loginResponseModel.getUser().getEmail();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -117,7 +111,6 @@ public class MovieActivity extends AppCompatActivity
         tvHeaderName.setText(name);
         TextView tvHeaderMail = (TextView) navHeaderView.findViewById(R.id.nav_usermail);
         tvHeaderMail.setText(email);
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void addImagesToThegallery(JSONArray imgs) throws JSONException {
@@ -329,36 +322,6 @@ public class MovieActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Movie Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW,
-                "Movie Page",
-                Uri.parse("http://host/path"),
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
-
     private ArrayList<HashMap<String, String>> ParseJSONMovies(String json) {
         if (json != null) {
             try {
@@ -446,26 +409,6 @@ public class MovieActivity extends AppCompatActivity
             Log.e("ServiceHandler", "No data received from HTTP Request for Sliders");
             return null;
         }
-    }
-
-    private void logoutUser() {
-
-        new AlertDialog.Builder(this)
-                .setTitle("Logout?")
-                .setMessage("are you sure you want to logout??")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "Logging Out", Toast.LENGTH_SHORT).show();
-                        db.deleteUsers();
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
     }
 
     private class GetMovies extends AsyncTask<Void, Void, Void> {

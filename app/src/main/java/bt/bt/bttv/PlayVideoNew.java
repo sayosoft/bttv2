@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Rect;
@@ -34,12 +35,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
 import io.vov.vitamio.widget.MediaController;
@@ -48,6 +51,7 @@ import io.vov.vitamio.widget.VideoView;
 public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener {
     private static String TAG = "PlayVideoNew";
     final Handler h = new Handler();
+    public SharedPreferences settings;
     boolean isPortrait = true;
     boolean avoidLoop = false;
     Context context;
@@ -80,11 +84,16 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
     private SeekBar volumeControl = null;
     private AudioManager audioManager = null;
     private boolean isBuffering = false;
-    private SQLiteHandler db;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -773,9 +782,7 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         protected String doInBackground(String... arg) {
             String test;
             test = "Test";
-            db = new SQLiteHandler(getApplicationContext());
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             String newurl = getString(R.string.saveresume) + uid + "/" + VideoID + "/" + mPos;
             String Res = webreq.makeWebServiceCall(newurl, WebRequest.GETRequest);
@@ -791,9 +798,7 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
         }
 
         protected String doInBackground(String... arg) {
-            db = new SQLiteHandler(getApplicationContext());
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
             String newurl = getString(R.string.url_add_to_playlist) + uid + "/" + VideoID + "/" + PlaylistID;
@@ -823,11 +828,7 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             Log.d("DoINBackGround", "On doInBackground...NewPlayListAsync");
             String test;
             test = "Test";
-            // SqLite database handler
-            db = new SQLiteHandler(getApplicationContext());
-            // Fetching user details from sqlite
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/newsavetoplaylist/" + uid + "/" + VideoID + "/" + Playlist;
@@ -864,11 +865,8 @@ public class PlayVideoNew extends AppCompatActivity implements MediaPlayer.OnInf
             Log.d("DoINBackGround", "On doInBackground...NewPlayListAsync");
             String test;
             test = "Test";
-            // SqLite database handler
-            db = new SQLiteHandler(getApplicationContext());
-            // Fetching user details from sqlite
-            HashMap<String, String> user = db.getUserDetails();
-            String uid = user.get("uid");
+
+            String uid = loginResponseModel.getUser().getUser_id();
             WebRequest webreq = new WebRequest();
             // Making a request to url and getting response
             String newurl = "http://bflix.ignitecloud.in/jsonApi/getplaylist3/" + uid + "/s";

@@ -2,7 +2,7 @@ package bt.bt.bttv;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
@@ -29,9 +30,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.helper.SessionManager;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 
 public class PlayHistoryActivity extends AppCompatActivity {
     // JSON Node names
@@ -42,29 +43,21 @@ public class PlayHistoryActivity extends AppCompatActivity {
     private static final String TAG_VIDEO_POSTER = "video_poster";
     private static String url = "http://bflix.ignitecloud.in/jsonApi/playhistory/";
     private static String url2 = "http://bflix.ignitecloud.in/jsonApi/playhistory2/";
+    public SharedPreferences settings;
     Context context = this;
     ArrayAdapter<JsonObject> playAdapter;
-    private SQLiteHandler db;
-    private SessionManager session;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        gson = new Gson();
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
 
-        db = new SQLiteHandler(getApplicationContext());
-
-        // session manager
-        session = new SessionManager(getApplicationContext());
-
-        if (!session.isLoggedIn()) {
-            logoutUser();
-        }
-
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-
-        String uid = user.get("uid");
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
+        String uid = loginResponseModel.getUser().getUser_id();
         url = "";
         url = "http://bflix.ignitecloud.in/jsonApi/playhistory/" + uid;
         url2 = "";
@@ -185,17 +178,6 @@ public class PlayHistoryActivity extends AppCompatActivity {
             Log.e("ServiceHandler", "No data received from HTTP Request");
             return null;
         }
-    }
-
-    private void logoutUser() {
-        session.setLogin(false);
-
-        db.deleteUsers();
-
-        // Launching the login activity
-        Intent intent = new Intent(PlayHistoryActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     /**

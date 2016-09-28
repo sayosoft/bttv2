@@ -24,12 +24,12 @@ import bt.bt.bttv.adapter.MyPlaylistsAdapter;
 import bt.bt.bttv.helper.APiAsync;
 import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.ConnectionDetector;
-import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.GlobleMethods;
+import bt.bt.bttv.model.LoginResponseModel;
 import bt.bt.bttv.model.MyPlayListModel;
 
 public class MyPlaylistsFragment extends Fragment implements View.OnClickListener, ApiInt {
 
-    public static final String PREFS_NAME = "MyPrefs";
     public SharedPreferences settings;
     RecyclerView rvMyPlayList;
     RecyclerView.LayoutManager mLayoutManager;
@@ -38,18 +38,20 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
     Button btnAddPlayList;
     private ConnectionDetector cd;
     private MyPlayListModel myPlayListModel;
-    private SQLiteHandler db;
     private TextView altText;
     private APiAsync aPiAsync;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.myplaylist_fragment, container, false);
+
         cd = new ConnectionDetector(getActivity());
-        settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        db = new SQLiteHandler(getActivity());
+        settings = getActivity().getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
+
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
         rvMyPlayList = (RecyclerView) view.findViewById(R.id.rvMyPlayList);
         rvMyPlayList.setHasFixedSize(true);
@@ -70,7 +72,7 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
 
         if (cd.isConnectingToInternet()) {
             if (myPlayListModel == null) {
-                aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getActivity().getString(R.string.msg_progress_dialog), APiAsync.GET_PLAYLIST, null);
+                aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_get_movie_playlists) + loginResponseModel.getUser().getUser_id(), getActivity().getString(R.string.msg_progress_dialog), APiAsync.GET_PLAYLIST, null);
                 aPiAsync.execute();
             } else {
                 mAdapter = new MyPlaylistsAdapter(getActivity(), myPlayListModel.getArray());
@@ -87,7 +89,7 @@ public class MyPlaylistsFragment extends Fragment implements View.OnClickListene
             case R.id.btnAddPlayList:
                 if (etPlayListName.getText().length() > 0) {
                     if (cd.isConnectingToInternet()) {
-                        aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_create_playlist) + db.getUserDetails().get("uid") + "/" + etPlayListName.getText().toString().replace(" ", "%20"), getActivity().getString(R.string.msg_progress_dialog), APiAsync.CREATE_PLAYLIST, null);
+                        aPiAsync = new APiAsync(MyPlaylistsFragment.this, getActivity(), getResources().getString(R.string.url_create_playlist) + loginResponseModel.getUser().getUser_id() + "/" + etPlayListName.getText().toString().replace(" ", "%20"), getActivity().getString(R.string.msg_progress_dialog), APiAsync.CREATE_PLAYLIST, null);
                         aPiAsync.execute();
                     } else {
                         Toast.makeText(getActivity(), R.string.msg_no_connection, Toast.LENGTH_SHORT).show();

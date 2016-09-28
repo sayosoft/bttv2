@@ -1,7 +1,9 @@
 package bt.bt.bttv;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,34 +17,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import bt.bt.bttv.helper.APiAsync;
 import bt.bt.bttv.helper.ApiInt;
-import bt.bt.bttv.helper.AppController;
 import bt.bt.bttv.helper.ConnectionDetector;
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.model.LoginResponseModel;
 
 public class EditProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, ApiInt {
 
+    public SharedPreferences settings;
     private Button btnUpdate, btnChangePassword;
-    private EditText inputFullName, inputLastName, inputEmail, inputMobile, et_current_password, et_new_password, et_re_password;
+    private EditText inputFullName, inputLastName, inputEmail, inputMobile, et_current_password, et_new_password, et_re_password, et_cid_number, et_address, et_city;
     private ProgressDialog pDialog;
-    private SQLiteHandler db;
-    private HashMap<String, String> user;
     private JSONObject jsonObject;
     private ConnectionDetector cd;
     private APiAsync aPiAsync;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +46,7 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_editprofile);
 
         cd = new ConnectionDetector(this);
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Your Profile");
@@ -67,6 +64,10 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         inputFullName = (EditText) findViewById(R.id.name);
         inputLastName = (EditText) findViewById(R.id.last_name);
         inputEmail = (EditText) findViewById(R.id.email);
+        et_cid_number = (EditText) findViewById(R.id.et_cid_number);
+        et_address = (EditText) findViewById(R.id.et_address);
+        et_city = (EditText) findViewById(R.id.et_city);
+
 
         inputMobile = (EditText) findViewById(R.id.mobilenumber);
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
@@ -80,15 +81,12 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
-
-        // Fetching user details from sqlite
-        user = db.getUserDetails();
-        String user_first_name = user.get("name");
-        String user_last_name = user.get("last_name");
-        String user_mobile = user.get("mobile");
-        String user_email = user.get("email");
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
+        String user_first_name = loginResponseModel.getUser().getName();
+        String user_last_name = loginResponseModel.getUser().getLast_name();
+        String user_mobile = loginResponseModel.getUser().getMobile();
+        String user_email = loginResponseModel.getUser().getEmail();
 
         inputFullName.setText(user_first_name);
         inputLastName.setText(user_last_name);
@@ -111,75 +109,6 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         inputMobile.setText("");
     }
 
-    private void updateUser(final String name, final String email, final String mobile, final String last_name, final String user_id) {
-        // Tag used to cancel the request
-        String tag_string_req = "req_register";
-
-        pDialog.setMessage("Updateing ...");
-        showDialog();
-
-        StringRequest strReq = new StringRequest(Method.POST, getString(R.string.url_user_update), new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                hideDialog();
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {
-                        String uid = jObj.getString("uid");
-
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
-                        String last_name = user.getString("last_name");
-                        String email = user.getString("email");
-
-                        String mobile = user.getString("mobile");
-
-                        String created_at = "03/07/2016";
-
-                        db.deleteUsers();
-                        // Inserting row in users table
-                        db.addUser(name, email, uid, created_at, last_name, mobile);
-
-                        Toast.makeText(getApplicationContext(), "User info updated. Relogin to Avoid Conflicts!", Toast.LENGTH_LONG).show();
-
-                    } else {
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
-            }
-        }) {
-
-            @Override
-            protected Map<String, String> getParams() {
-                // Posting params to register url
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", user_id);
-                params.put("first_name", name);
-                params.put("email", email);
-                params.put("last_name", last_name);
-                params.put("mobile", mobile);
-
-                return params;
-            }
-
-        };
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -188,16 +117,6 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
     }
 
     @Override
@@ -257,7 +176,7 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
                 String mobileno = inputMobile.getText().toString().trim();
 
                 if (!name.isEmpty() && !email.isEmpty()) {
-                    updateUser(name, email, mobileno, last_name, db.getUserDetails().get("uid"));
+                    apiUpdateUser(name, email, mobileno, last_name, loginResponseModel.getUser().getUser_id());
                 } else {
                     Toast.makeText(getApplicationContext(), "Please enter your details!", Toast.LENGTH_LONG).show();
                 }
@@ -289,6 +208,30 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
         }
     }
 
+    private void apiUpdateUser(String first_name, String email, String mobileno, String last_name, String user_id) {
+
+        jsonObject = new JSONObject();
+        try {
+            jsonObject.put("token", loginResponseModel.getUser().getToken().toString());
+            jsonObject.put("firstname", first_name);
+            jsonObject.put("lastname", last_name);
+            jsonObject.put("email", email);
+            jsonObject.put("mobile_number", mobileno);
+            jsonObject.put("cid_number", et_cid_number.getText().toString());
+            jsonObject.put("address", et_address.getText().toString());
+            jsonObject.put("city", et_city.getText().toString());
+
+            if (cd.isConnectingToInternet()) {
+                aPiAsync = new APiAsync(null, EditProfileActivity.this, getResources().getString(R.string.url_user_profile_update), getString(R.string.msg_progress_dialog), APiAsync.USER_PROFILE_UPDATE, jsonObject);
+                aPiAsync.execute();
+            } else {
+                Toast.makeText(EditProfileActivity.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void apiChangePassword() {
         if (cd.isConnectingToInternet()) {
             aPiAsync = new APiAsync(null, EditProfileActivity.this, getResources().getString(R.string.url_change_password), getString(R.string.msg_progress_dialog), APiAsync.CHANGE_PASSWORD, this.jsonObject);
@@ -310,6 +253,15 @@ public class EditProfileActivity extends AppCompatActivity implements Navigation
                         Toast.makeText(EditProfileActivity.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                break;
+            case APiAsync.USER_PROFILE_UPDATE:
+                LoginResponseModel loginResponseModel = gson.fromJson(response.toString(), LoginResponseModel.class);
+                settings.edit().putString(GlobleMethods.logFlag, response).commit();
+                if (loginResponseModel.getStatus().equals("success")) {
+                    Toast.makeText(getApplicationContext(), "Update Successful!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), loginResponseModel.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 break;
         }

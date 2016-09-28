@@ -2,6 +2,8 @@ package bt.bt.bttv;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,8 +21,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 
 public class OrderHistoryActivity extends ListActivity {
     private static final String TAG_ORDER_INFO = "orders";
@@ -30,16 +35,20 @@ public class OrderHistoryActivity extends ListActivity {
     private static final String TAG_ORDER_STATUS = "order_paid_status";
     private static final String TAG_ORDER_TXID = "order_id";
     private static String url = "http://bflix.ignitecloud.in/jsonApi/orderhistory/";
-    private SQLiteHandler db;
+    public SharedPreferences settings;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        db = new SQLiteHandler(getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
 
-        String uid = user.get("uid");
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
+
+        String uid = loginResponseModel.getUser().getUser_id();
         url = "";
         url = "http://bflix.ignitecloud.in/jsonApi/orderhistory/" + uid;
         Log.i("Order URL: ", "> " + url);

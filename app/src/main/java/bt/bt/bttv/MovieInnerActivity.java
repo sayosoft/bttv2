@@ -2,8 +2,10 @@ package bt.bt.bttv;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -27,7 +29,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.koushikdutta.ion.Ion;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,34 +38,15 @@ import java.util.List;
 import bt.bt.bttv.helper.APiAsync;
 import bt.bt.bttv.helper.ApiInt;
 import bt.bt.bttv.helper.ConnectionDetector;
-import bt.bt.bttv.helper.SQLiteHandler;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 import bt.bt.bttv.model.MovieInnerModel;
 import bt.bt.bttv.model.MyPlayListModel;
 
 public class MovieInnerActivity extends AppCompatActivity implements View.OnClickListener, ApiInt {
 
-    // JSON Node names
-    private static final String TAG_VIDEO_INFO = "videos";
-    private static final String TAG_VIDEO_RELATED_INFO = "related";
-    private static final String TAG_VIDEO_ID = "video_id";
-    private static final String TAG_VIDEO_TITLE = "video_title";
-    private static final String TAG_VIDEO_CATEGORY = "video_category";
-    private static final String TAG_VIDEO_POSTER = "video_poster";
-    private static final String TAG_VIDEO_GENRES = "video_genre";
-    private static final String TAG_VIDEO_DIRECTOR = "video_director";
-    private static final String TAG_VIDEO_ACTING = "video_acting";
-    private static final String TAG_VIDEO_LANGUAGE = "video_language";
-    private static final String TAG_VIDEO_DURATION = "video_duration";
-    private static final String TAG_VIDEO_DESCRIPTION = "video_description";
-    private static final String TAG_VIDEO_SOURCE = "video_source_url";
-    private static final String TAG_VIDEO_GENRES_TEXT = "video_genre_text";
-    private static final String TAG_VIDEO_RATING = "video_rating";
-    private static final String TAG_VIDEO_PUR = "video_purchased";
-    private static final String TAG_VIDEO_RESUME = "video_resume";
-    private static String postParams = "";
-    JSONArray mvs = null;
-    JSONArray related = null;
+    public SharedPreferences settings;
     String video_source = null;
     String MovieTitle = null;
     String MovieDuration = null;
@@ -78,11 +60,12 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     Boolean autoplay = false;
     int position;
     private TextView tvFavourite, tvAddToPlaylist, tvLater, tvShare;
-    private SQLiteHandler db;
     private ConnectionDetector cd;
     private APiAsync aPiAsync;
     private MyPlayListModel myPlayListModel;
     private MovieInnerModel movieInnerModel;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +73,10 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_movie_inner);
 
         cd = new ConnectionDetector(this);
-        db = new SQLiteHandler(getApplicationContext());
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
+        gson = new Gson();
+
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
         String ap = getIntent().getStringExtra("autoplay");
         if (ap != null) {
@@ -232,7 +218,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
 
     private void apiAddToPlaylist(String playlist_id) {
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_playlist) + db.getUserDetails().get("uid") + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102, null);
+            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_playlist) + loginResponseModel.getUser().getUser_id() + "/" + VideoID + "/" + playlist_id + "/" + "2", getString(R.string.msg_progress_dialog), 102, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -300,7 +286,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.tvFavourite:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 100, null);
+                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_favorite) + VideoID + "/" + loginResponseModel.getUser().getUser_id() + "/" + "2", getString(R.string.msg_progress_dialog), 100, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -311,7 +297,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.tvLater:
                 if (cd.isConnectingToInternet()) {
-                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + db.getUserDetails().get("uid") + "/" + "2", getString(R.string.msg_progress_dialog), 103, null);
+                    aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_add_to_watchlist) + VideoID + "/" + loginResponseModel.getUser().getUser_id() + "/" + "2", getString(R.string.msg_progress_dialog), 103, null);
                     aPiAsync.execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet Connection..!", Toast.LENGTH_LONG).show();
@@ -329,7 +315,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
     private void apiGetPlayLists() {
 
         if (cd.isConnectingToInternet()) {
-            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_get_movie_playlists) + db.getUserDetails().get("uid"), getString(R.string.msg_progress_dialog), 101, null);
+            aPiAsync = new APiAsync(null, MovieInnerActivity.this, getResources().getString(R.string.url_get_movie_playlists) + loginResponseModel.getUser().getUser_id(), getString(R.string.msg_progress_dialog), 101, null);
             aPiAsync.execute();
         } else {
             Toast.makeText(MovieInnerActivity.this, "Internet not available..!", Toast.LENGTH_SHORT).show();
@@ -404,7 +390,7 @@ public class MovieInnerActivity extends AppCompatActivity implements View.OnClic
         @Override
         protected Void doInBackground(Void... arg0) {
             WebRequest webreq = new WebRequest();
-            MoviesStr = webreq.makeWebServiceCall(getString(R.string.url_get_video) + getIntent().getStringExtra("vid") + "/" + db.getUserDetails().get("uid"), WebRequest.GETRequest);
+            MoviesStr = webreq.makeWebServiceCall(getString(R.string.url_get_video) + getIntent().getStringExtra("vid") + "/" + loginResponseModel.getUser().getUser_id(), WebRequest.GETRequest);
             return null;
         }
 

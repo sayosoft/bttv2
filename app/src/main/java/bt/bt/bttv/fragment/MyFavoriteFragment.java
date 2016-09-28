@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,9 +30,10 @@ import bt.bt.bttv.R;
 import bt.bt.bttv.adapter.AudioHomeAdapter;
 import bt.bt.bttv.adapter.VideoHomeAdapter;
 import bt.bt.bttv.helper.ConnectionDetector;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.HTTPURLConnection;
-import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.model.AudiosModel;
+import bt.bt.bttv.model.LoginResponseModel;
 import bt.bt.bttv.model.MyFavoriteModel;
 import bt.bt.bttv.model.VideosModel;
 import bt.bt.bttv.model.WatchLaterModel;
@@ -38,7 +41,6 @@ import bt.bt.bttv.model.WatchLaterModel;
 
 public class MyFavoriteFragment extends Fragment {
 
-    public static final String PREFS_NAME = "MyPrefs";
     public SharedPreferences settings;
     private List<AudiosModel> audiosModelList = new ArrayList<>();
     private List<VideosModel> videosModelList = new ArrayList<>();
@@ -46,15 +48,17 @@ public class MyFavoriteFragment extends Fragment {
     private ProgressDialog pDialog;
     private HTTPURLConnection service;
     private ConnectionDetector cd;
-    private SQLiteHandler db;
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        db = new SQLiteHandler(getActivity());
         cd = new ConnectionDetector(getActivity());
-        settings = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        settings = getActivity().getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
+        gson = new Gson();
+
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         llMain = (LinearLayout) view.findViewById(R.id.llMain);
@@ -158,7 +162,7 @@ public class MyFavoriteFragment extends Fragment {
 
             jsonObject = new JSONObject();
             try {
-                jsonObject.put("user_id", db.getUserDetails().get("uid"));
+                jsonObject.put("user_id", loginResponseModel.getUser().getUser_id());
                 jsonObject.put("media_type", "1");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -212,7 +216,7 @@ public class MyFavoriteFragment extends Fragment {
 
             jsonObject = new JSONObject();
             try {
-                jsonObject.put("user_id", db.getUserDetails().get("uid"));
+                jsonObject.put("user_id", loginResponseModel.getUser().getUser_id());
                 jsonObject.put("media_type", "2");
             } catch (JSONException e) {
                 e.printStackTrace();

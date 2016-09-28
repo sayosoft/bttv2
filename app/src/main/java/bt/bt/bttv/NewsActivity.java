@@ -26,7 +26,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.ImageListener;
 
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.SQLiteHandler;
 import bt.bt.bttv.helper.WebRequest;
 
 
@@ -103,8 +101,6 @@ public class NewsActivity extends AppCompatActivity
 
         }
     };
-    private SQLiteHandler db;
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +129,6 @@ public class NewsActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("News");
         setSupportActionBar(toolbar);
-
-        db = new SQLiteHandler(getApplicationContext());
-
-        HashMap<String, String> user = db.getUserDetails();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

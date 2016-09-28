@@ -2,13 +2,12 @@ package bt.bt.bttv;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +17,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -31,11 +29,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -51,9 +46,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import bt.bt.bttv.helper.GlobleMethods;
-import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.helper.SessionManager;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 
 
 public class SportsActivity extends AppCompatActivity
@@ -72,6 +66,7 @@ public class SportsActivity extends AppCompatActivity
     private static final String TAG_SLIDES_IMAGE = "slide_image_url";
     private static String moviesurl = "http://bflix.ignitecloud.in/jsonApi/vod/video_category/1";
     final HashMap<String, String> onlymovie = new HashMap<String, String>();
+    public SharedPreferences settings;
     ArrayList<HashMap<String, String>> moviesList2 = new ArrayList<HashMap<String, String>>();
     Integer sc = 6;
     final String[] slideimgs = new String[sc];
@@ -79,7 +74,6 @@ public class SportsActivity extends AppCompatActivity
     String[] mbThumbIds2 = new String[40];
     Integer[] mbThumbIds3 = new Integer[40];
     JSONArray Slides = null;
-
     CarouselView carouselView;
     ImageListener imageListener = new ImageListener() {
 
@@ -123,22 +117,8 @@ public class SportsActivity extends AppCompatActivity
 
         }
     };
-    private SQLiteHandler db;
-    private SessionManager session;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
-   /*  ImageListener imageListener = new ImageListener() {
-
-        @Override
-        public void setImageForPosition(int position, ImageView imageView) {
-            imageView.setImageResource(sampleImages[position]);
-        }
-    };
-    */
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +131,6 @@ public class SportsActivity extends AppCompatActivity
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
-
 
         /* End Threading */
 
@@ -173,21 +151,10 @@ public class SportsActivity extends AppCompatActivity
         toolbar.setTitle("Sports");
         setSupportActionBar(toolbar);
 
-        // SqLite database handler
-        db = new SQLiteHandler(getApplicationContext());
-
-        // session manager
-        session = new SessionManager(getApplicationContext());
-
-        if (!session.isLoggedIn()) {
-            logoutUser();
-        }
-
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-
-        String name = user.get("name");
-        String email = user.get("email");
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
+        String name = loginResponseModel.getUser().getName();
+        String email = loginResponseModel.getUser().getEmail();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -202,11 +169,6 @@ public class SportsActivity extends AppCompatActivity
         carouselView.setPageCount(4);
 
         carouselView.setImageListener(imageListener);
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void addImagesToThegallery(JSONArray imgs) throws JSONException {
@@ -397,47 +359,6 @@ public class SportsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Movie Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Movie Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://bt.bt.bttv/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
-
     private ArrayList<HashMap<String, String>> ParseJSONMovies(String json) {
         if (json != null) {
             try {
@@ -578,33 +499,6 @@ public class SportsActivity extends AppCompatActivity
     public void showSettings(MenuItem item) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
-    }
-
-    private void logoutUser() {
-
-        new AlertDialog.Builder(this)
-                .setTitle("Logout?")
-                .setMessage("are you sure you want to logout??")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Toast.makeText(getApplicationContext(), "Logging Out", Toast.LENGTH_SHORT).show();
-
-                        session.setLogin(false);
-
-                        db.deleteUsers();
-
-                        // Launching the login activity
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
-
-
     }
 
     public class ImageAdapter extends BaseAdapter {

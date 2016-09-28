@@ -2,7 +2,7 @@ package bt.bt.bttv;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.Future;
@@ -28,16 +28,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import bt.bt.bttv.helper.SQLiteHandler;
-import bt.bt.bttv.helper.SessionManager;
+import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.helper.WebRequest;
+import bt.bt.bttv.model.LoginResponseModel;
 
 public class OrderHistoryNew extends AppCompatActivity {
-    // JSON Node names
-    private static final String TAG_PLAY_INFO = "playhistory";
-    private static final String TAG_LAST_PLAYED = "play_last_played";
-    private static final String TAG_VIDEO_TITLE = "video_title";
-    private static final String TAG_VIDEO_POSTER = "video_poster";
     // JSON Node names
     private static final String TAG_ORDER_INFO = "orders";
     private static final String TAG_ID = "order_id";
@@ -50,35 +45,22 @@ public class OrderHistoryNew extends AppCompatActivity {
     private static final String TAG_ORDER_TXID = "order_id";
     private static String url = "http://bflix.ignitecloud.in/jsonApi/orderhistory/";
     private static String url2 = "http://bflix.ignitecloud.in/jsonApi/orderhistory2/";
+    public SharedPreferences settings;
     Context context = this;
     ArrayAdapter<JsonObject> orderAdapter;
-    private SQLiteHandler db;
-    private SessionManager session;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
+    private Gson gson;
+    private LoginResponseModel loginResponseModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        settings = getSharedPreferences(GlobleMethods.PREFS_NAME, Context.MODE_PRIVATE);
 
-        db = new SQLiteHandler(getApplicationContext());
+        gson = new Gson();
+        loginResponseModel = gson.fromJson(settings.getString(GlobleMethods.logFlag, ""), LoginResponseModel.class);
 
-        // session manager
-        session = new SessionManager(getApplicationContext());
-
-        if (!session.isLoggedIn()) {
-            logoutUser();
-        }
-
-        // Fetching user details from sqlite
-        HashMap<String, String> user = db.getUserDetails();
-
-        String uid = user.get("uid");
+        String uid = loginResponseModel.getUser().getUser_id();
         url = "";
         url = "http://bflix.ignitecloud.in/jsonApi/orderhistory/" + uid;
         url2 = "";
@@ -212,17 +194,6 @@ public class OrderHistoryNew extends AppCompatActivity {
             Log.e("ServiceHandler", "No data received from HTTP Request");
             return null;
         }
-    }
-
-    private void logoutUser() {
-        session.setLogin(false);
-
-        db.deleteUsers();
-
-        // Launching the login activity
-        Intent intent = new Intent(OrderHistoryNew.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     /**

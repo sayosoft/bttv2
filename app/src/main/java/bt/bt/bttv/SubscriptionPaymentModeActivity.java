@@ -13,11 +13,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import bt.bt.bttv.helper.GlobleMethods;
 import bt.bt.bttv.model.PackagesModel;
-import bt.bt.bttv.model.UserModel;
 
 /**
  * Created by Rani on 28/08/2016.
@@ -49,9 +46,6 @@ public class SubscriptionPaymentModeActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("fromAddBalance", false)) {
             btn_account_balance.setVisibility(View.GONE);
         }
-
-        Gson gson = new Gson();
-        UserModel userModel = gson.fromJson(settings.getString("logFlag", ""), UserModel.class);
 
         tvPackCost = (TextView) findViewById(R.id.tv_pack_cost);
         tvPackCost.setText(Html.fromHtml("<b>" + settings.getString(GlobleMethods.ACCOUNT_BALANCE, "") + "<sup>Nu</sup></b>"));
